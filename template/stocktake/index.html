@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[[${str}]] | 库存盘点</title>
+<link th:href="@{{sp}/css/bootstrap.min.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/font-awesome/css/font-awesome.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/css/animate.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/css/style.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/select2/select2.min.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/ladda/ladda-themeless.min.css|" rel="stylesheet">
+
+<link th:href="|${pub_bucket}/css/plugins/sweetalert/sweetalert.css|" rel="stylesheet">
+</head>
+
+<body>
+	<div id="wrapper">
+		<div th:replace="../common/nav"></div>
+		<div id="page-wrapper" class="gray-bg">
+			<div th:replace="../common/top"></div>
+			<div class="row wrapper border-bottom white-bg page-heading">
+				<div class="col-sm-4">
+					<h2>库存盘点</h2>
+					<ol class="breadcrumb">
+						<li><a href="javascript:;">Home</a></li>
+						<li class="active"><strong>盘点表</strong></li>
+					</ol>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="wrapper wrapper-content animated fadeInUp">
+
+						<div class="ibox">
+							<div class="ibox-title">
+								<h5>库存盘点记录</h5>
+								<div class="ibox-tools">
+									<a href="javascript:void(0)" class="btn btn-primary btn-xs add_new_ic">创建盘点表</a>
+								</div>
+							</div>
+							<div class="ibox-content">
+								<div class="row m-b-sm m-t-sm">
+									<div class="col-sm-3 m-b-xs">
+										<button type="button" id="loading-example-btn" class="btn btn-white btn-sm">
+											<i class="fa fa-refresh"></i> Refresh
+										</button>
+									</div>
+									<div class="col-sm-3">
+										<select class="input-sm form-control input-s-sm inline ic_ware">
+		                                    <option></option>
+		                                    <option th:each="wh:${all_whs}" th:value="${wh.id}" th:text="${wh.name}" th:selected="${wh.id==w}"></option>
+		                                </select>
+									</div>
+									<div class="col-sm-3">
+										<select class="input-sm form-control input-s-sm inline ic_ss">
+											<option></option>
+		                                    <option value="0000" th:selected="${s=='0000'}">创建</option>
+		                                    <option value="1000" th:selected="${s=='1000'}">进行中</option>
+		                                    <option value="6000" th:selected="${s=='6000'}">结束</option>
+		                                </select>
+									</div>
+									<div class="col-sm-3">
+										<div class="input-group">
+											<input type="text" placeholder="盘点编号" class="input-sm form-control ic_no" th:value="${n}"> 
+											<span class="input-group-btn">
+												<button type="button" class="btn btn-sm btn-primary submit_query ladda-button"> 查询</button>
+											</span>
+										</div>
+									</div>
+								</div>
+
+								<div class="table-responsive">
+                                	<table class="table table-striped">
+										<thead>
+		                                    <tr>
+												<th>编号</th>
+												<th>名称</th>
+												<th>盘点仓库</th>
+												<th>盘点类型</th>
+												<th>盘点状态</th>
+												<th>创建时间</th>
+												<th>备注信息</th>
+	  											<th>操作</th>
+		                                    </tr>
+	                                    </thead>
+										<tbody>
+											<tr th:each="st:${page.result}" th:attr_id="${st.id }">
+												<td>[[${st.icno }]]</td>
+												<td>
+													<a href="javascript:;">[[${st.icname }]]</a><br/> 
+													<small>更新时间 [[${#dates.format(st.c_time, 'yyyy-MM-dd')}]]</small>
+												</td>
+												<td>[[${st.wh_name}]]</td>
+												<td>
+													<span th:if="${st.ictype=='10'}">全盘</span>
+													<span th:if="${st.ictype=='50'}">抽盘</span>
+												</td>
+												<td>
+													<span th:if="${st.icss=='0000'}">创建</span>
+													<span th:if="${st.icss=='1000'}">进行</span>
+													<span th:if="${st.icss=='6000'}">结束</span>
+												</td>
+												<td>[[${#dates.format(st.a_time, 'yyyy-MM-dd')}]]</td>
+												<td>[[${st.icinfo }]]</td>
+												<td>
+													<button class="btn btn-white btn-sm edit" th:attr_id="${st.id }" th:if="${st.icss=='1000'}"><i class="fa fa-pencil"></i> 继续盘点 </button>
+													<button class="btn btn-danger btn-sm start" type="button" th:attr_id="${st.id }" th:if="${st.icss=='0000'}"><i class="fa fa-trash"></i> 开启盘点</button>
+													<button class="btn btn-warning btn-sm finish" type="button" th:attr_id="${st.id}" th:if="${st.icss=='1000'}"><i class="fa fa-paste"></i> 完成盘点</button>
+													<button class="btn btn-info btn-sm details" type="button" th:attr_id="${st.id }" th:if="${st.icss=='6000'}"><i class="fa fa-paste"></i> 盘点明细</button>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+									<div th:replace="../common/page"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div th:replace="../common/foot"></div>
+		</div>
+	</div>
+	
+	<!-- Mainly scripts -->
+	<script th:src="@{{sp}/js/jquery-2.1.1.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/bootstrap.min.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/metisMenu/jquery.metisMenu.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/slimscroll/jquery.slimscroll.min.js(sp=${pub_bucket})}"></script>
+
+	<!-- Custom and plugin javascript -->
+	<script th:src="@{{sp}/js/inspinia.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/pace/pace.min.js(sp=${pub_bucket})}"></script>
+	<!-- Ladda -->
+    <script th:src="|${pub_bucket}/js/plugins/ladda/spin.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/ladda/ladda.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/ladda/ladda.jquery.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/jeditable/jquery.jeditable.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/dataTables/datatables.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/select2/select2.full.min.js|"></script>
+	<script th:src="@{{sp}/third/layer3/layer.js(sp=${pub_bucket})}" type="text/javascript"></script>
+	
+	<script th:src="|${pub_bucket}/js/plugins/sweetalert/sweetalert.min.js|"></script>
+
+	<script>
+		$(document).ready(function() {
+
+			$('#loading-example-btn').click(function() {
+				btn = $(this);
+				simpleLoad(btn, true)
+
+				// Ajax example
+				//                $.ajax().always(function () {
+				//                    simpleLoad($(this), false)
+				//                });
+
+				simpleLoad(btn, false)
+			});
+		});
+
+		function simpleLoad(btn, state) {
+			if (state) {
+				btn.children().addClass('fa-spin');
+				btn.contents().last().replaceWith(" Loading");
+			} else {
+				setTimeout(function() {
+					btn.children().removeClass('fa-spin');
+					btn.contents().last().replaceWith(" Refresh");
+				}, 2000);
+			}
+		}
+	</script>
+</body>
+
+<script type="text/javascript">
+$(function() {
+	$(".add_new_ic").on("click", function() {
+		location.href = '/scm/stocktake/create?' + new Date().getTime();
+	});
+	var l = $(".ladda-button").ladda();
+	$(".submit_query").on("click", function() {
+		var w = $(".ic_ware").val();
+		var s = $(".ic_ss").val();
+		var n = $.trim($(".ic_no").val());
+		$(this).ladda('start');
+		location.href=  '/scm/stocktake/index?w=' + w + '&s=' + s + '&n=' + n;
+	});
+	$(".ic_ware").select2({placeholder:'选择仓库',allowClear:true});
+	$(".ic_ss").select2({placeholder:'选择盘点状态',allowClear:true});
+	
+	$(".start").on("click", function() {
+		var $this = $(this);
+		var id = $this.attr("attr_id");
+		swal({
+	        title: "确定要开启盘点吗?",
+	        text: "您即将开启该盘点表",
+	        type: "warning",
+	        showCancelButton: true,
+	        confirmButtonColor: "#DD6B55",
+	        confirmButtonText: "确定",
+	        closeOnConfirm: false
+	    }, function () {
+	    	$.get('/scm/stocktake/aj/start?' + new Date().getTime(), {id:id}, function(data) {
+	    		if(data.available) {
+	    			$this.parent().parent().find("td").eq(3).html('进行');
+	    			swal("成功!", "您已经开启盘点表，请开始盘点操作.", "success");
+	    			location.reload();
+	    		} else {
+	    			var code = data.messages[0];
+					var msg = "操作失败：" + code;
+					layer.msg(msg, {shift: 6});
+	    		}
+	    	});
+	    });
+	});
+	$(".finish").on("click", function() {
+		var $this = $(this);
+		var id = $this.attr("attr_id");
+		swal({
+	        title: "确定要完成盘点吗?",
+	        text: "完成系统将自动关闭该盘点表，并根据实际库存执行相应损溢库存操作",
+	        type: "warning",
+	        showCancelButton: true,
+	        confirmButtonColor: "#DD6B55",
+	        confirmButtonText: "确定",
+	        closeOnConfirm: false
+	    }, function () {
+	    	$.get('/scm/stocktake/aj/finish?' + new Date().getTime(), {id:id}, function(data) {
+	    		if(data.available) {
+	    			$this.parent().parent().find("td").eq(3).html('完成');
+	    			swal("成功!", "您已经关闭盘点表.", "success");
+	    			location.reload();
+	    		} else {
+	    			var code = data.messages[0];
+					var msg = "操作失败：" + code;
+					layer.msg(msg, {shift: 6});
+	    		}
+	    	});
+	    });
+	});
+	
+	$(".edit").on("click", function() {
+		location.href = '/scm/stocktake/create?id=' + $(this).attr("attr_id") + '&' + new Date().getTime();
+	});
+	$(".details").on("click", function() {
+		location.href = '/scm/stocktake/item?id=' + $(this).attr("attr_id") + '&' + new Date().getTime();
+	});
+});
+</script>
+
+</html>

@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[[${str}]] | 库存管理</title>
+<link th:href="@{{sp}/css/bootstrap.min.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/font-awesome/css/font-awesome.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/css/animate.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/css/style.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/ladda/ladda-themeless.min.css|" rel="stylesheet">
+
+<link th:href="|${pub_bucket}/css/plugins/select2/select2.min.css|" rel="stylesheet">
+</head>
+
+<body>
+	<div id="wrapper">
+		<div th:replace="../common/nav"></div>
+		<div id="page-wrapper" class="gray-bg">
+			<div th:replace="../common/top"></div>
+			<div class="row wrapper border-bottom white-bg page-heading">
+				<div class="col-sm-4">
+					<h2>库存变动批次管理</h2>
+					<ol class="breadcrumb">
+						<li><a href="javascript:;">Home</a></li>
+						<li class="active"><strong>批次列表</strong></li>
+					</ol>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="wrapper wrapper-content animated fadeInUp">
+						<div class="ibox">
+							<div class="ibox-title">
+								<h5>库存批次</h5>
+								<div class="ibox-tools">
+									<a href="javascript:void(0)" class="btn btn-primary btn-xs new_batch">创建库存变动批次</a>
+								</div>
+							</div>
+							<div class="ibox-content">
+								<div class="row m-b-sm m-t-sm hide">
+									<div class="col-sm-9 m-b-xs">
+										<button type="button" id="loading-example-btn" class="btn btn-white btn-sm">
+											<i class="fa fa-refresh"></i> Refresh
+										</button>
+									</div>
+									<div class="col-sm-3">
+										<div class="input-group">
+											<input type="text" placeholder="Search"
+												class="input-sm form-control"> <span
+												class="input-group-btn">
+												<button type="button" class="btn btn-sm btn-primary"> Go!</button>
+											</span>
+										</div>
+									</div>
+								</div>
+
+								<div class="table-responsive">
+                                	<table class="table table-striped">
+										<thead>
+		                                    <tr>
+												<th>流水号</th>
+												<th>批次名称</th>
+												<th>操作类型</th>
+												<th>批次类型</th>
+												<th>发生仓库</th>
+												<th>创建时间</th>
+												<th>是否默认</th>
+												<th>状态</th>
+	  											<th>操作</th>
+		                                    </tr>
+	                                    </thead>
+										<tbody>
+											<tr th:each="st:${page.result}" th:attr_id="${st.id }">
+												<td>[[${st.sn }]]</td>
+												<td>
+													<a href="javascript:;">[[${st.bname }]]</a><br/> 
+													<small>更新时间 [[${#dates.format(st.c_time, 'yyyy-MM-dd')}]]</small>
+												</td>
+												<td th:text="${st.in_house==1}?'入库':'出库'"></td>
+												<td>
+													<span th:each="t:${op_code_list}" th:if="${t.inHouse==st.in_house && t.code==st.op_type}">[[${t.name}]]</span>
+												</td>
+												<td>
+												发生：<span th:text="${st.s_wh_name==null}?'':${st.s_wh_name}"></span><br/>
+												
+												<span th:if="${st.op_type=='3001'}">调入：</span>
+												<button data-style="zoom-in" class="ladda-button btn btn-info btn-xs aim_warehouse" type="button" th:attr_id="${st.id }" th:if="${st.op_type=='3001'}" th:attr_aid="${st.a_wh_id}">
+													<span  th:text="${st.a_wh_name==null}?'请选择':${st.a_wh_name}"></span>
+												</button>
+												</td>
+												<td>[[${#dates.format(st.a_time, 'yyyy-MM-dd')}]]</td>
+												<td>[[${st.is_def_sys }]]</td>
+												<td>[[${st.flag }]]</td>
+												<td>
+													<button data-style="zoom-in" class="ladda-button btn btn-primary btn-sm edit" th:attr_id="${st.id }"><i class="fa fa-pencil"></i> 编辑 </button>
+													<!-- <button class="btn btn-info btn-sm g_imgs" type="button" th:attr_id="${st.id }"><i class="fa fa-paste"></i> 打印</button> -->
+													<buttondata-style="zoom-in" class="ladda-button btn btn-warning btn-sm bt_items" type="button" th:attr_id="${st.id }"><i class="fa fa-paste"></i> 明细</button>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+									<div th:replace="../common/page"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div th:replace="../common/foot"></div>
+		</div>
+	</div>
+	
+	<div id="whs_list" style="display:none;padding-left:15px;padding-right:15px; margin-bottom: 30px; max-width: 960px;">
+		<div class="row">
+			<div class="col-md-12 margin-bottom-15">
+				<label for="ware_list" class="control-label">仓库列表</label>
+				<select class="form-control margin-bottom-15" id="ware_list">
+					<option value="-1">请选择</option>
+				</select>
+			</div>
+		</div>
+		<div class="row templatemo-form-buttons" style="margin-top:15px">
+			<div class="col-md-12">
+				<button data-style="expand-right" class="ladda-button btn btn-primary save_wh" style="width:100%">确认</button>
+			</div>
+		</div>
+	</div>
+	
+	<div id="templatemo-preferences-form" style="display:none;padding-left:15px;padding-right:15px; margin-bottom: 30px; max-width: 960px;">
+		<div class="row">
+			<div class="col-md-6 margin-bottom-15">
+				<label for="b_name" class="control-label">批次名称</label>
+				<input type="text" class="form-control" id="b_name" placeholder="请输入批次名称">
+			</div>
+			<div class="col-md-6 margin-bottom-15">
+				<label for="b_sn" class="control-label">批次编号</label>
+				<input type="text" class="form-control" id="b_sn" placeholder="为空自动生成">
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6 margin-bottom-15">
+				<label for="in_house" class="control-label">操作类型</label>
+				<select name="in_house" class="form-control margin-bottom-15" id="in_house">
+					<option value="-1">请选择</option>
+					<option th:value="${bt.key }" th:each="bt:${op_code_cat }">[[${bt.value }]]</option>
+				</select>
+			</div>
+			<div class="col-md-6 margin-bottom-15">
+				<label for="op_type" class="control-label">批次分类</label>
+				<select name="op_type" class="form-control margin-bottom-15" id="op_type">
+					<option value="-1">请选择</option>
+					<option th:value="${bt.code }" th:attr_k="${bt.inHouse }" th:attr_ns="${bt.needSource }" th:attr_na="${bt.needAim }" th:each="bt:${op_code_list }">[[${bt.name }]]</option>
+				</select>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12 margin-bottom-15">
+				<label for="source_wh" class="control-label">发生仓库（默认）</label>
+				<select name="in_house" class="form-control margin-bottom-15" id="source_wh">
+					<option value="-1">请选择</option>
+					<option th:each="wh:${source_warehouse}" th:value="${wh.id}" th:text="${wh.name}"></option>
+				</select>
+			</div>
+		</div>
+		<div class="has-success has-feedback row_inner">
+			<div class="row">
+				<div class="col-md-12 margin-bottom-15">
+					<label for="proj_config" class="control-label">说明</label><br/>
+					<span>发生仓库：这里仅用来设置默认仓库，当具体库存变动操作不关联仓库或仓库库存不可用时生效</span><br/>
+					<hr>
+					<span>备注：当时库存变动表单设置仓库，默认发生仓库设置不生效。</span>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12 margin-bottom-15">
+				<label for="b_info" class="control-label">批次备注</label>
+				<textarea name="b_info" class="form-control" rows="3" id="b_info" ></textarea>
+			</div>
+		</div>
+		<div class="row templatemo-form-buttons" style="margin-top:15px">
+			<div class="col-md-12">
+				<button data-style="expand-right" class="ladda-button btn btn-primary save_batch" style="width:100%">确认</button>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Mainly scripts -->
+	<script th:src="@{{sp}/js/jquery-2.1.1.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/bootstrap.min.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/metisMenu/jquery.metisMenu.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/slimscroll/jquery.slimscroll.min.js(sp=${pub_bucket})}"></script>
+
+	<!-- Custom and plugin javascript -->
+	<script th:src="@{{sp}/js/inspinia.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/pace/pace.min.js(sp=${pub_bucket})}"></script>
+	
+	<script th:src="@{{sp}/third/layer3/layer.js(sp=${pub_bucket})}" type="text/javascript"></script>
+	
+	<!-- Ladda -->
+    <script th:src="|${pub_bucket}/js/plugins/ladda/spin.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/ladda/ladda.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/ladda/ladda.jquery.min.js|"></script>
+    
+    <script th:src="|${pub_bucket}/js/plugins/select2/select2.full.min.js|"></script>
+
+	<script>
+		$(document).ready(function() {
+
+			$('#loading-example-btn').click(function() {
+				btn = $(this);
+				simpleLoad(btn, true)
+
+				// Ajax example
+				//                $.ajax().always(function () {
+				//                    simpleLoad($(this), false)
+				//                });
+
+				simpleLoad(btn, false)
+			});
+		});
+
+		function simpleLoad(btn, state) {
+			if (state) {
+				btn.children().addClass('fa-spin');
+				btn.contents().last().replaceWith(" Loading");
+			} else {
+				setTimeout(function() {
+					btn.children().removeClass('fa-spin');
+					btn.contents().last().replaceWith(" Refresh");
+				}, 2000);
+			}
+		}
+	</script>
+</body>
+
+<script type="text/javascript">
+$(function() {
+	var id = 0;
+	$("#in_house").on("change", function() {
+		v = $(this).val();
+		$("#op_type").find("option").each(function() {
+			if($(this).attr("attr_k")!=v) {
+				$(this).attr("disabled", "disabled");
+			} else {
+				$(this).removeAttr("disabled");
+			}
+		});
+	});
+	$(".new_batch").on("click", function() {
+		id = 0;
+		$("#b_name").val('');
+		$("#b_info").val('');
+		$("#in_house").val(-1);
+		$("#op_type").val(-1);
+		$("#in_house").trigger("change");
+		layer.open({
+			area : ['60%', '80%'],
+			type : 1,
+			content : $("#templatemo-preferences-form")
+		});
+	});
+	
+	$(".edit").on("click", function() {
+		$this = $(this);
+		$this.ladda('start');
+		$.get("/scm/invbatch/aj/view/?" + Date.parse(new Date()), {id:$(this).attr("attr_id")}, function(data) {
+			$this.ladda('stop');
+			if(data.available) {
+				id = data.data.id;
+				$("#b_name").val(data.data.bname);
+				$("#b_info").val(data.data.binfo);
+				$("#b_sn").val(data.data.sn);
+				$("#in_house").val(data.data.in_house);
+				$("#in_house").trigger("change");
+				$("#in_house").trigger("change");
+				$("#op_type").val(data.data.op_type);
+				$("#op_type").trigger("change");
+				$("#source_wh").val(data.data.s_wh_id);
+				layer.open({
+					area : ['50%', '70%'],
+					type : 1,
+					content : $("#templatemo-preferences-form")
+				});
+			} else {
+				id = 0;
+				var code = data.messages[0];
+				var msg = "操作失败：" + code;
+				layer.msg(msg, {shift: 6});
+			}
+		});
+	});
+	
+	$(".save_batch").on("click", function() {
+		var name = $.trim($("#b_name").val());
+		var info = $.trim($("#b_info").val());
+		var in_house = $("#in_house").val();
+		var op_type = $("#op_type").val();
+		var sn = $.trim($("#b_sn").val());
+		var source_wh = $("#source_wh").val();
+		$this = $(this);
+		$this.ladda('start');
+		var param = {id:id,name:name,info:info,in_house:in_house,op_type:op_type,sn:sn,source_wh:source_wh};
+		$.post('/scm/invbatch/aj/save', param, function(data) {
+			$this.ladda('stop');
+			if(data.available) {
+				layer.alert('操作成功', {
+			        skin: 'layui-layer-lan',
+			        shift: 4 //动画类型
+			    }, function(){
+			    	location.reload();
+			    });
+			} else {
+				var code = data.messages[0];
+				var msg = "操作失败：" + code;
+				layer.msg(msg, {shift: 6});
+			}
+		});
+	});
+	var l = $(".ladda-button").ladda();
+	
+	$(".aim_warehouse").on("click", function() {
+		$this = $(this); id = $this.attr("attr_id");
+		aid=$this.attr("attr_aid");
+		$this.ladda('start');
+		$.get('/scm/invbatch/aj/load_whs',{}, function(data) {
+			$this.ladda('stop');
+			if(data.available&&data.data!=null) {
+				var html = '<option value="-1">请选择</option>';
+				for(x in data.data) {
+					html += '<option value="' + data.data[x].id + '">' + data.data[x].name + '</option>';
+				}
+				$("#ware_list").html(html);
+				$('#ware_list option[value='+aid+']').attr("selected","selected");
+				layer.open({
+					area : ['50%', '70%'],
+					type : 1,
+					content : $("#whs_list")
+				});
+			} else {
+				var code = data.messages[0];
+				var msg = "操作失败：" + code;
+				layer.msg(msg, {shift: 6});
+			}
+		});
+	});
+	$(".save_wh").on("click", function() {
+		var ware_list = $("#ware_list").val();
+		$this = $(this);
+		$this.ladda('start');
+		$.get('/scm/invbatch/aj/update_wh', {id:id,wh:ware_list}, function(data) {
+			$this.ladda('stop');
+			layer.closeAll();
+			if(data.available) {
+				$this.find('span').text(data.data.a_wh_name);
+				location.href = '/scm/invbatch/index?' + new Date().getTime();
+			} else {
+				var code = data.messages[0];
+				var msg = "操作失败：" + code;
+				layer.msg(msg, {shift: 6});
+			}
+		});
+	});
+	$(".bt_items").on("click", function() {
+		$(this).ladda('start');
+		location.href = '/scm/invbatch/items?id=' + $(this).attr("attr_id") + "&" + new Date().getTime();
+	});
+});
+</script>
+
+</html>

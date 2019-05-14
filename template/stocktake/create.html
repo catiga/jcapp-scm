@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[[${str}]] | 库存盘点</title>
+<link th:href="@{{sp}/css/bootstrap.min.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/font-awesome/css/font-awesome.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/css/animate.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/css/style.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/ladda/ladda-themeless.min.css|" rel="stylesheet">
+
+<link th:href="|${pub_bucket}/css/plugins/select2/select2.min.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/dataTables/datatables.min.css|" rel="stylesheet">
+
+<link th:href="|${pub_bucket}/css/plugins/jsTree/style.min.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/sweetalert/sweetalert.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/datapicker/datepicker3.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/clockpicker/clockpicker.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/daterangepicker/daterangepicker-bs3.css|" rel="stylesheet">
+</head>
+
+<body>
+	<div id="wrapper">
+		<div th:replace="../common/nav"></div>
+		<div id="page-wrapper" class="gray-bg">
+			<div th:replace="../common/top"></div>
+			<div class="row wrapper border-bottom white-bg page-heading">
+				<div class="col-sm-4">
+					<h2>库存盘点管理</h2>
+					<ol class="breadcrumb">
+						<li><a href="javascript:;">Home</a></li>
+						<li><a href="/scm/stocktake/index">库存盘点</a></li>
+						<li class="active"><strong>盘点表明细</strong></li>
+					</ol>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="wrapper wrapper-content animated fadeInRight">
+						<div class="row">
+							<div class="col-lg-12">
+								<div class="row">
+									<div class="col-lg-12">
+										<div class="ibox float-e-margins">
+											<div class="ibox-title">
+												<h5>盘点表基本信息</h5>
+												<div class="ibox-tools">
+													<a href="javascript:void(0)" class="btn btn-primary btn-xs save_upub ladda-button">保存</a>
+												</div>
+											</div>
+											<div class="ibox-content">
+												<div class="row">
+													<div class="col-md-2">
+														<div class="form-group">
+															<label for="select_wh">选择仓库</label>
+															<select class="select_wh form-control">
+																<option></option>
+																<option th:each="w:${all_whs}" th:value="${w.id}" th:text="${w.name}" th:selected="${form!=null&&w.id==form.wh_id}"></option>
+															</select>
+														</div>
+													</div>
+													<div class="col-md-2">
+														<div class="form-group">
+															<label for="select_ictype">盘点类型</label>
+															<select class="select_ictype form-control">
+																<option value='-1'>选择盘点类型</option>
+																<option value="10" th:selected="${form!=null&&form.ictype=='10'}">全盘</option>
+																<option value="50" th:selected="${form!=null&&form.ictype=='50'}">抽盘</option>
+															</select>
+														</div>
+													</div>
+													<div class="col-md-2">
+														<div class="form-group">
+															<label for="hideEasing">盘点表名称</label> 
+															<input type="text" placeholder="名称" class="form-control icname" th:value="${form!=null}?${form.icname}"/>
+														</div>
+													</div>
+													<div class="col-md-6">
+														<div class="form-group">
+															<label for="hideEasing">盘点表备注</label> 
+															<input type="text" placeholder="备注信息" class="form-control icinfo" th:value="${form!=null}?${form.icinfo}"/>
+														</div>
+													</div>
+												</div>
+												
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+				
+						<div class="row">
+							<div class="col-lg-12">
+								<div class="ibox float-e-margins">
+									<div class="ibox-title">
+										<h5>盘点商品明细</h5>
+										<div class="ibox-tools add_goods_btn">
+											<a data-toggle="modal" href="#modal-form" class="btn btn-primary btn-xs load_models">添加</a>
+										</div>
+									</div>
+									<div class="ibox-content">
+										<table class="table table-striped table-bordered table-hover" id="editable">
+											<thead>
+												<tr>
+													<th>商品编号</th>
+													<th>商品名称</th>
+													<th>SKU编号</th>
+													<th>SKU属性</th>
+													<th>进货单位</th>
+													<th>规格单位</th>
+													<th>库存数量</th>
+													<th>盘点数量</th>
+													<th>损溢量</th>
+													<th>盘点状态</th>
+													<th>操作</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr th:id="${form.wh_id} + '_' + ${i.goods_id} + '_' + ${i.goods_sku_id}" th:each="i:${items}" class="data_row" th:classappend="${form.wh_id} + '_' + ${i.goods_id} + '_' + ${i.goods_sku_id}">
+													<td>[[${i.goods_no}]]</td>
+													<td>[[${i.goods_name}]]</td>
+													<td>[[${i.goods_sku_no}]]</td>
+													<td>[[${i.goods_sku_name}]]</td>
+													<td class="unit">[[${i.unit}]]</td>
+													<td class="spec">[[${i.spec}]]</td>
+													<td class="now_num">[[${i.recnum}]]</td>
+													<td class="sel_num" th:id="${form.wh_id} + '_' + ${i.goods_id} + '_' + ${i.goods_sku_id} +'_num'">[[${i.realnum}]]</td>
+													<td class="d_value">
+														<span th:text="${i.realnum!=null}?${i.recnum-i.realnum}"></span>
+													</td>
+													<td class="now_ss">
+														<span th:text="${i.realnum!=null}?'已盘点':'未盘点'"></span>
+													</td>
+													<td></td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div th:replace="../common/foot"></div>
+		</div>
+	</div>
+	
+	
+	
+	<div id="modal-form" class="modal inmodal fade" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-sm-12 b-r goods_area">
+		                    <div class="ibox ">
+		                        <div class="ibox-title">
+		                        	<h5>选择商品</h5>
+		                        	<button type="button" class="close close_sku_list" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+		                        </div>
+		                        <div class="ibox-content GOODS_LIST">
+		                            <div class="spiner-example">
+		                                <div class="sk-spinner sk-spinner-wave">
+		                                    <div class="sk-rect1"></div>
+		                                    <div class="sk-rect2"></div>
+		                                    <div class="sk-rect3"></div>
+		                                    <div class="sk-rect4"></div>
+		                                    <div class="sk-rect5"></div>
+		                                </div>
+		                            </div>
+		                        </div>
+		                    </div>
+		                </div>
+		                <div class="col-sm-6 b-r hide goods_sku_area">
+		                    <div class="ibox ">
+		                        <div class="ibox-title">
+		                        	<h5>选择SKU</h5>
+		                        	<button type="button" class="close close_sku_list" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+		                        </div>
+		                        <div class="ibox-content SKU_LIST">
+		                            <div class="spiner-example">
+		                                <div class="sk-spinner sk-spinner-wave">
+		                                    <div class="sk-rect1"></div>
+		                                    <div class="sk-rect2"></div>
+		                                    <div class="sk-rect3"></div>
+		                                    <div class="sk-rect4"></div>
+		                                    <div class="sk-rect5"></div>
+		                                </div>
+		                            </div>
+		                        </div>
+		                    </div>
+		                </div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	
+	
+	<div id="templatemo-preferences-form" style="display:none;padding-left:15px;padding-right:15px">
+		<div class="row">
+			<div class="col-md-6 margin-bottom-15">
+				<label for="wh_num" class="control-label">入库数量</label>
+				<input type="text" class="form-control" id="wh_num" placeholder="请输入入库数量">
+			</div>
+			<div class="col-md-6 margin-bottom-15">
+				<label for="wh_cost" class="control-label">成本价格</label>
+				<input type="text" class="form-control" id="wh_cost" placeholder="请输入成本价格">
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6 margin-bottom-15">
+				<label for="wh_date" class="control-label">生产日期</label>
+				<input type="text" class="form-control" id="wh_date" placeholder="请选择生产日期">
+			</div>
+			<div class="col-md-6 margin-bottom-15">
+				<label for="wh_validate" class="control-label">有效期</label>
+				<input type="text" class="form-control" id="wh_validate" placeholder="请输入有效期（天）">
+			</div>
+		</div>
+		
+		<div class="row templatemo-form-buttons">
+			<div class="col-md-12" style="margin-top:15px">
+				<button id="save_info" class="btn btn-primary save_item" style="width:100%">保存</button>
+			</div>
+		</div>
+	</div>
+	
+	<input type="hidden" id="form_id" th:value="${form!=null}?${form.id}"/>
+	<input type="hidden" id="form_type" th:value="${form!=null}?${form.ictype}"/>
+	
+	<!-- Mainly scripts -->
+	<script th:src="@{{sp}/js/jquery-2.1.1.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/bootstrap.min.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/metisMenu/jquery.metisMenu.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/slimscroll/jquery.slimscroll.min.js(sp=${pub_bucket})}"></script>
+
+	<!-- Custom and plugin javascript -->
+	<script th:src="@{{sp}/js/inspinia.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/pace/pace.min.js(sp=${pub_bucket})}"></script>
+	
+	<script th:src="@{{sp}/third/layer3/layer.js(sp=${pub_bucket})}" type="text/javascript"></script>
+	
+	<!-- Ladda -->
+    <script th:src="|${pub_bucket}/js/plugins/ladda/spin.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/ladda/ladda.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/ladda/ladda.jquery.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/jeditable/jquery.jeditable.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/dataTables/datatables.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/select2/select2.full.min.js|"></script>
+    
+    <script th:src="|${pub_bucket}/js/plugins/jsTree/jstree.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/validate/jquery.validate.min.js|"></script>
+    
+    <script th:src="|${pub_bucket}/js/plugins/sweetalert/sweetalert.min.js|"></script>
+    <!-- Data picker -->
+	<script th:src="|${pub_bucket}/js/plugins/datapicker/bootstrap-datepicker.js|"></script>
+    <!-- Clock picker -->
+	<script th:src="|${pub_bucket}/js/plugins/clockpicker/clockpicker.js|"></script>
+	<!-- Date range use moment.js same as full calendar plugin -->
+	<script th:src="|${pub_bucket}/js/plugins/fullcalendar/moment.min.js|"></script>
+	<!-- Date range picker -->
+	<script th:src="|${pub_bucket}/js/plugins/daterangepicker/daterangepicker.js|"></script>
+
+</body>
+
+<script type="text/javascript" th:inline="javascript">
+var units = [[${units}]];
+var find_unit_name = function(code) {
+	for(xxx in units) {
+		if(units[xxx].code==code) {
+			return units[xxx].name;
+		}
+	}
+	return '未定义';
+}
+
+$(function() {
+	var l = $(".ladda-button").ladda();
+	
+	$(".unit").each(function() {
+		$(this).html(find_unit_name($(this).html()));
+	})
+	$(".spec").each(function() {
+		$(this).html(find_unit_name($(this).html()));
+	})
+	
+	var oTable = $('#editable').DataTable({"searching": false,"lengthChange": false,"ordering": false});
+	
+	$('#in_date .input-group.date').datepicker({
+		todayBtn : "linked",
+		keyboardNavigation : false,
+		forceParse : false,
+		calendarWeeks : true,
+		autoclose : true,
+		format: "yyyy-mm-dd"
+	});
+	if($("#form_type").val()=='50') {
+		$(".add_goods_btn").removeClass("hide");
+	}
+    $(".select_wh").select2({placeholder : "选择仓库", allowClear : true});
+    $(".select_ictype").on("change", function() {
+    	var $this = $(this);
+    	if($this.val()=='50') {
+    		$(".add_goods_btn").removeClass("hide");
+    	} else {
+    		$(".add_goods_btn").addClass("hide");
+    	}
+    });
+    $(".select_wh").on("change", function() {
+    	$(".select_ictype").val('-1');
+    });
+    
+    var load_wh_sku = function(v) {
+    	var select_wh = $(".select_wh").val();
+    	if(!select_wh) {
+    		$(".select_ictype").val('-1');
+    		swal("提示", "请选择盘点仓库", "error");
+    		return;
+    	}
+    	if(form_id<=0) {
+    		swal("提示", "请先保存盘点表", "error");
+    		return;
+    	}
+    	$.get('/scm/stocktake/aj/load_sku?' + new Date().getTime(), {form_id:form_id,wh:select_wh}, function(data) {
+    		if(data.available&&data.data!=null) {
+    			var html = '';
+				for(x in data.data) {
+					console.log(data.data[x]);
+					var goods_id = data.data[x].goods_id;
+					var goods_num = data.data[x].goods_no;
+					var goods_name = data.data[x].goods_name;
+					var sku_id =data.data[x].goods_sku_id;
+					var sku_no = data.data[x].goods_sku_no;
+					var sku_props = data.data[x].goods_sku_name;
+					var unit = data.data[x].unit;
+					var spec = data.data[x].spec_unit;
+					var stock = data.data[x].stock;
+					var row_id = select_wh + "_" + goods_id + "_" + sku_id
+					var param = {"DT_RowId": row_id, "DT_RowClass": "data_row " + row_id,
+							"0": goods_num, "1": goods_name, "2": sku_no, "3": sku_props, "4": find_unit_name(unit), "5":find_unit_name(spec), "6":stock, "7":"", "8":"", "9":"", "10":""};
+					var newRow = $('#editable').dataTable().fnAddData(param);
+					
+					var oSettings = $('#editable').dataTable().fnSettings();
+				    var nTr = oSettings.aoData[ newRow[0] ].nTr;
+				    $('td', nTr)[6].setAttribute('class', 'now_num');
+				    $('td', nTr)[7].setAttribute('class', 'sel_num');
+				    $('td', nTr)[7].setAttribute('id', row_id + "_num");
+				    $('td', nTr)[8].setAttribute('class', 'd_value');
+				    $('td', nTr)[9].setAttribute('class', 'now_ss');
+				}
+				
+				$(".sel_num").editable('/scm/stocktake/aj/flush',{
+				    type:'text',//实时编辑input框的type
+				    cancel:'取消',//取消编辑按钮的文字
+				    submit:'确定',//确认提交按钮的文字
+				    indicator:'保存中...',//提交处理过程中显示的提示文字
+				    tooltip:'单击编辑...',//鼠标悬停时的提示信息
+				    submitdata: function(value, settings) {
+				    	return {form_id:form_id};
+				    },
+				    onsubmit: function(settings, original) {
+				    	$(this).validate({
+				            errorPlacement: function(error, element) {
+				                var form = $(element).parent();
+				                form.next().remove();
+				                form.parent().append(error);
+				            },
+				            success: function(error, element) {
+				                var form = $(element).parent();
+				                form.next().remove();
+				            },
+				            rules: {
+				                value:{required:!0,min:1,digits:true}
+				            },
+				            messages: {
+				                value:{
+				                    required: '不能为空',
+				                    min: '最小数量为1',
+				                    digits:'请输入整数'
+				                }
+				            }
+				        });
+				        return $(this).valid();
+				    },
+				    callback: function(value, settings) {
+				    	value = parseInt(value);
+				    	if(value==-3) {
+				    		swal("提示", '请先保存盘点表信息', "error");
+				    		$(this).html('');
+				    	} else if(value==-1) {
+				    		swal("提示", '库存参数错误', "error");
+				    		$(this).html('');
+				    	} else if(value==-2) {
+				    		swal("提示", '商品或仓库信息不存在', "error");
+				    		$(this).html('');
+				    	} else if(value>=0) {
+				    		var now_num = parseInt($(this).parent().find(".now_num").text());
+					    	$(this).html(value);
+					    	$(this).parent().find(".d_value").html(value-now_num);
+					    	$(this).parent().find(".now_ss").html('已盘点');
+				    	}
+				    }
+				});
+			} else {
+				var code = data.messages[0];
+				var msg = "没有商品数据：" + code;
+				swal("提示", msg, "error");
+			}
+    	});
+    }
+    
+    var form_id = $("#form_id").val(); if(form_id=='null'||form_id=='') form_id = 0;
+    if(form_id!='') {
+    	$(".select_ictype").find('option').each(function() {
+    		if($(this).val()!=$("#form_type").val()) {
+    			$(this).attr('disabled', 'disabled');
+    		}
+    	});
+    }
+    $(".save_upub").on("click", function() {
+    	var select_wh = $(".select_wh").val();
+    	var select_ictype = $(".select_ictype").val();
+    	var icname = $.trim($(".icname").val());
+    	var icinfo = $.trim($(".icinfo").val());
+    	var params = {id:form_id,wh:select_wh,ictype:select_ictype,icname:icname,icinfo:icinfo};
+    	var $this = $(this);
+    	$this.ladda('start');
+    	$.post('/scm/stocktake/aj/save_form', params, function(data) {
+    		$this.ladda('stop');
+    		if(data.available) {
+    			swal({title: "Good job!", text: "盘点表数据保存成功!", type: "success"});
+    			if(form_id==0) {
+    				form_id = data.data;
+    				//开始保存所有明细数据
+    				if(select_ictype=='10') { load_wh_sku($(".select_ictype").val()); }
+    			}
+    		} else {
+				var code = data.messages[0];
+				if(data.messages.length>1) {
+					code = data.messages[1] + "，" + code; 
+				}
+				var msg = "操作失败：" + code;
+				swal("提示", msg, "error");
+			}
+    	});
+    });
+    
+    
+    
+    $('.sel_g').editable('editable.php',{
+		data   : " {'E':'Letter E','F':'Letter F','G':'Letter G', 'selected':'F'}",
+	    type:'select',//实时编辑input框的type
+	    cancel:'取消',//取消编辑按钮的文字
+	    submit:'确定',//确认提交按钮的文字
+	    indicator:'保存中...',//提交处理过程中显示的提示文字
+	    tooltip:'单击编辑...'//鼠标悬停时的提示信息
+	});
+	
+    $(".sel_num").editable('/scm/stocktake/aj/flush',{
+	    type:'text',//实时编辑input框的type
+	    cancel:'取消',//取消编辑按钮的文字
+	    submit:'确定',//确认提交按钮的文字
+	    indicator:'保存中...',//提交处理过程中显示的提示文字
+	    tooltip:'单击编辑...',//鼠标悬停时的提示信息
+	    submitdata: function(value, settings) {
+	    	return {form_id:form_id};
+	    },
+	    onsubmit: function(settings, original) {
+	    	$(this).validate({
+	            errorPlacement: function(error, element) {
+	                var form = $(element).parent();
+	                form.next().remove();
+	                form.parent().append(error);
+	            },
+	            success: function(error, element) {
+	                var form = $(element).parent();
+	                form.next().remove();
+	            },
+	            rules: {
+	                value:{required:!0,min:1,digits:true}
+	            },
+	            messages: {
+	                value:{
+	                    required: '不能为空',
+	                    min: '最小领用数量为1',
+	                    digits:'请输入整数'
+	                }
+	            }
+	        });
+	        return $(this).valid();
+	    },
+	    callback: function(value, settings) {
+	    	value = parseInt(value);
+	    	if(value==-3) {
+	    		swal("提示", '请先保存盘点表信息', "error");
+	    		$(this).html('');
+	    	} else if(value==-1) {
+	    		swal("提示", '库存参数错误', "error");
+	    		$(this).html('');
+	    	} else if(value==-2) {
+	    		swal("提示", '商品或仓库信息不存在', "error");
+	    		$(this).html('');
+	    	} else if(value>=0) {
+	    		var now_num = parseInt($(this).parent().find(".now_num").text());
+		    	$(this).html(value);
+		    	$(this).parent().find(".d_value").html(value-now_num);
+		    	$(this).parent().find(".now_ss").html('已盘点');
+	    	}
+	    }
+	});
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    $(".load_models").on("click", function() {
+    	var select_wh = $(".select_wh").val();
+    	if(!select_wh) {
+    		swal({
+                title: "提示",
+                text: "请先选择盘点仓库!",
+                type: "error",
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "确定",
+                closeOnConfirm: true
+            }, function () {
+            	$(".close_sku_list").trigger("click");
+            });
+    		return;
+    	}
+    	if(form_id==0) {
+    		swal({
+                title: "提示",
+                text: "请先保存盘点表!",
+                type: "error",
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "确定",
+                closeOnConfirm: true
+            }, function () {
+            	$(".close_sku_list").trigger("click");
+            });
+    		return;
+    	}
+    	$(".goods_area").removeClass('col-sm-6');
+		$(".goods_area").addClass('col-sm-12');
+		$(".goods_sku_area").addClass('hide');
+		$.get('/scm/stocktake/aj/load_goods?wh=' + select_wh + "&" + new Date().getTime(), {}, function(data) {
+			if(data.available&&data.data!=null) {
+				var html = '<div class="tab-content">'
+				html += '<div id="tab-2" class="tab-pane active">';
+				html += '<div class="full-height-scroll">';
+				html += '<div class="table-responsive">';
+				html += '<table class="table table-striped table-hover">';
+				html += '<tbody>';
+				
+				for(x in data.data) {
+					var tmp_obj = data.data[x];
+					html += '<tr>';
+					html += '<td><a data-toggle="tab" href="javascript:void(0)" class="choose_goods client-link" goods_id="' + tmp_obj.id + '">' + tmp_obj.goods_name + '</a></td>';
+					html += '<td class="goods_id"><i class="fa fa-flag"></i> ' + tmp_obj.goods_id + '</td>';
+					html += '</tr>';
+				}
+				html += '</tbody></table></div></div></div></div>';
+				$(".GOODS_LIST").html(html);
+				$(".choose_goods").on("click", function() {
+					var goods_id = $(this).attr("goods_id");
+					var goods_num = $(this).parent().parent().find(".goods_id").text();
+					var goods_name = $(this).text();
+					$.get('/scm/stocktake/aj/load_sku_sel?' + new Date().getTime(), {gid:goods_id,wh:select_wh,form_id:form_id}, function(data) {
+						if(data.data==null||data.data.length==0) {
+							var msg = "没有商品数据";
+							layer.msg(msg, {shift: 6});
+							return;
+						}
+						if(data.available) {
+							$(".goods_area").removeClass('col-sm-12');
+							$(".goods_area").addClass('col-sm-6');
+							$(".goods_sku_area").removeClass('hide');
+							
+							var html = '<div class="tab-content">'
+							html += '<div id="tab-2" class="tab-pane active">';
+							html += '<div class="full-height-scroll">';
+							html += '<div class="table-responsive">';
+							html += '<table class="table table-striped table-hover">';
+							html += '<tbody>';
+							
+							for(x in data.data) {
+								var tmp_obj = data.data[x];
+								var unit = data.data[x].unit;
+								var spec = data.data[x].spec;
+								html += '<tr>';
+								html += '<td><a data-toggle="tab" href="javascript:void(0)" class="client-link sku_no">' + tmp_obj.goods_sku_no + '</a></td>';
+								html += '<td class="sku_props"><i class="fa fa-flag"></i> ' + tmp_obj.goods_sku_name + '</td>';
+								html += '<td class="sku_stock">' + tmp_obj.stock + '</td>';
+								html += '<td class="client-status"><button class="choose_gm btn btn-primary btn-circle" sku_id="' + tmp_obj.goods_sku_id + '" sku_unit="' + unit + '" sku_spec="' + spec + '"><i class="fa fa-check"></i></button></td>';
+								html += '</tr>';
+							}
+							html += '</tbody></table></div></div></div></div>';
+							$(".SKU_LIST").html(html);
+							$(".choose_gm").on("click", function() {
+								var sku_id = $(this).attr("sku_id");
+								var sku_no = $.trim($(this).parent().parent().find(".sku_no").text());
+								var sku_props = $.trim($(this).parent().parent().find(".sku_props").text());
+								var unit = find_unit_name($(this).attr("sku_unit"));
+								var spec = find_unit_name($(this).attr("sku_spec"));
+								var stock = $.trim($(this).parent().parent().find(".sku_stock").text());
+								var row_id = select_wh + "_" + goods_id + "_" + sku_id
+								var param = {"DT_RowId": row_id, "DT_RowClass": "data_row " + row_id,
+										"0": goods_num, "1": goods_name, "2": sku_no, "3": sku_props, "4": unit, "5":spec, "6":stock, "7":"", "8":"", "9":"", "10":""};
+								if($("#" + row_id).length>0) { return; }
+								var newRow = $('#editable').dataTable().fnAddData(param);
+								
+								var oSettings = $('#editable').dataTable().fnSettings();
+							    var nTr = oSettings.aoData[ newRow[0] ].nTr;
+							    $('td', nTr)[6].setAttribute('class', 'now_num');
+							    $('td', nTr)[7].setAttribute('class', 'sel_num');
+							    $('td', nTr)[7].setAttribute('id', row_id + "_num");
+							    $('td', nTr)[8].setAttribute('class', 'd_value');
+							    $('td', nTr)[9].setAttribute('class', 'now_ss');
+							    
+							    
+							    
+							    $(".sel_num").editable('/scm/stocktake/aj/flush',{
+								    type:'text',//实时编辑input框的type
+								    cancel:'取消',//取消编辑按钮的文字
+								    submit:'确定',//确认提交按钮的文字
+								    indicator:'保存中...',//提交处理过程中显示的提示文字
+								    tooltip:'单击编辑...',//鼠标悬停时的提示信息
+								    submitdata: function(value, settings) {
+								    	return {form_id:form_id};
+								    },
+								    onsubmit: function(settings, original) {
+								    	$(this).validate({
+								            errorPlacement: function(error, element) {
+								                var form = $(element).parent();
+								                form.next().remove();
+								                form.parent().append(error);
+								            },
+								            success: function(error, element) {
+								                var form = $(element).parent();
+								                form.next().remove();
+								            },
+								            rules: {
+								                value:{required:!0,min:1,digits:true}
+								            },
+								            messages: {
+								                value:{
+								                    required: '不能为空',
+								                    min: '最小数量为1',
+								                    digits:'请输入整数'
+								                }
+								            }
+								        });
+								        return $(this).valid();
+								    },
+								    callback: function(value, settings) {
+								    	value = parseInt(value);
+								    	if(value==-3) {
+								    		swal("提示", '请先保存盘点表信息', "error");
+								    		$(this).html('');
+								    	} else if(value==-1) {
+								    		swal("提示", '库存参数错误', "error");
+								    		$(this).html('');
+								    	} else if(value==-2) {
+								    		swal("提示", '商品或仓库信息不存在', "error");
+								    		$(this).html('');
+								    	} else if(value>=0) {
+								    		var now_num = parseInt($(this).parent().find(".now_num").text());
+									    	$(this).html(value);
+									    	$(this).parent().find(".d_value").html(value-now_num);
+									    	$(this).parent().find(".now_ss").html('已盘点');
+								    	}
+								    }
+								});
+							    
+							});
+						}
+					});
+				});
+			} else {
+				var code = data.messages[0];
+				var msg = "没有商品数据：" + code;
+				layer.msg(msg, {shift: 6});
+			}
+		});
+	});
+});
+</script>
+
+</html>

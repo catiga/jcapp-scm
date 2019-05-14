@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[[${str}]] | 分组管理</title>
+<link th:href="@{{sp}/css/bootstrap.min.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/font-awesome/css/font-awesome.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/css/animate.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/css/style.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/jsTree/style.min.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/sweetalert/sweetalert.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/ladda/ladda-themeless.min.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/select2/select2.min.css|" rel="stylesheet">
+</head>
+
+<body>
+	<div id="wrapper">
+		<div th:replace="../common/nav"></div>
+		<div id="page-wrapper" class="gray-bg">
+			<div th:replace="../common/top"></div>
+			<div class="row wrapper border-bottom white-bg page-heading">
+				<div class="col-sm-4">
+					<h2>分组管理</h2>
+					<ol class="breadcrumb">
+						<li><a href="javascript:;">Home</a></li>
+						<li class="active"><strong>分组列表</strong></li>
+					</ol>
+				</div>
+			</div>
+
+			<div class="wrapper wrapper-content animated fadeInRight">
+				<div class="row">
+					<div class="col-lg-4">
+						<div class="ibox float-e-margins">
+							<div class="ibox-title">
+								<h5>商品分组结构</h5>
+								<div class="ibox-tools">
+									<a href="javascript:void(0)" class="btn btn-primary btn-xs add_root_cat">添加根分组</a>
+								</div>
+							</div>
+							<div class="ibox-content">
+								<div id="jstree1"></div>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-lg-8">
+						<div class="ibox ">
+							<div class="ibox-title"><h5>分组信息编辑</h5></div>
+							<div class="ibox-content">
+								<p class="font-bold">请创建或者选择对应分组</p>
+								<form role="form" id="form">
+									<input type="hidden" id="cat_id"/>
+									<input type="hidden" id="cat_parent_id"/>
+									<div class="form-group">
+										<label>名称</label> 
+										<input type="text" placeholder="分组名称" class="form-control" required name="cat_name" id="cat_name">
+									</div>
+									<div class="form-group">
+										<label>代码</label> 
+										<input type="text" placeholder="分组代码" class="form-control" name="cat_code" id="cat_code">
+									</div>
+									<div class="form-group">
+										<label>图标</label> 
+										<input type="file" class="form-control" id="proj_logo" >
+										<div id="result"></div>
+									</div>
+									<div class="form-group">
+										<label>说明</label> 
+										<input type="text" placeholder="分组说明" class="form-control" name="cat_info" id="cat_info">
+									</div>
+									<hr/>
+									<div class="form-group">
+										<label>显示渠道（仅对当前数据有效）</label> 
+										<select class="select_channel form-control" multiple="multiple">
+											<option th:each="w:${dsc_result}" th:value="${w.id}" th:text="${w.name}"></option>
+										</select>
+									</div>
+									<div>
+										<button class="btn btn-sm btn-primary m-t-n-xs" type="submit">
+											<strong>保存</strong>
+										</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div th:replace="../common/foot"></div>
+		</div>
+	</div>
+	
+	<!-- Mainly scripts -->
+	<script th:src="@{{sp}/js/jquery-2.1.1.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/bootstrap.min.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/metisMenu/jquery.metisMenu.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/slimscroll/jquery.slimscroll.min.js(sp=${pub_bucket})}"></script>
+
+	<!-- Custom and plugin javascript -->
+	<script th:src="@{{sp}/js/inspinia.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/pace/pace.min.js(sp=${pub_bucket})}"></script>
+	<script th:src="|${pub_bucket}/js/plugins/jsTree/jstree.min.js|"></script>
+	<script th:src="@{{sp}/third/layer3/layer.js(sp=${pub_bucket})}" type="text/javascript"></script>
+	
+	<!-- Ladda -->
+    <script th:src="|${pub_bucket}/js/plugins/ladda/spin.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/ladda/ladda.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/ladda/ladda.jquery.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/jeditable/jquery.jeditable.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/dataTables/datatables.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/select2/select2.full.min.js|"></script>
+    
+    <script th:src="|${pub_bucket}/js/plugins/sweetalert/sweetalert.min.js|"></script>
+</body>
+
+<style>
+.jstree-open > .jstree-anchor > .fa-folder:before {content: "\f07c";}
+.jstree-default .jstree-icon.none {width: 0;}
+</style>
+
+<script type="text/javascript">
+$(function() {
+	$(".select_channel").select2({placeholder : "选择显示渠道", allowClear : true});
+	var l = $(".ladda-button").ladda();
+	
+	//图片预览
+   function ProcessFile(e) {
+        var file = document.getElementById('proj_logo').files[0];
+        $("#result").html("");
+        if (file) {
+            var reader = new FileReader();
+            reader.onload = function (event) {
+                var txt = event.target.result;
+                var img = document.createElement("img");
+                img.style="width:60px;height:60px;";
+                img.src = txt;//将图片base64字符串赋值给img的src
+                document.getElementById("result").appendChild(img);
+            };
+        }
+        reader.readAsDataURL(file);
+    }
+    function contentLoaded() {
+        document.getElementById('proj_logo').addEventListener('change',
+            ProcessFile, false);
+    }
+    window.addEventListener("DOMContentLoaded", contentLoaded, false); 
+    
+});
+</script>
+
+<script th:inline="javascript">
+$(document).ready(function(){
+	function append_img(path) {
+    	$("#result").html("");
+    	if(path) {
+    		var img = document.createElement("img");
+            img.style="width:60px;height:60px;";
+            img.src = path;//将图片base64字符串赋值给img的src
+            document.getElementById("result").appendChild(img);
+    	}
+    }
+	
+	let root_path = [[${root_path}]];
+    $('#jstree1').jstree({
+		'core' : {
+			'check_callback' : true,
+			"data" : {  
+		        "dataType" : 'json', 
+		        "opts":{method: "POST"},
+		        "url" : function(node){  
+		            return '/scm/catalog/aj/load?' + new Date().getTime(); 
+		        },  
+		        "data" : function(node){
+		        	if(node.id !="#"){
+		        		return {"id" : node.id};
+		        	}
+		            return {"id" : 0};//写自己的加载数据
+		        }
+		    }
+		},
+		'plugins' : [ 'types', 'dnd', 'contextmenu' ],
+		'types' : {
+			'default' : {'icon' : 'fa fa-folder'},
+			'html' : {'icon' : 'fa fa-file-code-o'},
+			'svg' : {'icon' : 'fa fa-file-picture-o'},
+			'css' : {'icon' : 'fa fa-file-code-o'},
+			'img' : {'icon' : 'fa fa-file-image-o'},
+			'js' : {'icon' : 'fa fa-file-text-o'}
+		},
+		contextmenu : {
+			"items" : function(node) {
+				return { 
+                    "view" : {
+                        label: "编辑节点",
+                        action: function(data) {
+                        	view_node(data);
+                        }
+                    },
+                     "create" : {
+                        label: "创建子节点",
+                        action: function(data) {
+                        	create_node(data);
+                        }
+                    },
+                    "delete" : {
+                    	label: "删除节点",
+                    	action: function(data) {
+                        	remove_node(data);
+                        }
+                    }
+				} 
+			}
+		}
+	});
+    
+    $("#jstree1").on('move_node.jstree', function(event,data){
+         var new_parent = data.parent;
+         var node = data.node.id;
+         var old_parent = data.old_parent;
+         if(new_parent==old_parent) {
+        	 return;
+         }
+         $.get('/scm/catalog/aj/switch_parent?' + new Date().getTime(), {e:node,p:new_parent}, function(data) {
+         });
+    });
+    $("#form").on("submit", function() {
+    	var name = $.trim($("#cat_name").val());
+    	var code = $.trim($("#cat_code").val());
+    	var icon = $.trim($("#cat_icon").val());
+    	var info = $.trim($("#cat_info").val());
+    	var cat_id = $.trim($("#cat_id").val());
+    	let select_dsc = $(".select_channel").val();
+    	if(select_dsc) {
+    		select_dsc = select_dsc.join(',');
+    	} else {
+    		select_dsc = '-1';		//默认值则都不显示
+    	}
+    	var cat_parent_id = $.trim($("#cat_parent_id").val());
+    	
+    	var formData = new FormData();
+        formData.append("icon_logo", document.getElementById("proj_logo").files[0]);
+        formData.append("id", cat_id);
+        formData.append("parent_id", cat_parent_id);
+        formData.append("name", name);
+        formData.append("code", code);
+        formData.append("info", info);
+        formData.append("select_dsc", select_dsc);
+        
+        $.ajax({
+            url: '/scm/catalog/aj/save',
+            type: "POST",
+            data: formData,
+            datatype:"json",
+            contentType: false,
+            processData: false,
+            traditional: true,
+            success: function (data) {
+           		layer.closeAll();
+           		if(data.available) {
+        			layer.msg('操作成功');
+        			if(op=='create') {
+        				if(current_inst==null) {
+        					location.reload();
+        				} else {
+        					var newNode = current_inst.create_node(current_node, {"text":data.data.cat_name_cn,"id":data.data.id}, "last");
+        				}
+        			} else if(op=='view') {
+        				current_inst.set_text(current_node, data.data.cat_name_cn);
+        			}
+        			$("#cat_name").val('');
+        			$("#cat_code").val('');
+        			$("#cat_icon").val('');
+        			$("#cat_info").val('');
+        			$("#cat_id").val('');
+        			$(".select_channel").select2("val", "");
+        			$("#cat_parent_id").val('');
+        		} else {
+        			var code = data.messages[0];
+    				var msg = "操作失败：" + code;
+    				layer.msg(msg, {icon: 2});
+        		}
+            },
+            error: function () {
+           		layer.closeAll();
+           		swal({title: "Error", text: "操作失败", type: "error"});
+            }
+        });
+        
+    	/*
+    	$.post('/scm/catalog/aj/save', {id:cat_id,parent_id:cat_parent_id,name:name,code:code,icon:icon,info:info,select_dsc:select_dsc}, function(data) {
+    		if(data.available) {
+    			layer.msg('操作成功');
+    			if(op=='create') {
+    				if(current_inst==null) {
+    					location.reload();
+    				} else {
+    					var newNode = current_inst.create_node(current_node, {"text":data.data.cat_name_cn,"id":data.data.id}, "last");
+    				}
+    			} else if(op=='view') {
+    				current_inst.set_text(current_node, data.data.cat_name_cn);
+    			}
+    			$("#cat_name").val('');
+    			$("#cat_code").val('');
+    			$("#cat_icon").val('');
+    			$("#cat_info").val('');
+    			$("#cat_id").val('');
+    			$(".select_channel").select2("val", "");
+    			$("#cat_parent_id").val('');
+    		} else {
+    			var code = data.messages[0];
+				var msg = "操作失败：" + code;
+				layer.msg(msg, {icon: 2});
+    		}
+    	});
+    	*/
+    	return false;
+    });
+    
+    $(".add_root_cat").on("click", function() {
+		$("#cat_name").val('');
+		$("#cat_code").val('');
+		$("#cat_icon").val('');
+		$("#cat_info").val('');
+		$("#cat_id").val('');
+		$("#cat_parent_id").val('');
+		$(".select_channel").select2("val", "");
+		$("#cat_name").focus();
+		op = 'create';
+		$("#cat_name").attr('placeholder', '输入根节点名称')
+	});
+    
+    var current_inst = null; var current_node = null; var op = null;
+    var id = 0;
+    var view_node = function(data) {
+    	var inst = $.jstree.reference(data.reference);
+		var node = inst.get_node(data.reference);
+    	current_inst = inst;
+    	current_node = node;
+    	$.get('/scm/catalog/aj/view?' + new Date().getTime(), {id:node.id}, function(data) {
+    		if(data.available) {
+    			$("#cat_name").val(data.data.cat_name_cn);
+    			$("#cat_code").val(data.data.cat_name_en);
+    			$("#cat_icon").val(data.data.cat_icon);
+    			$("#cat_info").val(data.data.cat_info);
+    			$("#cat_id").val(data.data.id);
+    			$("#cat_parent_id").val(data.data.parent_id);
+    			if(data.data.cat_icon) {
+    				append_img(root_path + '/' + data.data.cat_icon);
+    			}
+    			//处理显示渠道
+    			let show_dsc = data.data.show_dsc;
+    			if(!show_dsc) {
+    				$(".select_channel").select2("val", "");
+    			} else {
+    				$(".select_channel").select2("val", show_dsc.split(","));
+    				$(".select_channel").trigger("change");
+    			}
+    			$("#cat_name").focus();
+    			op = 'view';
+    		}
+    	});
+    }
+    var create_node = function(data) {
+    	var inst = $.jstree.reference(data.reference);
+		var node = inst.get_node(data.reference);
+		current_inst = inst;	//设置节点ref
+		current_node = node;	//设置节点node
+		$("#cat_parent_id").val(node.id);
+		$("#cat_id").val('');
+		$(".select_channel").select2("val", "");
+		$("#cat_name").attr('placeholder', '输入子节点名称')
+		$("#cat_name").focus();
+		op = 'create';
+    }
+    var remove_node = function(data) {
+    	var inst = $.jstree.reference(data.reference);
+		var node = inst.get_node(data.reference);
+		$.post('/scm/catalog/aj/remove', {id:node.id}, function(data) {
+			if(data.available) {
+				inst.delete_node(node);
+				layer.msg('操作成功');
+			} else {
+				layer.msg('操作失败', {icon: 2});
+			}
+		});
+    }
+});
+</script>
+
+
+</html>

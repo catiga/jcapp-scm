@@ -1,0 +1,14 @@
+
+1.原pe1库表:data_goods_info:增加a_time
+
+2.增加仓库信息表:sys_warehouse_info
+
+3.库存批次表:data_goods_op_stock_batch:增加发生仓库s_wh_id, s_wh_name
+4.库存批次表:data_goods_op_stock_batch:增加目标仓库a_wh_id, a_wh_name
+
+5.data_goods_stock:增加字段sku_info
+6.data_goods_stock:增加字段wh_id, wh_name
+7.data_goods_stock:增加字段pid
+
+8.增加库存变动模板表单:data_gs_form
+9:data_goods_stock:增加form_id

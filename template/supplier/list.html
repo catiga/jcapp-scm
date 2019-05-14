@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[[${str}]] | 供应商管理</title>
+<link th:href="@{{sp}/css/bootstrap.min.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/font-awesome/css/font-awesome.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/css/animate.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/css/style.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/ladda/ladda-themeless.min.css|" rel="stylesheet">
+</head>
+
+<body>
+	<div id="wrapper">
+		<div th:replace="../common/nav"></div>
+		<div id="page-wrapper" class="gray-bg">
+			<div th:replace="../common/top"></div>
+			<div class="row wrapper border-bottom white-bg page-heading">
+				<div class="col-sm-4">
+					<h2>供应商管理</h2>
+					<ol class="breadcrumb">
+						<li><a href="javascript:;">Home</a></li>
+						<li class="active"><strong>供应商列表</strong></li>
+					</ol>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="wrapper wrapper-content animated fadeInUp">
+
+						<div class="ibox">
+							<div class="ibox-title">
+								<h5>供应商信息</h5>
+								<div class="ibox-tools">
+									<a href="javascript:void(0)" class="btn btn-primary btn-xs add_supplier">添加供应商</a>
+								</div>
+							</div>
+							<div class="ibox-content">
+								<div class="table-responsive">
+                                	<table class="table table-striped">
+										<thead>
+		                                    <tr>
+												<th>编号</th>
+												<th>名称</th>
+												<th>联系人</th>
+												<th>联系电话</th>
+	  											<th>添加时间</th>
+	  											<th>操作</th>
+		                                    </tr>
+	                                    </thead>
+										<tbody>
+											<tr th:each="st:${page.result}" th:attr_id="${st.id }">
+												<td>[[${st.num }]]</td>
+												<td>
+													<a href="javascript:;">[[${st.name }]]</a><br/> 
+													<small>更新时间 [[${#dates.format(st.c_time, 'yyyy-MM-dd')}]]</small>
+												</td>
+												<td>[[${st.contact_name }]]</td>
+												<td>[[${st.contact_phone }]]</td>
+												<td>[[${#dates.format(st.c_time, 'yyyy-MM-dd')}]]</td>
+												<td>
+													<button data-style="zoom-in" class="ladda-button btn btn-primary btn-sm edit" th:attr_id="${st.id }"><i class="fa fa-pencil"></i> 编辑 </button>
+													<button data-style="zoom-in" class="ladda-button btn btn-warning btn-sm goods" th:attr_id="${st.id }"><i class="fa fa-paste"></i> 商品</button>
+													<!-- <button class="btn btn-info btn-sm func_config" type="button" th:attr_id="${st.id }"><i class="fa fa-paste"></i> 商品</button> -->
+												</td>
+											</tr>
+										</tbody>
+									</table>
+									<div th:replace="../common/page"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div th:replace="../common/foot"></div>
+		</div>
+	</div>
+	
+	
+	<div id="templatemo-preferences-form" style="display:none;padding-left:15px;padding-right:15px">
+		<div class="row">
+			<div class="col-md-6 margin-bottom-15">
+				<label class="control-label" for="sp_no">供应商编号</label> 
+				<input type="text" class="form-control" id="sp_no" placeholder="请输入供应商编号">
+			</div>
+			<div class="col-md-6 margin-bottom-15">
+				<label for="sp_name" class="control-label">供应商名称</label>
+				<input type="text" class="form-control" id="sp_name" placeholder="请输入供应商名称">
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-4 margin-bottom-15">
+				<label for="province" class="control-label">所在省</label>
+				<select class="ipt_select1 form-control margin-bottom-15" name="province" id="province">
+					<option value="请选择">请选择</option>
+				</select>
+			</div>
+			<div class="col-md-4 margin-bottom-15">
+				<label for="city" class="control-label">所在市</label>
+				<select class="ipt_select1 form-control margin-bottom-15" name="city" id="city">
+					<option value="请选择">请选择</option>
+				</select>
+			</div>
+			<div class="col-md-4 margin-bottom-15">
+				<label for="zone" class="control-label">所在区</label>
+				<select class="ipt_select1 form-control margin-bottom-15" name="zone" id="zone">
+					<option value="请选择">请选择</option>
+				</select>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12 margin-bottom-15">
+				<label for="sp_address" class="control-label">详细地址</label>
+				<input type="text" class="form-control" id="sp_address" placeholder="请输入供应商地址">
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6 margin-bottom-15">
+				<label for="sp_phone" class="control-label">联系电话</label>
+				<input type="text" class="form-control" id="sp_phone" placeholder="请输入联系电话">
+			</div>
+			<div class="col-md-6 margin-bottom-15">
+				<label for="sp_person" class="control-label">联系人信息</label>
+				<input type="text" class="form-control" id="sp_person" placeholder="请输入联系人信息">
+			</div>
+		</div>
+		<div class="row hide">
+			<div class="col-md-6 margin-bottom-15">
+				<label class="control-label" for="store_logo">供应商logo</label>
+				<img src="" id="store_logo_img" width="80px" height="60px"/> 
+				<input name="store_logo" type="hidden" class="form-control" id="store_logo"> 
+			</div>
+			<div class="col-md-6 margin-bottom-15">
+				<div id="container">
+	                <a class="btn btn-default btn-lg " id="pickfiles" href="#" >
+	                    <i class="glyphicon glyphicon-plus"></i>
+	                    <sapn>选择文件</sapn>
+	                </a>
+	            </div>
+			</div>
+		</div>
+		
+		<div class="row templatemo-form-buttons">
+			<div class="col-md-12" style="margin-top:15px">
+				<button id="save_info" class="btn btn-primary save_info" style="width:100%">保存</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- Mainly scripts -->
+	<script th:src="@{{sp}/js/jquery-2.1.1.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/bootstrap.min.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/metisMenu/jquery.metisMenu.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/slimscroll/jquery.slimscroll.min.js(sp=${pub_bucket})}"></script>
+
+	<!-- Custom and plugin javascript -->
+	<script th:src="@{{sp}/js/inspinia.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/pace/pace.min.js(sp=${pub_bucket})}"></script>
+	
+	<script th:src="@{{sp}/third/layer3/layer.js(sp=${pub_bucket})}" type="text/javascript"></script>
+	<!-- Ladda -->
+    <script th:src="|${pub_bucket}/js/plugins/ladda/spin.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/ladda/ladda.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/ladda/ladda.jquery.min.js|"></script>
+    
+	<script>
+		$(document).ready(function() {
+
+			$('#loading-example-btn').click(function() {
+				btn = $(this);
+				simpleLoad(btn, true)
+
+				// Ajax example
+				//                $.ajax().always(function () {
+				//                    simpleLoad($(this), false)
+				//                });
+
+				simpleLoad(btn, false)
+			});
+		});
+
+		function simpleLoad(btn, state) {
+			if (state) {
+				btn.children().addClass('fa-spin');
+				btn.contents().last().replaceWith(" Loading");
+			} else {
+				setTimeout(function() {
+					btn.children().removeClass('fa-spin');
+					btn.contents().last().replaceWith(" Refresh");
+				}, 2000);
+			}
+		}
+	</script>
+</body>
+
+<script type="text/javascript">
+$(function() {
+	var city_loader = function(ele, pid) {
+		$.ajax({
+            async: false,
+            type: 'POST',
+            url: "/scm/common/city",
+            data: {id:pid },
+            dataType: "json",
+            success: function(data) {
+            	if(data.available&&data.data!=null) {
+    				$('#' + ele).html('<option value="-1">请选择</option>');
+    				for(ci in data.data) {
+    					var html = '<option attr_id="' + data.data[ci].id + '" value="' + data.data[ci].city_no + '">' + data.data[ci].city_name + '</option>';
+    					$('#' + ele).append(html);
+    				}
+    				$('#' + ele).val(-1);
+    			}
+            }
+        });
+	}
+	city_loader('province', null);
+	$("#province").on("change", function() {
+		$("#city").html('<option value="-1">请选择</option>');
+		$("#zone").html('<option value="-1">请选择</option>');
+		city_loader('city', $(this).find("option:selected").attr("attr_id"));
+	});
+	$("#city").on("change", function() {
+		$("#zone").html('<option value="-1">请选择</option>');
+		city_loader('zone', $(this).find("option:selected").attr("attr_id"));
+	});
+	
+	var s_id = 0;
+	$(".add_supplier").on("click", function(){
+		s_id = 0;
+		$("#sp_no").val("");
+		$("#sp_name").val("");
+		$("#province").val("请选择");
+		$("#city").val("请选择");
+		$("#zone").val("请选择");
+		$("#sp_address").val("");
+		$("#sp_phone").val("");
+		$("#sp_person").val("");
+		$("#store_logo").val("");
+		$("#store_logo_img").attr("src", "");
+		layer.open({
+			area : [ '60%', '80%'],
+			type : 1,
+			content : $("#templatemo-preferences-form")
+		});
+	});
+	
+	$(".edit").on("click", function(){
+		s_id = $(this).attr("attr_id");
+		var url = "/scm/supplier/aj/view/?" + Date.parse(new Date());
+		$this = $(this);
+		$this.ladda('start');
+		$.get(url, {id:s_id}, function(data){
+			$this.ladda('stop');
+			if(data.available&&data.data!=null) {
+				var provider = data.data;
+				$("#sp_no").val(provider.num);
+				$("#sp_name").val(provider.name);
+				
+				if(provider.province_no!=null) {
+					$("#province").val(provider.province_no);
+					$("#province").trigger("change");						
+				}
+				
+				if(provider.city_no!=null) {
+					$("#city").val(provider.city_no);
+					$("#city").trigger("change");						
+				}
+				
+				if(provider.zone_no!=null) {
+					$("#zone").val(provider.zone_no);
+				}
+				
+				$("#sp_address").val(provider.address);
+				$("#sp_phone").val(provider.contact_phone);
+				$("#sp_person").val(provider.contact_name);
+				
+				$("#store_logo").val(provider.logo);
+				$("#store_logo_img").attr("src", provider.logo);
+				
+				layer.open({
+					area : [ '60%', '80%'],
+					type : 1,
+					content : $("#templatemo-preferences-form")
+				});
+			} else {
+				var code = data.messages[0];
+				var msg = "操作失败：" + code;
+				layer.msg(msg, {icon: 2});
+			}
+		});
+	});
+	
+	$(".save_info").on("click", function(){
+		var provider_name = $("#sp_name").val();
+		var provider_num = $("#sp_no").val();
+		var province = $("#province").find("option:selected").attr("attr_id");
+		var city = $("#city").find("option:selected").attr("attr_id");
+		var zone = $("#zone").find("option:selected").attr("attr_id");
+		
+		var provider_address = $("#sp_address").val();
+		var provider_phone = $("#sp_phone").val();
+		var provider_person = $("#sp_person").val();
+		
+		var store_logo = $("#store_logo").val();
+		
+		if(provider_num==null||provider_num=="") {
+			layer.msg("请输入供应商编号", {icon: 2});
+			return;
+		}
+		if(provider_name==null||provider_name=="") {
+			layer.msg("请输入供应商名称", {icon: 2});
+			return;
+		}
+		if(province==null) {
+			layer.msg("请选择所在省份", {icon: 2});
+			return;
+		}
+		if(city==null) {
+			layer.msg("请选择所在城市", {icon: 2});
+			return;
+		}
+		
+		var index = layer.load();
+		var url = "/scm/supplier/aj/save/?" + Date.parse(new Date());
+		$.post(url, {id:s_id,name:provider_name,num:provider_num,
+			province:province,city:city,zone:zone,address:provider_address,
+			contact_phone:provider_phone,contact_person:provider_person,logo:store_logo}, function(data){
+			layer.close(index);
+			if(data.available) {
+				layer.alert('操作成功', {
+			        skin: 'layui-layer-lan',
+			        shift: 4 //动画类型
+			    }, function(){
+			    	location.reload();
+			    });
+			} else {
+				var code = data.messages[0];
+				var msg = "操作失败：" + code;
+				layer.msg(msg, {icon: 2});
+			}
+		});
+	});
+	var l = $(".ladda-button").ladda();
+	
+	$(".goods").on("click", function() {
+		location.href = '/scm/supplier/goods?id=' + $(this).attr('attr_id') + '&' + new Date().getTime();
+	});
+});
+</script>
+
+</html>

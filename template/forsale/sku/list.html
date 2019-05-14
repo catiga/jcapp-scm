@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[[${str}]] | 商品SKU管理</title>
+<link th:href="@{{sp}/css/bootstrap.min.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/font-awesome/css/font-awesome.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/css/animate.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/css/style.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/ladda/ladda-themeless.min.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/sweetalert/sweetalert.css|" rel="stylesheet">
+</head>
+
+<body>
+	<div id="wrapper">
+		<div th:replace="../../common/nav"></div>
+		<div id="page-wrapper" class="gray-bg">
+			<div th:replace="../../common/top"></div>
+			<div class="row wrapper border-bottom white-bg page-heading">
+				<div class="col-sm-4">
+					<h2><strong th:text="${goods.goods_name}"></strong><small>SKU管理</small></h2>
+					<ol class="breadcrumb">
+						<li><a href="javascript:;">Home</a></li>
+						<li><a href="javascript:;">商品库</a></li>
+						<li class="active"><strong>SKU列表</strong></li>
+					</ol>
+				</div>
+			</div>
+			
+			
+			
+			<div class="row sku_prop_area hide">
+				<div class="col-lg-12">
+					<div class="wrapper wrapper-content animated fadeIn">
+						<div class="row">
+							<div class="col-lg-12">
+								<div class="ibox float-e-margins">
+									<div class="ibox-title">
+										<h5>SKU属性组管理区</h5>
+										<div class="ibox-tools">
+											<a class="collapse-link"> <i class="fa fa-chevron-up"></i></a>
+											<a class="dropdown-toggle" data-toggle="dropdown" href="#"> <i class="fa fa-wrench"></i></a>
+											<ul class="dropdown-menu dropdown-user"></ul>
+											<a class="close-link"> <i class="fa fa-times"></i></a>
+										</div>
+									</div>
+									<div class="ibox-content">
+										<div class="row">
+											<div class="col-md-4">
+												<div class="form-group">
+													<label for="sku_no">SKU编号</label>
+													<input id="sku_no" type="text" class="form-control" placeholder="请输入编号"/>
+												</div>
+												<!-- <div class="form-group">
+													<label for="sku_price">SKU价格</label>
+													<input id="sku_price" type="text" class="form-control" placeholder="请输入售价" readonly/>
+												</div> -->
+												<div class="form-group">
+													<label for="sku_remark">备注信息</label>
+													<input id="sku_remark" type="text" class="form-control" placeholder="请输入备注"/>
+												</div>
+												<div class="form-group">
+													<button data-style="zoom-in" class="ladda-button btn btn-primary" id="save_sku_prop_value">保存</button>
+													<button type="button" class="btn btn-white" id="shutdown_area">关闭</button>
+												</div>
+											</div>
+											<div class="col-md-4">
+												<div class="form-group" th:each="st,stat:${model_props}" th:if="${stat.index}<4">
+													<label for="hideEasing">[[${st.attr_k}]]</label> 
+													<input type="text" placeholder="请输入属性值" class="form-control sku_prop_name" th:key="${st.attr_k}"/>
+												</div>
+											</div>
+											<div class="col-md-4">
+												<div class="form-group" th:each="st,stat:${model_props}" th:if="${stat.index}>=4">
+													<label for="hideEasing">[[${st.attr_k}]]</label> 
+													<input type="text" placeholder="请输入属性值" class="form-control sku_prop_name" th:key="${st.attr_k}"/>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="wrapper wrapper-content animated fadeInUp">
+						<div class="ibox">
+							<div class="ibox-title">
+								<h5>SKU列表</h5>
+							</div>
+							<div class="ibox-content">
+								<div class="table-responsive">
+                                	<table class="table table-striped">
+										<thead>
+		                                    <tr>
+												<th>编号</th>
+												<th>属性</th>
+												<th>备注</th>
+												<th>添加时间</th>
+		                                    </tr>
+	                                    </thead>
+										<tbody>
+											<tr th:each="st:${skus}" th:attr_id="${st.id }">
+												<td>[[${st.sku_no }]]</td>
+												<td>[[${st.skus}]]</td>
+												<td>[[${st.remark}]]</td>
+												<td>[[${#dates.format(st.c_time, 'yyyy-MM-dd')}]]</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div th:replace="../../common/foot"></div>
+		</div>
+	</div>
+	<input type="hidden" id="g" th:value="${goods!=null}?${goods.id}"/>
+	<input type="hidden" id="m" th:value="${model!=null}?${model.id}"/>
+	<button data-toggle="modal" href="#modal-form" class="btn btn-info btn-sm select_goods hide"><i class="fa fa-paste"></i> 选择</button>
+	
+	<div id="modal-form" class="modal fade" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-sm-12 b-r">
+		                    <div class="ibox ">
+		                        <div class="ibox-title">
+		                        	<h5>商品列表</h5>
+		                        	<button type="button" class="close close_store_list" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+		                        </div>
+		                        <div class="ibox-content STORE_LIST">
+		                            <div class="spiner-example">
+		                                <div class="sk-spinner sk-spinner-wave">
+		                                    <div class="sk-rect1"></div>
+		                                    <div class="sk-rect2"></div>
+		                                    <div class="sk-rect3"></div>
+		                                    <div class="sk-rect4"></div>
+		                                    <div class="sk-rect5"></div>
+		                                </div>
+		                            </div>
+		                        </div>
+		                    </div>
+		                </div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Mainly scripts -->
+	<script th:src="@{{sp}/js/jquery-2.1.1.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/bootstrap.min.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/metisMenu/jquery.metisMenu.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/slimscroll/jquery.slimscroll.min.js(sp=${pub_bucket})}"></script>
+
+	<!-- Custom and plugin javascript -->
+	<script th:src="@{{sp}/js/inspinia.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/pace/pace.min.js(sp=${pub_bucket})}"></script>
+	
+	<script th:src="@{{sp}/third/layer3/layer.js(sp=${pub_bucket})}" type="text/javascript"></script>
+	<!-- Sweet alert -->
+    <script th:src="|${pub_bucket}/js/plugins/sweetalert/sweetalert.min.js|"></script>
+    
+    <!-- Ladda -->
+    <script th:src="|${pub_bucket}/js/plugins/ladda/spin.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/ladda/ladda.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/ladda/ladda.jquery.min.js|"></script>
+	
+	<script>
+		$(document).ready(function() {
+
+			$('#loading-example-btn').click(function() {
+				btn = $(this);
+				simpleLoad(btn, true)
+
+				// Ajax example
+				//                $.ajax().always(function () {
+				//                    simpleLoad($(this), false)
+				//                });
+
+				simpleLoad(btn, false)
+			});
+		});
+
+		function simpleLoad(btn, state) {
+			if (state) {
+				btn.children().addClass('fa-spin');
+				btn.contents().last().replaceWith(" Loading");
+			} else {
+				setTimeout(function() {
+					btn.children().removeClass('fa-spin');
+					btn.contents().last().replaceWith(" Refresh");
+				}, 2000);
+			}
+		}
+	</script>
+</body>
+
+<script th:inline="javascript">
+$(function() {
+	
+});
+</script>
+
+</html>

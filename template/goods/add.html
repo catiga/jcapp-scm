@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[[${str}]] | 货品库</title>
+<link th:href="@{{sp}/css/bootstrap.min.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/font-awesome/css/font-awesome.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/css/animate.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/css/style.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/css/plugins/select2/select2.min.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/css/plugins/switchery/switchery.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/sweetalert/sweetalert.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/summernote/summernote.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/summernote/summernote-bs3.css|" rel="stylesheet">
+
+<link th:href="|${pub_bucket}/css/plugins/ladda/ladda-themeless.min.css|" rel="stylesheet">
+</head>
+
+<body>
+	<div id="wrapper">
+		<div th:replace="../common/nav"></div>
+		<div id="page-wrapper" class="gray-bg">
+			<div th:replace="../common/top"></div>
+			<div class="row wrapper border-bottom white-bg page-heading">
+				<div class="col-lg-10">
+					<h2>货品库管理</h2>
+					<ol class="breadcrumb">
+						<li><a href="javascript:;">Home</a></li>
+						<li><a href="/scm/goods/index">货品库</a></li>
+						<li class="active"><strong>添加货品</strong></li>
+					</ol>
+				</div>
+				<div class="col-lg-2"></div>
+			</div>
+			<div class="wrapper wrapper-content animated fadeInRight">
+				
+				<div class="row">
+					<div class="col-lg-5">
+						<div class="ibox float-e-margins">
+							<div class="ibox-title">
+								<h5>基本信息</h5>
+								<div class="ibox-tools">
+									<a class="collapse-link"> <i class="fa fa-chevron-up"></i></a> 
+									<a class="dropdown-toggle" data-toggle="dropdown" href="/scm/goods/index"> <i class="fa fa-wrench"></i></a>
+									<ul class="dropdown-menu dropdown-user">
+										<li><a href="javascript:;">暂无</a></li>
+									</ul>
+									<a class="close-link"> <i class="fa fa-times"></i></a>
+								</div>
+							</div>
+							<div class="ibox-content">
+								<form class="form-horizontal">
+									<div class="form-group">
+										<label class="col-lg-2 control-label">名称</label>
+										<div class="col-lg-10">
+											<input type="text" placeholder="货品名称" class="form-control" name="goods_name" id="goods_name" th:value="${goods.goods_name}">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-lg-2 control-label">货品编码</label>
+										<div class="col-lg-10">
+											<input type="text" placeholder="货品编码，为空则自动生成" class="form-control" name="goods_num" id="goods_num" th:value="${goods.goods_id}">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-lg-2 control-label">外部编码</label>
+										<div class="col-lg-10">
+											<input type="text" placeholder="如厂家条形码等" class="form-control" name="goods_out_no" id="goods_out_no" th:value="${goods.goods_out_no}">
+										</div>
+									</div>
+									<div class="form-group hide">
+	                                    <label for="goods_gt" class="col-lg-2 control-label">类型</label>
+	                                    <div class="col-lg-10">
+		                                    <select class="form-control goods_gt" id="goods_gt">
+		                                    	<option value="0" selected>普通货品</option>
+		                                    </select>
+	                                    </div>
+	                                </div>
+	                                <div class="form-group">
+										<label class="col-lg-2 control-label">搜索短码</label>
+										<div class="col-lg-10">
+											<input type="text" placeholder="设置快速搜索编码" class="form-control" name="goods_code" id="goods_code" th:value="${goods.goods_code}">
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-7">
+						<div class="ibox float-e-margins">
+							<div class="ibox-title">
+								<h5>基本信息</h5>
+								<div class="ibox-tools">
+									<a class="collapse-link"> <i class="fa fa-chevron-up"></i></a> 
+									<a class="dropdown-toggle" data-toggle="dropdown" href="form_basic.html#"> <i class="fa fa-wrench"></i></a>
+									<ul class="dropdown-menu dropdown-user">
+										<li><a href="javascript:;">暂无</a></li>
+									</ul>
+									<a class="close-link"> <i class="fa fa-times"></i></a>
+								</div>
+							</div>
+							<div class="ibox-content">
+								<div class="row">
+									<div class="col-sm-8 b-r">
+										<form class="form-horizontal">
+											<div class="form-group">
+												<label class="col-lg-2 control-label">包装单位</label>
+												<div class="col-lg-10">
+													<select class="form-control goods_gt" id="goods_unit" name="goods_unit">
+				                                    	<option></option>
+				                                    	<option th:each="u:${units}" th:value="${u.code}" th:selected="${u.code==goods.unit}">[[${u.name}]]</option>
+				                                    </select>
+												</div>
+											</div>
+											
+											
+											<div class="form-group">
+												<label class="col-lg-2 control-label">规格</label>
+												<div class="col-lg-10">
+													<div class="input-group">
+														<input type="text" placeholder="货品规格" class="form-control" name="goods_weight" id="goods_weight" th:value="${goods.weight}">
+														<span class="input-group-addon">／</span>
+														<select class="form-control spec_unit" id="spec_unit" name="spec_unit">
+					                                    	<option th:each="u:${units}" th:value="${u.code}" th:selected="${u.code==goods.spec_unit}">[[${u.name}]]</option>
+					                                    </select>
+													</div>
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-lg-2 control-label">材质</label>
+												<div class="col-lg-10">
+													<input type="text" placeholder="货品材质" class="form-control" name="goods_material" id="goods_material" th:value="${goods.goods_material}">
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-lg-2 control-label">简介</label>
+												<div class="col-lg-10">
+													<input type="text" placeholder="请输入货品简介" id="goods_remark" class="form-control goods_remark" th:value="${goods.goods_remark}">
+												</div>
+											</div>
+										</form>
+									</div>
+									<div class="col-sm-4">
+										<h4>快速操作</h4>
+										<p>仅保存基本信息:</p>
+										<button data-style="zoom-in" class="ladda-button btn btn-primary btn-sm save_basic_info"><i class="fa fa-pencil"></i> 保存基本信息 </button>
+										<button data-style="zoom-in" class="ladda-button btn btn-warning btn-sm save_and_back"><i class="fa fa-pencil"></i> 保存并返回 </button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-8">
+						<div class="ibox float-e-margins">
+							<div class="ibox-title">
+								<h5>货品价格信息</h5>
+								<button id="edit" class="btn btn-primary btn-xs m-l-sm save_price" type="button">保存</button>
+							</div>
+							<div class="ibox-content">
+								<form role="form" class="form-inline">
+									<div class="form-group">
+	                                    <label for="goods_remark" class="">售价</label>
+	                                    <input type="text" placeholder="请输入货品售价" id="goods_price" class="form-control goods_price" th:value="${goods.goods_price/100}">|
+	                                </div>
+	                                <div class="form-group">
+	                                    <label for="goods_remark" class="">建议售价</label>
+	                                    <input type="text" placeholder="请输入货品建议销售价" id="goods_original_price" class="form-control goods_original_price" th:value="${goods.goods_original_price/100}">|
+	                                </div>
+	                                <div class="form-group">
+	                                    <label for="goods_remark" class="">成本价</label>
+	                                    <input type="text" placeholder="请输入货品成本价" id="goods_cost_price" class="form-control goods_cost_price" th:value="${goods.cost_price/100}">
+	                                </div>
+	                            </form>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-4">
+						<div class="ibox float-e-margins">
+							<div class="ibox-title">
+								<h5>SKU模型组 <small>仅支持初始化一次，请谨慎操作</small></h5>
+							</div>
+							<div class="ibox-content">
+								<div class="text-center">
+									<a th:if="${model==null}" data-toggle="modal" class="btn btn-primary load_models" href="#modal-form">选择SKU模型</a>
+									<a th:if="${model!=null}" class="btn btn-primary" href="javascript:;">[[${model.m_name_cn}]]</a>
+								</div>
+								<div id="modal-form" class="modal fade" aria-hidden="true">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-body">
+												<div class="row">
+													<div class="col-sm-12 b-r">
+									                    <div class="ibox ">
+									                        <div class="ibox-title">
+									                        	<h5>SKU模型列表</h5>
+									                        	<button type="button" class="close close_sku_list" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+									                        </div>
+									                        <div class="ibox-content SKU_LIST">
+									                            <div class="spiner-example">
+									                                <div class="sk-spinner sk-spinner-wave">
+									                                    <div class="sk-rect1"></div>
+									                                    <div class="sk-rect2"></div>
+									                                    <div class="sk-rect3"></div>
+									                                    <div class="sk-rect4"></div>
+									                                    <div class="sk-rect5"></div>
+									                                </div>
+									                            </div>
+									                        </div>
+									                    </div>
+									                </div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="ibox float-e-margins">
+							<div class="ibox-title">
+								<h5>货品介绍信息</h5>
+								<button id="edit" class="btn btn-primary btn-xs m-l-sm edit_content" type="button">编辑</button>
+								<button id="save" class="btn btn-primary  btn-xs save_content" type="button">保存</button>
+							</div>
+							<div class="ibox-content no-padding">
+								<div class="click2edit wrapper p-md" th:utext="${content.content}"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div th:replace="../common/foot"></div>
+		</div>
+	</div>
+	
+	<!-- Mainly scripts -->
+	<script th:src="@{{sp}/js/jquery-2.1.1.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/bootstrap.min.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/metisMenu/jquery.metisMenu.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/slimscroll/jquery.slimscroll.min.js(sp=${pub_bucket})}"></script>
+	
+	<script th:src="@{{sp}/js/plugins/select2/select2.full.min.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/switchery/switchery.js(sp=${pub_bucket})}"></script>
+	<script th:src="|${pub_bucket}/js/plugins/sweetalert/sweetalert.min.js|"></script>
+	<!-- Custom and plugin javascript -->
+	<script th:src="@{{sp}/js/inspinia.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/pace/pace.min.js(sp=${pub_bucket})}"></script>
+	
+	<script th:src="@{{sp}/third/layer3/layer.js(sp=${pub_bucket})}" type="text/javascript"></script>
+	
+	<!-- SUMMERNOTE -->
+    <script th:src="|${pub_bucket}/js/plugins/summernote/summernote.min.js|"></script>
+    
+    <!-- Ladda -->
+    <script th:src="|${pub_bucket}/js/plugins/ladda/spin.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/ladda/ladda.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/ladda/ladda.jquery.min.js|"></script>
+    
+</body>
+
+<script type="text/javascript">
+$(function() {
+	var rich_param = {
+        height: 400,
+        focus:true,
+        onImageUpload: function onImageUpload(files, editor, $editable) {
+        	console.log(editor);
+        	console.log($editable);
+            var formData = new FormData();
+            formData.append("upfile", files[0]);
+            formData.append("g_id", g);
+            formData.append("img_type", "0600");
+            $.ajax({
+                url: '/scm/goods/aj/upload',
+                type: "POST",
+                data: formData,
+                datatype:"json",
+                contentType: false,
+                processData: false,
+                traditional: true,
+                success: function (data) {
+               		if(data.available) {
+               			editor.insertImage($editable, 'http://pe1s.static.pdr365.com/' + data.data[0]['img_url']);
+        			} else {
+        				var code = data.messages[0];
+        				var msg = '上传失败：' + code;
+        				layer.msg(msg, {icon: 2});
+        			}
+                },
+                error: function () {
+               		layer.closeAll();
+               		$this.ladda('stop');
+               		swal({title: "Error", text: "操作失败", type: "error"});
+                }
+            });
+		}
+    };
+	
+	var g = '[[${goods.id}]]';
+	
+	var l = $(".ladda-button").ladda();
+	
+	$(".edit_content").on("click", function() {
+		$('.click2edit').summernote(rich_param);
+	});
+	
+	$(".save_content").on("click", function() {
+		var aHTML = $('.click2edit').code(); //save HTML If you need(aHTML: array).
+		$.post('/scm/goods/aj/save_content', {id:g,content:aHTML}, function(data) {
+			if(data.available) {
+				layer.msg('信息保存成功');
+				$('.click2edit').destroy();
+			} else {
+				var code = data.messages[0];
+				var msg = "操作失败：" + code;
+				if(data.messages.length>1) {
+					msg = "操作失败：" + data.messages[1] + code;
+				}
+				layer.msg(msg, {shift: 6});
+			}
+		});
+	});
+	
+	$(".load_models").on("click", function() {
+		$.get('/scm/goods/aj/load_model?' + new Date().getTime(), {}, function(data) {
+			if(data.available&&data.data!=null) {
+				var html = '<div class="tab-content">'
+				html += '<div id="tab-2" class="tab-pane active">';
+				html += '<div class="full-height-scroll">';
+				html += '<div class="table-responsive">';
+				html += '<table class="table table-striped table-hover">';
+				html += '<tbody>';
+				
+				for(x in data.data) {
+					var tmp_obj = data.data[x];
+					html += '<tr>';
+					html += '<td><a data-toggle="tab" href="clients.html#company-1" class="client-link">' + tmp_obj.m_name_cn + '</a></td>';
+					html += '<td><i class="fa fa-flag"></i> ' + tmp_obj.m_name_en + '</td>';
+					html += '<td class="client-status"><button class="choose_gm btn btn-primary btn-circle" gmid="' + tmp_obj.id + '"><i class="fa fa-check"></i></button></td>';
+					html += '</tr>';
+				}
+				html += '</tbody></table></div></div></div></div>';
+				$(".SKU_LIST").html(html);
+				$(".choose_gm").on("click", function() {
+					var gmid = $(this).attr("gmid");
+					var gmname = $(this).parent().parent().find("td").eq(0).text();
+					$(".load_models").html(gmname);
+					$(".load_models").attr('gm_id', gmid);
+					$(".close_sku_list").trigger("click");
+				});
+			} else {
+				var code = data.messages[0];
+				var msg = "操作失败，可能未设置SKU模型：" + code;
+				layer.msg(msg, {shift: 6});
+				$(".close_sku_list").trigger("click");
+			}
+		});
+	});
+	$(".save_basic_info").on("click", function() {
+		var name = $.trim($("#goods_name").val());
+		var num = $.trim($("#goods_num").val());
+		var out_no = $.trim($("#goods_out_no").val());
+		var unit = $.trim($("#goods_unit").val());
+		var spec_unit = $.trim($("#spec_unit").val());
+		var weight = $.trim($("#goods_weight").val());
+		var material = $.trim($("#goods_material").val());
+		var remark = $.trim($("#goods_remark").val());
+		var gmid = $(".load_models").attr("gm_id");
+		var goods_code = $.trim($("#goods_code").val());
+		//var goods_supp = $("#goods_supp").val();
+		$this = $(this);
+		$this.ladda('start');
+		$.post('/scm/goods/aj/save_base', {id:g,name:name,num:num,out_no:out_no,unit:unit,weight:weight,material:material,remark:remark,gmid:gmid,spec_unit:spec_unit,goods_code:goods_code}, function(data) {
+			$this.ladda('stop');
+			if(data.available) {
+				g = data.data;
+				layer.msg('基本信息保存成功');
+			} else {
+				var code = data.messages[0];
+				var msg = "操作失败：" + code;
+				if(data.messages.length>1) {
+					msg = "操作失败：" + data.messages[1] + code;
+				}
+				swal("提示", msg, "error");
+			}
+		});
+	});
+	
+	$(".save_and_back").on("click", function() {
+		var name = $.trim($("#goods_name").val());
+		var num = $.trim($("#goods_num").val());
+		var out_no = $.trim($("#goods_out_no").val());
+		var unit = $.trim($("#goods_unit").val());
+		var spec_unit = $.trim($("#spec_unit").val());
+		var weight = $.trim($("#goods_weight").val());
+		var material = $.trim($("#goods_material").val());
+		var remark = $.trim($("#goods_remark").val());
+		var gmid = $(".load_models").attr("gm_id");
+		var goods_code = $.trim($("#goods_code").val());
+		//var goods_supp = $("#goods_supp").val();
+		$this = $(this);
+		$this.ladda('start');
+		$.post('/scm/goods/aj/save_base', {id:g,name:name,num:num,out_no:out_no,unit:unit,weight:weight,material:material,remark:remark,gmid:gmid,spec_unit:spec_unit,goods_code:goods_code}, function(data) {
+			$this.ladda('stop');
+			if(data.available) {
+				g = data.data;
+				layer.msg('基本信息保存成功');
+				location.href = '/scm/goods/index?' + new Date().getTime();
+			} else {
+				var code = data.messages[0];
+				var msg = "操作失败：" + code;
+				if(data.messages.length>1) {
+					msg = "操作失败：" + data.messages[1] + code;
+				}
+				swal("提示", msg, "error");
+			}
+		});
+	});
+	$(".save_price").on("click", function() {
+		var price = $.trim($("#goods_price").val());
+		var original_price = $.trim($("#goods_original_price").val());
+		var cost_price = $.trim($("#goods_cost_price").val());
+		var gmid = $(".load_models").attr("gm_id");
+		$.post('/scm/goods/aj/save_price', {id:g,price:price,original_price:original_price,cost_price:cost_price,gmid:gmid}, function(data) {
+			if(data.available) {
+				layer.msg('货品价格保存成功');
+			} else {
+				var code = data.messages[0];
+				var msg = "操作失败：" + code;
+				if(data.messages.length>1) {
+					msg = "操作失败：" + data.messages[1] + code;
+				}
+				layer.msg(msg, {shift: 6});
+			}
+		});
+	});
+	$("#goods_unit").select2({placeholder:'选择计量单位',allowClear : true});
+	$("#goods_supp").select2({placeholder:'选择供应商',allowClear : true});
+	
+});
+</script>
+
+</html>

@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[[${str}]] | 套餐组合管理</title>
+<link th:href="@{{sp}/css/bootstrap.min.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/font-awesome/css/font-awesome.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/css/animate.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/css/style.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/css/plugins/switchery/switchery.css(sp=${pub_bucket})}" rel="stylesheet">
+
+<link th:href="|${pub_bucket}/css/plugins/ladda/ladda-themeless.min.css|" rel="stylesheet">
+
+<link th:href="|${pub_bucket}/css/plugins/select2/select2.min.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/dataTables/datatables.min.css|" rel="stylesheet">
+
+<link th:href="|${pub_bucket}/css/plugins/jsTree/style.min.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/sweetalert/sweetalert.css|" rel="stylesheet">
+
+<link th:href="|${pub_bucket}/css/plugins/datapicker/datepicker3.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/clockpicker/clockpicker.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/daterangepicker/daterangepicker-bs3.css|" rel="stylesheet">
+</head>
+
+<body>
+	<div id="wrapper">
+		<div th:replace="../common/nav"></div>
+		<div id="page-wrapper" class="gray-bg">
+			<div th:replace="../common/top"></div>
+			<div class="row wrapper border-bottom white-bg page-heading">
+				<div class="col-sm-4">
+					<h2>套餐组合管理</h2>
+					<ol class="breadcrumb">
+						<li><a href="javascript:;">Home</a></li>
+						<li><a href="/scm/gdpack/index">套餐组合</a></li>
+						<li class="active"><strong>创建套餐组合</strong></li>
+					</ol>
+				</div>
+				<div class="col-lg-2"></div>
+			</div>
+			<div class="wrapper wrapper-content animated fadeInRight">
+				
+				<div class="row">
+					<div class="col-lg-4">
+						<div class="ibox float-e-margins">
+							<div class="ibox-title">
+								<h5>基本信息</h5>
+								<div class="ibox-tools">
+									<a class="collapse-link"> <i class="fa fa-chevron-up"></i></a> 
+									<a class="dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-wrench"></i></a>
+									<ul class="dropdown-menu dropdown-user"></ul>
+									<a class="close-link"> <i class="fa fa-times"></i></a>
+								</div>
+							</div>
+							<div class="ibox-content">
+								<form class="form-horizontal">
+									<div class="form-group">
+										<label class="col-lg-2 control-label">名称</label>
+										<div class="col-lg-10">
+											<input type="text" placeholder="套餐名称" class="form-control" name="goods_name" id="goods_name" th:value="${pack.name}">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-lg-2 control-label">商品编号</label>
+										<div class="col-lg-10">
+											<input type="text" placeholder="套餐编码" class="form-control" name="goods_num" id="goods_num" th:value="${pack.sn}">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-lg-2 control-label">简介</label>
+										<div class="col-lg-10">
+											<input type="text" placeholder="套餐简介" class="form-control" name="goods_info" id="goods_info" th:value="${pack.info}">
+										</div>
+									</div>
+	                                <div class="form-group">
+										<label class="col-lg-2 control-label">计量单位</label>
+										<div class="col-lg-10">
+											<select class="form-control goods_gt" id="goods_unit" name="goods_unit">
+		                                    	<option></option>
+		                                    	<option th:each="u:${units}" th:value="${u.code}" th:selected="${u.code==pack.unit}">[[${u.name}]]</option>
+		                                    </select>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-8">
+						<div class="ibox float-e-margins">
+							<div class="ibox-title">
+								<h5>基本信息</h5>
+								<div class="ibox-tools">
+									<a class="collapse-link"> <i class="fa fa-chevron-up"></i></a> 
+									<a class="dropdown-toggle" data-toggle="dropdown" href="form_basic.html#"> <i class="fa fa-wrench"></i></a>
+									<ul class="dropdown-menu dropdown-user"></ul>
+									<a class="close-link"> <i class="fa fa-times"></i></a>
+								</div>
+							</div>
+							<div class="ibox-content">
+								<div class="row">
+									<div class="col-sm-6 b-r">
+										<form class="form-horizontal">
+											<div class="form-group">
+												<label class="col-lg-2 control-label">售价</label>
+												<div class="col-lg-10">
+													<input type="text" placeholder="套餐销售价" class="form-control" name="gp_sale_price" id="gp_sale_price" th:value="${pack.sale_price/100}">
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-lg-2 control-label">原价</label>
+												<div class="col-lg-10">
+													<input type="text" placeholder="建议销售价" class="form-control" name="gp_rec_price" id="gp_rec_price" th:value="${pack.rec_price/100}">
+												</div>
+											</div>
+			                                <div class="form-group">
+												<label class="col-lg-2 control-label">成本价</label>
+												<div class="col-lg-10">
+													<input type="text" placeholder="成本价" id="gp_cost_price" class="form-control gp_cost_price" th:value="${pack.cost_price/100}">
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-lg-4 control-label">自动计算基本价格</label>
+												<div class="col-lg-8">
+													<input type="checkbox" class="auto_compute_price" checked />
+												</div>
+											</div>
+										</form>
+									</div>
+									<div class="col-sm-6">
+										<h4>操作</h4>
+										<p>保存信息并返回:</p>
+										<button data-style="zoom-in" class="ladda-button btn btn-primary btn-sm save"><i class="fa fa-pencil"></i> 保存信息 </button>
+										<br/>
+										<button data-style="zoom-in" class="ladda-button btn btn-warning btn-sm save_and_back"><i class="fa fa-pencil"></i> 保存并返回 </button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="wrapper wrapper-content animated fadeInRight" style="padding-bottom:0px">
+							<div class="row">
+								<div class="col-lg-12">
+									<div class="ibox float-e-margins">
+										<div class="ibox-title">
+											<h5>标准套餐商品明细</h5>
+											<div class="ibox-tools">
+												<a class="btn btn-primary btn-xs load_models">添加商品</a>
+												<a class="btn btn-primary btn-xs load_merges">添加合成品</a>
+												<a data-toggle="modal" href="#modal-form" class="btn btn-primary btn-xs load_models_trigger" style="display:none">添加商品</a>
+												<a data-toggle="modal" href="#modal-form-merge" class="btn btn-primary btn-xs load_merges_trigger" style="display:none">添加合成品</a>
+											</div>
+										</div>
+										<div class="ibox-content">
+											<table class="table table-striped table-bordered table-hover" id="editable">
+												<thead>
+													<tr>
+														<th>商品编号</th>
+														<th>商品名称</th>
+														<th>SKU编号</th>
+														<th>SKU属性</th>
+														<th>数量</th>
+														<th>单位</th>
+														<th>成本价</th>
+														<th>售价</th>
+														<th>类型</th>
+														<th>操作</th>
+													</tr>
+												</thead>
+												<tbody>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="wrapper wrapper-content animated fadeInRight">
+							<div class="row">
+								<div class="col-lg-12">
+									<div class="ibox float-e-margins">
+										<div class="ibox-title">
+											<h5>套餐商品可选方案</h5>
+										</div>
+										<div class="ibox-content">
+											<table class="table table-striped table-bordered table-hover" id="verttable">
+												<thead>
+													<tr>
+														<th>主商品信息</th>
+														<th>商品编号</th>
+														<th>商品名称</th>
+														<th>SKU编号</th>
+														<th>SKU属性</th>
+														<th>数量</th>
+														<th>补差</th>
+														<th>单位</th>
+														<th>成本价</th>
+														<th>售价</th>
+														<th>类型</th>
+														<th>操作</th>
+													</tr>
+												</thead>
+												<tbody>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div th:replace="../common/foot"></div>
+		</div>
+	</div>
+	
+	
+	<div id="modal-form" class="modal inmodal fade" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-sm-12 b-r goods_area">
+		                    <div class="ibox ">
+		                        <div class="ibox-title">
+		                        	<h5>选择商品</h5>
+		                        	<button type="button" class="close close_sku_list" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+		                        </div>
+		                        <div class="ibox-content">
+		                            <div class="spiner-example GOODS_LIST_LOADING">
+		                                <div class="sk-spinner sk-spinner-wave">
+		                                    <div class="sk-rect1"></div>
+		                                    <div class="sk-rect2"></div>
+		                                    <div class="sk-rect3"></div>
+		                                    <div class="sk-rect4"></div>
+		                                    <div class="sk-rect5"></div>
+		                                </div>
+		                            </div>
+		                            <table class="table table-striped table-hover choose_goods_tbl GOODS_LIST_RESULT">
+										<thead>
+											<tr>
+												<th>名称</th>
+												<th>条码</th>
+											</tr>
+										</thead>
+										<tbody class="GOODS_LIST"></tbody>
+									</table>
+		                        </div>
+		                    </div>
+		                </div>
+		                <div class="col-sm-6 b-r hide goods_sku_area">
+		                    <div class="ibox ">
+		                        <div class="ibox-title">
+		                        	<h5>选择SKU</h5>
+		                        	<button type="button" class="close close_sku_list" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+		                        </div>
+		                        <div class="ibox-content SKU_LIST">
+		                            <div class="spiner-example">
+		                                <div class="sk-spinner sk-spinner-wave">
+		                                    <div class="sk-rect1"></div>
+		                                    <div class="sk-rect2"></div>
+		                                    <div class="sk-rect3"></div>
+		                                    <div class="sk-rect4"></div>
+		                                    <div class="sk-rect5"></div>
+		                                </div>
+		                            </div>
+		                        </div>
+		                    </div>
+		                </div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	<div id="modal-form-merge" class="modal fade" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-sm-12 b-r merges_area">
+		                    <div class="ibox ">
+		                        <div class="ibox-title">
+		                        	<h5>选择合成品</h5>
+		                        	<button type="button" class="close close_merge_list" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+		                        </div>
+		                        <div class="ibox-content MERGES_LIST">
+		                            <div class="spiner-example">
+		                                <div class="sk-spinner sk-spinner-wave">
+		                                    <div class="sk-rect1"></div>
+		                                    <div class="sk-rect2"></div>
+		                                    <div class="sk-rect3"></div>
+		                                    <div class="sk-rect4"></div>
+		                                    <div class="sk-rect5"></div>
+		                                </div>
+		                            </div>
+		                        </div>
+		                    </div>
+		                </div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	
+	
+	<div id="templatemo-preferences-form" style="display:none;padding-left:15px;padding-right:15px">
+		<div class="row">
+			<div class="col-md-12 margin-bottom-15">
+				<label for="wh_num" class="control-label">数量</label>
+				<input type="text" class="form-control" id="wh_num" placeholder="请输入数量">
+			</div>
+		</div>
+		<div class="row templatemo-form-buttons">
+			<div class="col-md-12" style="margin-top:15px">
+				<button id="save_info" class="btn btn-primary save_item" style="width:100%">保存</button>
+			</div>
+		</div>
+	</div>
+	
+	<input type="hidden" id="gpid" th:value="${pack.id}"/>
+	<!-- Mainly scripts -->
+	<script th:src="@{{sp}/js/jquery-2.1.1.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/bootstrap.min.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/metisMenu/jquery.metisMenu.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/slimscroll/jquery.slimscroll.min.js(sp=${pub_bucket})}"></script>
+	
+	<script th:src="@{{sp}/js/plugins/select2/select2.full.min.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/switchery/switchery.js(sp=${pub_bucket})}"></script>
+
+	<!-- Custom and plugin javascript -->
+	<script th:src="@{{sp}/js/inspinia.js?dd(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/pace/pace.min.js(sp=${pub_bucket})}"></script>
+	
+	<script th:src="@{{sp}/third/layer3/layer.js(sp=${pub_bucket})}" type="text/javascript"></script>
+	
+    <!-- Ladda -->
+    <script th:src="|${pub_bucket}/js/plugins/ladda/spin.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/ladda/ladda.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/ladda/ladda.jquery.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/jeditable/jquery.jeditable.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/dataTables/datatables.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/select2/select2.full.min.js|"></script>
+    
+    <script th:src="|${pub_bucket}/js/plugins/jsTree/jstree.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/validate/jquery.validate.min.js|"></script>
+    
+    <script th:src="|${pub_bucket}/js/plugins/sweetalert/sweetalert.min.js|"></script>
+    <!-- Data picker -->
+	<script th:src="|${pub_bucket}/js/plugins/datapicker/bootstrap-datepicker.js|"></script>
+    <!-- Clock picker -->
+	<script th:src="|${pub_bucket}/js/plugins/clockpicker/clockpicker.js|"></script>
+	<!-- Date range use moment.js same as full calendar plugin -->
+	<script th:src="|${pub_bucket}/js/plugins/fullcalendar/moment.min.js|"></script>
+	<!-- Date range picker -->
+	<script th:src="|${pub_bucket}/js/plugins/daterangepicker/daterangepicker.js|"></script>
+	
+	<!-- Switchery -->
+	<script th:src="|${pub_bucket}/js/plugins/switchery/switchery.js|"></script>
+    
+</body>
+
+<script type="text/javascript" th:inline="javascript">
+var units = [[${units}]];
+var find_unit_name = function(code) {
+	for(xxx in units) {
+		if(units[xxx].code==code) {
+			return units[xxx].name;
+		}
+	}
+	return '未定义';
+}
+$(function() {
+	//var oTable = $('#editable').DataTable({"searching": false,"lengthChange": false,"ordering": false});
+	//$('#editable').DataTable({"searching": false,"lengthChange": false,"ordering": false});
+	//$('#verttable').DataTable({"searching": false,"lengthChange": false,"ordering": false});
+	
+	let nwfr = 'ge';
+	var l = $(".ladda-button").ladda();
+	$(".load_models").on("click", function() {
+		nwfr = 'ge';
+		$.select_general(nwfr, item_id);
+	});
+	
+	$(".load_merges").on("click", function() {
+		nwfr = 'ge';
+		$.select_merge(nwfr, item_id);
+	});
+	
+	$(".save").on("click", function() {
+    	var gpname = $.trim($("#goods_name").val());
+    	var gpsn = $.trim($("#goods_num").val());
+    	var gpunit = $.trim($("#goods_unit").val());
+    	var gpinfo = $.trim($("#goods_info").val());
+    	
+    	var gp_sale_price = $.trim($("#gp_sale_price").val());
+    	var gp_rec_price = $.trim($("#gp_rec_price").val());
+    	var gp_cost_price = $.trim($("#gp_cost_price").val());
+    	var v = switchery.isChecked()?1:0;
+    	if(!gpname) {
+    		swal("提示", "请输入套餐名称", "error");
+    		return;
+    	}
+    	var rows = null;
+    	$(".data_row").each(function() {
+    		var row = $(this).attr("id") + "_" + $.trim($(this).find("td").eq(4).find("input").val());
+    		var item_type = $(this).find("td").eq(8).text()=='商品'?'100':'500';
+    		row = row + "_" + item_type;
+    		rows = (rows==null?row:rows + "," + row);
+    	});
+    	if(!rows) {
+    		swal("提示", "请选择套餐商品", "error");
+    		return;
+    	}
+    	var gpid = $("#gpid").val();
+		$this = $(this);
+		$this.ladda('start');
+		$.post('/scm/gdpack/aj/save', {id:gpid,gpname:gpname,gpsn:gpsn,gpunit:gpunit,gpinfo:gpinfo,gp_sale_price:gp_sale_price,gp_rec_price:gp_rec_price,gp_cost_price:gp_cost_price,data:rows,v:v}, function(data) {
+			$this.ladda('stop');
+			if(data.available) {
+				$("#gpid").val(data.data.id);
+				$("#gp_rec_price").val(data.data.rec_price/100);
+				$("#gp_cost_price").val(data.data.cost_price/100);
+				swal({title: "Good job!", text: "保存完成", type: "success"}, function() {
+					//location.reload();
+					location.href = "/scm/gdpack/add?id=" + data.data.id + "&" + new Date().getTime();
+				});
+			} else {
+				var code = data.messages[0];
+				var msg = "操作失败：" + code;
+				if(data.messages.length>1) {
+					msg = "操作失败：" + data.messages[1] + code;
+				}
+				swal("提示", msg, "error");
+			}
+		});
+    });
+	
+	$(".save_and_back").on("click", function() {
+    	var gpname = $.trim($("#goods_name").val());
+    	var gpsn = $.trim($("#goods_num").val());
+    	var gpunit = $.trim($("#goods_unit").val());
+    	var gpinfo = $.trim($("#goods_info").val());
+    	
+    	var gp_sale_price = $.trim($("#gp_sale_price").val());
+    	var gp_rec_price = $.trim($("#gp_rec_price").val());
+    	var gp_cost_price = $.trim($("#gp_cost_price").val());
+    	var v = switchery.isChecked()?1:0;
+    	if(!gpname) {
+    		swal("提示", "请输入套餐名称", "error");
+    		return;
+    	}
+    	var rows = null;
+    	$(".data_row").each(function() {
+    		var row = $(this).attr("id") + "_" + $.trim($(this).find("td").eq(4).find("input").val());
+    		var item_type = $(this).find("td").eq(8).text()=='商品'?'100':'500';
+    		row = row + "_" + item_type;
+    		rows = (rows==null?row:rows + "," + row);
+    	});
+    	if(!rows) {
+    		swal("提示", "请选择套餐商品", "error");
+    		return;
+    	}
+    	var gpid = $("#gpid").val();
+		$this = $(this);
+		$this.ladda('start');
+		$.post('/scm/gdpack/aj/save', {id:gpid,gpname:gpname,gpsn:gpsn,gpunit:gpunit,gpinfo:gpinfo,gp_sale_price:gp_sale_price,gp_rec_price:gp_rec_price,gp_cost_price:gp_cost_price,data:rows,v:v}, function(data) {
+			$this.ladda('stop');
+			if(data.available) {
+				$("#gpid").val(data.data);
+				swal({title: "Good job!", text: "保存完成", type: "success"}, function() {location.href = '/scm/gdpack/index'});
+			} else {
+				var code = data.messages[0];
+				var msg = "操作失败：" + code;
+				if(data.messages.length>1) {
+					msg = "操作失败：" + data.messages[1] + code;
+				}
+				swal("提示", msg, "error");
+			}
+		});
+    });
+	
+	var elem = document.querySelector('.auto_compute_price');
+	var switchery = new Switchery(elem, {
+		color : '#1AB394'
+	});
+	switchery.setPosition(true);
+	switchery.handleOnchange(true);
+	$(".auto_compute_price").on("change", function() {
+		var $this = $(this);
+		var v = switchery.isChecked();
+		if(v) {
+			$("#gp_rec_price").attr("disabled", "disabled");
+			$("#gp_cost_price").attr("disabled", "disabled");
+		} else {
+			$("#gp_rec_price").removeAttr("disabled");
+			$("#gp_cost_price").removeAttr("disabled");
+		}
+	})
+	
+	$("body").on("click", ".remove_dtrow", function(e) {
+		e.stopPropagation();
+    	var id = $(this).parent().parent().attr("id");
+    	let vert_remove = $(this).parent().parent().hasClass("vert_data_row");
+    	let item_id = $(this).attr("item_id");
+    	if(!vert_remove) {
+    		//需要后台通知
+    		swal({
+    	        title: "确认删除该套餐商品吗?",
+    	        type: "warning",
+    	        showCancelButton: true,
+    	        confirmButtonColor: "#DD6B55",
+    	        confirmButtonText: "删除!",
+    	        closeOnConfirm: false
+    	    }, function () {
+    	    	//request
+    	    	$('#editable').DataTable().rows("#" + id).remove().draw(false);
+        		$.get('/scm/gdpack/aj/remove_item?'+new Date().getTime(), {item_id:item_id}, function(data) {
+        			if(data.available) {
+        				$('#verttable').DataTable().rows(".item_vert_" + item_id).remove().draw(false);
+        				swal("操作成功!", "套餐商品已经被删除.", "success");
+        			} else {
+        				var err_code = data.messages[0];
+        				var err_msg = err_code;
+        				if(data.messages.length>1) {
+        					err_msg = data.messages[1];
+        				}
+        				swal("提示", err_msg, "error");
+        			}
+        		});
+    	    });
+    		
+    	} else {
+    		let tot_ch_id = $(this).parent().parent().attr("id").split("_");
+			let g_id = tot_ch_id[1];
+			let gs_id = tot_ch_id[2];
+			//let ch_item_id = $(this).parent().parent().find("td").eq(0).html();
+			let ch_item_id = $(this).attr("item_id");
+    		swal({
+    	        title: "确认删除该替代品吗?",
+    	        type: "warning",
+    	        showCancelButton: true,
+    	        confirmButtonColor: "#DD6B55",
+    	        confirmButtonText: "删除!",
+    	        closeOnConfirm: false
+    	    }, function () {
+    	    	//request
+        		$.get('/scm/gdpack/aj/remove_vert?'+new Date().getTime(), {item_id:ch_item_id,g_id:g_id,gs_id:gs_id}, function(data) {
+        			if(data.available) {
+        				$('#verttable').DataTable().rows("#" + id).remove().draw(false);
+        				swal("操作成功!", "该替代品已经被删除.", "success");
+        			} else {
+        				var err_code = data.messages[0];
+        				var err_msg = err_code;
+        				if(data.messages.length>1) {
+        					err_msg = data.messages[1];
+        				}
+        				swal("提示", err_msg, "error");
+        			}
+        		});
+    	    });
+    	}
+    });
+	let item_id = 0;
+	$("body").on("click", ".vert_dtrow", function(e) {
+		e.stopPropagation();
+    	var id = $(this).parent().parent().attr("id");
+    	item_id = $(this).attr("item_id");
+    	if(!item_id) {
+    		layer.msg('请先执行套餐保存操作', {icon: 5});
+    		return;
+    	}
+    	nwfr = 'fr';
+    	let merge_one = $(this).hasClass('merge_one');
+    	if(!merge_one)
+    		$.select_general(nwfr, item_id);
+    	else {
+    		$.select_merge(nwfr, item_id);
+    	}
+    });
+	
+	if($("#gpid").val()!='') {
+		$.get('/scm/gdpack/aj/load_pk_item?' + new Date().getTime(), {pack_id:$("#gpid").val()}, function(data) {
+			if(data.available&&data.data!=null) {
+				for(x in data.data) {
+					var tmp_obj = data.data[x];
+					let item_id = tmp_obj.id;
+					var sku_id = tmp_obj.fkid;
+					var sku_no = tmp_obj.fkno;
+					var sku_props = tmp_obj.fkname;
+					var goods_id = tmp_obj.fid;
+					var goods_num = tmp_obj.fno;
+					var goods_name = tmp_obj.fname;
+					var unit = tmp_obj.unit;
+					if(!sku_no) {
+						sku_no = goods_num;
+						sku_props = '{"商品名称":"' + goods_name + '"}';
+					}
+					var num = tmp_obj.num;
+					let input_num = '<input type="text" placeholder="数量" class="form-control"  style="width:90%" value="' + num + '">';
+					
+					var cost_price = tmp_obj.cost_price/100;
+					var goods_price = tmp_obj.sale_price/100;
+					var item_type = tmp_obj.it_code=='100'?'商品':'合成品';
+					var btn_area = '<button data-style="zoom-in" class="ladda-button btn btn-danger btn-xs remove_dtrow" item_id="' + item_id + '"><i class="fa fa-trash"></i> 删除</button>';
+					btn_area = btn_area + '<button data-style="zoom-in" class="ladda-button btn btn-info btn-xs vert_dtrow" item_id="' + item_id + '"><i class="fa fa-cog"></i> 单品</button>';
+					btn_area = btn_area + '<button data-style="zoom-in" class="ladda-button btn btn-info btn-xs vert_dtrow merge_one" item_id="' + item_id + '"><i class="fa fa-cogs"></i> 合成品</button>';
+					var row_id = "row_" + goods_id; if(sku_id) {row_id += "_" + sku_id;} else {row_id += "_0"}
+					if($("#" + row_id).length>0) { return; }
+					var param = {"DT_RowId": row_id, "DT_RowClass": "data_row " + row_id + " item_code_" + item_id,
+							"0": goods_num, "1": goods_name, "2": sku_no, "3": sku_props, "4": input_num, "5":find_unit_name(unit), "6":cost_price, "7":goods_price, "8":item_type, "9": btn_area };
+					$('#editable').dataTable().fnAddData(param);
+				}
+				//开始加载套餐内替代品明细
+				$.get('/scm/gdpack/aj/load_vert?' + new Date().getTime(), {pack_id:$("#gpid").val()}, function(data) {
+					console.log(data);
+					if(data.available&&data.data!=null) {
+						for(x in data.data) {
+							var tmp_obj = data.data[x];
+							let item_id = tmp_obj.id;
+							var sku_id = tmp_obj.fkid;
+							var sku_no = tmp_obj.fkno;;
+							var sku_props = tmp_obj.fkname;
+							var goods_id = tmp_obj.fid;
+							var goods_num = tmp_obj.fno;
+							var goods_name = tmp_obj.fname;
+							var unit = tmp_obj.unit;
+							var num = tmp_obj.num;
+							let fdd_price = tmp_obj.fdd_price/100;
+							var goods_c_price = tmp_obj.cost_price/100;
+							var goods_price = tmp_obj.sale_price/100;
+							let vert_item_id = tmp_obj.item_id;
+							let vert_item_name = vert_item_id;
+							if(!sku_no) {
+								sku_no = goods_num;
+								sku_props = '{"商品名称":"' + goods_name + '"}';
+							}
+							var item_type = tmp_obj.it_code=='100'?'商品':'合成品';
+							var btn_area = '<button data-style="zoom-in" class="ladda-button btn btn-danger btn-xs remove_dtrow" item_id="' + vert_item_id + '"><i class="fa fa-trash"></i> 删除</button>';
+							btn_area = btn_area + '<button data-style="zoom-in" class="ladda-button btn btn-info btn-xs vert_save" item_id="' + vert_item_id + '"><i class="fa fa-trash"></i> 保存</button>';
+							var row_id = "row_" + goods_id; if(sku_id) {row_id += "_" + sku_id;} else {row_id += "_0"}
+							
+							$(".item_code_" + vert_item_id).each(function() {
+								vert_item_name = $(this).find("td").eq(1).html();
+							});
+							if($("#" + row_id).length>0) { return; }
+							let input_num = '<input type="text" placeholder="数量" class="form-control"  style="width:90%" value="' + num + '">';
+							let input_pd = '<input type="text" placeholder="补差" class="form-control"  style="width:90%" value="' + fdd_price + '">';
+							var param = {"DT_RowId": row_id, "DT_RowClass": "vert_data_row " + row_id + " item_vert_" + tmp_obj.item_id,
+									"0":vert_item_name, "1": goods_num, "2": goods_name, "3": sku_no, "4": sku_props, "5": input_num, "6":input_pd, "7":unit, "8":goods_c_price, "9":goods_price, "10":item_type, "11": btn_area };
+							$('#verttable').dataTable().fnAddData(param);
+						}
+					}
+				});
+			}
+		});
+	}
+	$("#goods_unit").select2({placeholder:'选择计量单位',allowClear : true});
+	
+	$("body").on("click", ".data_row", function() {
+   		row_id = $(this).attr("id");
+   		/* $("#wh_num").val('');
+		layer.open({
+			area : [ '60%', '80%'],
+			type : 1,
+			content : $("#templatemo-preferences-form")
+		}); */
+	});
+	
+	$("body").on("click", ".vert_save", function() {
+		//let item_ch_id = $(this).parent().parent().find("td").eq(0).html();
+		let item_ch_id = $(this).attr("item_id");
+		let item_ch_num = $(this).parent().parent().find("td").eq(5).find("input").val();
+		let item_ch_price = $(this).parent().parent().find("td").eq(6).find("input").val();
+		let tot_ch_id = $(this).parent().parent().attr("id").split("_");
+		let data = item_ch_id + "_" + tot_ch_id[1] + "_" + tot_ch_id[2] + "_" + item_ch_num + "_" + item_ch_price;
+		let item_type = $(this).attr("item_type");
+		$.post('/scm/gdpack/aj/save_vert', {gpid:$("#gpid").val(),data:data,item_type:item_type}, function(d) {
+			if(d.available) {
+				swal({title: "Good job!", text: "保存完成", type: "success"}, function() {});
+			} else {
+				var err_code = d.messages[0];
+				var err_msg = err_code;
+				if(d.messages.length>1) {
+					err_msg = d.messages[1];
+				}
+				swal("提示", err_msg, "error");
+                return;
+			}
+		});
+	});
+	
+	$("#save_info").on("click", function() {
+    	var wh_num = parseInt($.trim($("#wh_num").val()));
+    	if(wh_num==null||isNaN(wh_num)||wh_num<1) {
+    		layer.msg('请检查参数', {icon: 5});
+    		return;
+    	}
+    	$("#" + row_id).find("td").eq(4).html(wh_num);
+    	layer.closeAll();
+    });
+});
+
+
+
+
+$.select_general = function(fr, item_id) {
+	$(".load_models_trigger").trigger("click");
+	$(".GOODS_LIST_LOADING").show();
+	$(".GOODS_LIST_RESULT").hide();
+	$(".goods_area").removeClass('col-sm-6');
+	$(".goods_area").addClass('col-sm-12');
+	$(".goods_sku_area").addClass('hide');
+	$('.choose_goods_tbl').each(function() {
+		$(this).dataTable().fnClearTable();
+		$(this).dataTable().fnDestroy();
+	});
+	$.get('/scm/gdpack/aj/load_goods?' + new Date().getTime(), {}, function(data) {
+		$(".GOODS_LIST_LOADING").hide();
+    	$(".GOODS_LIST_RESULT").show();
+		if(data.available&&data.data!=null) {
+			let html = '';
+			for(x in data.data.result) {
+				var tmp_obj = data.data.result[x];
+				html += '<tr class ="choose_goods" goods_id="' + tmp_obj.id + '"  goods_num="'+  tmp_obj.goods_id +'" goods_name="'+tmp_obj.goods_name +'"';
+				html += ' goods_unit="'+tmp_obj.unit+ '"   unit_code="' + tmp_obj.unit + '" op="' + tmp_obj.goods_original_price + '" rp="' + tmp_obj.goods_price + '" cp="' + tmp_obj.cost_price + '">';
+				html += '<td><a data-toggle="tab" href="javascript:void(0)" class=" client-link" >' + tmp_obj.goods_name + '</a></td>';
+				html += '<td class="goods_id"><i class="fa fa-flag"></i> ' + tmp_obj.goods_id + '</td>';
+				//html += '<td class="client-status"><button class="choose_gm btn btn-primary btn-circle" gmid="' + tmp_obj.id + '"><i class="fa fa-check"></i></button></td>';
+				html += '</tr>';
+			}
+			$(".GOODS_LIST").html(html);
+			$('.choose_goods_tbl').DataTable({
+				"searching":true,"lengthChange": false,"ordering": false, "paging": false, scrollY:'50vh',scrollCollapse: true,
+			});
+			
+			$(".choose_goods").on("click", function() {
+				var goods_id = $(this).attr("goods_id");
+				var goods_num = $(this).attr("goods_num");
+				var goods_name = $(this).attr("goods_name")
+				
+				var goods_unit = find_unit_name($(this).attr("goods_unit"));
+				var goods_price = $(this).attr("rp");
+				var goods_o_price = $(this).attr("op");
+				var goods_c_price = $(this).attr("cp");
+				$.get('/scm/gdpack/aj/load_sku?' + new Date().getTime(), {gid:goods_id}, function(data) {
+					if(data.available) {
+						$(".goods_area").removeClass('col-sm-12');
+						$(".goods_area").addClass('col-sm-6');
+						$(".goods_sku_area").removeClass('hide');
+						
+						var html = '<div class="tab-content">'
+						html += '<div id="tab-2" class="tab-pane active">';
+						html += '<div class="full-height-scroll">';
+						html += '<div class="table-responsive">';
+						html += '<table class="table table-striped table-hover">';
+						html += '<tbody>';
+						
+						for(x in data.data) {
+							var tmp_obj = data.data[x];
+							html += '<tr>';
+							html += '<td><a data-toggle="tab" href="javascript:void(0)" class="client-link sku_no">' + tmp_obj.sku_no + '</a></td>';
+							html += '<td class="sku_props"><i class="fa fa-flag"></i> ' + tmp_obj.skus + '</td>';
+							
+							html += '<td class="client-status"><button class="choose_gm btn btn-primary btn-circle" sku_id="' + tmp_obj.id + '"><i class="fa fa-check"></i></button></td>';
+							html += '</tr>';
+						}
+						html += '</tbody></table></div></div></div></div>';
+						$(".SKU_LIST").html(html);
+						$(".choose_gm").on("click", function() {
+						    if(isNaN(goods_c_price)) {
+		                        swal("提示", "商品未设置成本价", "error");
+		                        return;
+		                    }
+							var sku_id = $(this).attr("sku_id");
+							var sku_no = $.trim($(this).parent().parent().find(".sku_no").text());
+							var sku_props = $.trim($(this).parent().parent().find(".sku_props").text());
+							var unit = goods_unit;
+							var btn_area = '<button data-style="zoom-in" class="ladda-button btn btn-danger btn-xs remove_dtrow"><i class="fa fa-trash"></i> 删除</button>';
+							var row_id = "row_" + goods_id; if(sku_id) {row_id += "_" + sku_id;}
+							var item_type = '商品';
+							if($("#" + row_id).length>0) { return; }
+							let input_num = '<input type="text" placeholder="数量" class="form-control"  style="width:90%" value="1">';
+							if(fr!='fr') {
+								//btn_area = btn_area + '<button data-style="zoom-in" class="ladda-button btn btn-info btn-xs vert_dtrow"><i class="fa fa-trash"></i> 可选</button>';
+								var param = {"DT_RowId": row_id, "DT_RowClass": "data_row " + row_id,
+										"0": goods_num, "1": goods_name, "2": sku_no, "3": sku_props, "4": input_num, "5":unit, "6":goods_c_price/100, "7":goods_price/100, "8":item_type, "9": btn_area };
+								$('#editable').dataTable().fnAddData(param);
+							} else {
+								let input_pd = '<input type="text" placeholder="补差" class="form-control"  style="width:90%" value="0">';
+								btn_area = btn_area + '<button data-style="zoom-in" class="ladda-button btn btn-info btn-xs vert_save" item_id="' + item_id + '" item_type="100"><i class="fa fa-trash"></i> 保存</button>';
+								
+								let vert_item_name = item_id;
+								$(".item_code_" + item_id).each(function() {
+									vert_item_name = $(this).find("td").eq(1).html();
+								});
+								var param = {"DT_RowId": row_id, "DT_RowClass": "vert_data_row " + row_id,
+										"0":vert_item_name, "1": goods_num, "2": goods_name, "3": sku_no, "4": sku_props, "5": input_num, "6":input_pd, "7":unit, "8":goods_c_price/100, "9":goods_price/100, "10":item_type, "11": btn_area };
+								$('#verttable').dataTable().fnAddData(param);
+							}
+						});
+					}
+				});
+			});
+		} else {
+			var code = data.messages[0];
+			var msg = "没有商品数据：" + code;
+			layer.msg(msg, {shift: 6});
+		}
+	});
+}
+
+$.select_merge = function(fr, item_id) {
+	$(".load_merges_trigger").trigger("click");
+	$.get('/scm/gdpack/aj/load_merges?' + new Date().getTime(), {}, function(data) {
+		if(data.available&&data.data!=null) {
+			var html = '<div class="tab-content">'
+			html += '<div id="tab-2" class="tab-pane active">';
+			html += '<div class="full-height-scroll">';
+			html += '<div class="table-responsive">';
+			html += '<table class="table table-striped table-hover">';
+			html += '<tbody>';
+			
+			for(x in data.data.result) {
+				var tmp_obj = data.data.result[x];
+				html += '<tr>';
+				html += '<td><a data-toggle="tab" href="javascript:void(0)" class="client-link" merge_id="' + tmp_obj.id + '">' + tmp_obj.name + '</a></td>';
+				html += '<td class="merge_sn"><i class="fa fa-flag"></i> ' + tmp_obj.sn + '</td>';
+				html += '<td class="merge_unit" op="' + tmp_obj.rec_price + '" rp="' + tmp_obj.sale_price + '" cp="' + tmp_obj.cost_price + '">' + find_unit_name(tmp_obj.unit) + '</td>';
+				html += '<td class="merge_info">' + tmp_obj.info + '</td>';
+				html += '<td class="client-status"><button class="choose_merge btn btn-primary btn-circle" merge_id="' + tmp_obj.id + '"><i class="fa fa-check"></i></button></td>';
+				html += '</tr>';
+			}
+			html += '</tbody></table></div></div></div></div>';
+			$(".MERGES_LIST").html(html);
+			$(".choose_merge").on("click", function() {
+				var merge_id = $(this).attr("merge_id");
+				var merge_sn = $.trim($(this).parent().parent().find(".merge_sn").text());
+				var merge_name = $.trim($(this).parent().parent().find("td").eq(0).text());
+				var merge_unit = $.trim($(this).parent().parent().find(".merge_unit").text());
+				var merge_c_price = $(this).parent().parent().find(".merge_unit").attr('cp');
+				var merge_s_price = $(this).parent().parent().find(".merge_unit").attr('rp');
+				var btn_area = '<button data-style="zoom-in" class="ladda-button btn btn-danger btn-xs remove_dtrow"><i class="fa fa-trash"></i> 删除</button>';
+				var row_id = "row_" + merge_id; row_id += "_0";
+				var item_type = '合成品';
+				if($("#" + row_id).length>0) { return; }
+				
+				let input_num = '<input type="text" placeholder="数量" class="form-control"  style="width:90%" value="1">';
+				if(fr!='fr') {
+					//btn_area = btn_area + '<button data-style="zoom-in" class="ladda-button btn btn-info btn-xs vert_dtrow"><i class="fa fa-trash"></i> 可选</button>';
+					var param = {"DT_RowId": row_id, "DT_RowClass": "data_row " + row_id,
+							"0": merge_sn, "1": merge_name, "2": '-', "3": '-', "4": input_num, "5":merge_unit, "6":merge_c_price/100, "7":merge_s_price/100, "8":item_type, "9": btn_area };
+					$('#editable').dataTable().fnAddData(param);
+				} else {
+					/* var param = {"DT_RowId": row_id, "DT_RowClass": "vert_data_row " + row_id,
+							"0": merge_sn, "1": merge_name, "2": '-', "3": '-', "4": input_num, "5":merge_unit, "6":merge_c_price/100, "7":merge_s_price/100, "8":item_type, "9": btn_area };
+					$('#verttable').dataTable().fnAddData(param); */
+					
+					let input_pd = '<input type="text" placeholder="补差" class="form-control"  style="width:90%" value="0">';
+					btn_area = btn_area + '<button data-style="zoom-in" class="ladda-button btn btn-info btn-xs vert_save" item_id="' + item_id + '" item_type="500"><i class="fa fa-trash"></i> 保存</button>';
+					
+					let vert_item_name = item_id;
+					$(".item_code_" + item_id).each(function() {
+						vert_item_name = $(this).find("td").eq(1).html();
+					});
+					var param = {"DT_RowId": row_id, "DT_RowClass": "vert_data_row " + row_id,
+							"0":vert_item_name, "1": merge_sn, "2": merge_name, "3": '-', "4": '-', "5": input_num, "6":input_pd, "7":merge_unit, "8":merge_c_price/100, "9":merge_s_price/100, "10":item_type, "11": btn_area };
+					$('#verttable').dataTable().fnAddData(param);
+				}
+			});
+		} else {
+			var code = data.messages[0];
+			var msg = "没有合成品数据：" + code;
+			layer.msg(msg, {shift: 6});
+		}
+	});
+}
+</script>
+
+</html>

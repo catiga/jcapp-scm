@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[[${str}]] | 货品库</title>
+<link th:href="@{{sp}/css/bootstrap.min.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/font-awesome/css/font-awesome.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/css/animate.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/css/style.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/iCheck/custom.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/jsTree/style.min.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/sweetalert/sweetalert.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/ladda/ladda-themeless.min.css|" rel="stylesheet">
+
+<style type="text/css">
+.gpimg>img {width:60px; height:60px}
+</style>
+</head>
+
+<body>
+	<div id="wrapper">
+		<div th:replace="../common/nav"></div>
+		<div id="page-wrapper" class="gray-bg">
+			<div th:replace="../common/top"></div>
+			<div class="row wrapper border-bottom white-bg page-heading">
+				<div class="col-sm-4">
+					<h2>货品库管理</h2>
+					<ol class="breadcrumb">
+						<li><a href="javascript:;">Home</a></li>
+						<li class="active"><strong>货品库</strong></li>
+					</ol>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-3 catalog_area" style="display:none">
+					<div class="wrapper wrapper-content animated fadeInUp">
+						<div class="ibox float-e-margins">
+							<div class="ibox-title">
+								<h5>商品分组结构</h5>
+							</div>
+							<div class="ibox-content">
+								<div id="jstree1"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-12 goods_area">
+					<div class="wrapper wrapper-content animated fadeInUp">
+						<div class="ibox">
+							<div class="ibox-title">
+								<h5>货品库信息</h5>
+								<div class="ibox-tools">
+									<a href="javascript:void(0)" class="btn btn-primary btn-xs add_goods">添加货品</a>
+								</div>
+							</div>
+							<div class="ibox-content">
+								<div class="row m-b-sm m-t-sm">
+									<div class="col-sm-3 m-b-xs">
+										<button type="button" id="loading-example-btn" class="btn btn-white btn-sm load_catalog hide">
+											<i class="fa fa-refresh"></i> 分组管理
+										</button>
+										<button type="button" data-style="zoom-in" class="btn btn-danger btn-sm batch_for_sale ladda-button">
+											<i class="fa fa-rub"></i> 批量上架
+										</button>
+									</div>
+									<div class="col-sm-6 cat_info">
+										<h5></h5>
+									</div>
+									<div class="col-sm-3">
+										<div class="input-group">
+											<input type="text" placeholder="输入扫描商品条码或名称" class="input-sm form-control g_no_name" th:value="${g_no_name}">
+											<span class="input-group-btn">
+												<button type="button" class="btn btn-sm btn-primary do_query"> 查询</button>
+											</span>
+										</div>
+									</div>
+								</div>
+								<div class="table-responsive">
+                                	<table class="table table-striped">
+										<thead>
+		                                    <tr>
+		                                    	<th><input type="checkbox" id="all_checkbox" class="i-checks blick_g"></th>
+												<th>图片</th>
+												<th>编码</th>
+												<th>短码</th>
+												<th>名称</th>
+												<th>规格单位</th>
+												<th>包装单位</th>
+												<th>售价(元)</th>
+												<th>原价(元)</th>
+												<th>成本价(元)</th>
+	  											<th>操作</th>
+		                                    </tr>
+	                                    </thead>
+										<tbody>
+											<tr th:each="st:${page.result}" th:attr_id="${st.id }">
+												<td class="check-mail">
+							                        <input type="checkbox" name="goods_item" class="i-checks blick_g" th:attr_id="${st.id}">
+							                    </td>
+												<td class='gpimg'>
+													<img class="right_img" th:if="${st.goods_picturelink!=null}" th:src="${st.goods_picturelink}"/>
+													<img th:if="${st.goods_picturelink==null}" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1532405662569&di=495b69bea3fe35a647d4892c01cfe93a&imgtype=0"/>
+												</td>
+												<td>
+													内部：[[${st.goods_id }]]<br/>
+													条码：[[${st.goods_out_no}]]
+												</td>
+												<td>[[${st.goods_code}]]</td>
+												<td>
+													<a href="javascript:;">[[${st.goods_name }]]</a><br/> 
+													<small>更新时间 [[${#dates.format(st.c_time, 'yyyy-MM-dd')}]]</small>
+												</td>
+												<td>
+													<!-- <span th:text="${st.weight}"></span> -->
+													<span th:each="u:${units}" th:if="${u.code==st.spec_unit}" th:text="${u.name}"></span>
+												</td>
+												<td>
+													<span th:each="u:${units}" th:if="${u.code==st.unit}" th:text='${u.name}'></span>
+												</td>
+												<td>[[${st.goods_price/100 }]]</td>
+												<td>[[${st.goods_original_price/100 }]]</td>
+												<td>[[${st.cost_price/100 }]]</td>
+												<td>
+													<button class="btn btn-white btn-sm edit" th:attr_id="${st.id }" th:disabled="${now_proj.id!=st.proj_id}"><i class="fa fa-pencil"></i> 编辑 </button>
+													<button class="btn btn-info btn-sm g_imgs" type="button" th:attr_id="${st.id }"><i class="fa fa-paste"></i> 图片</button>
+													<button class="btn btn-warning btn-sm skus" th:if="${st.model_id!=0}" type="button" th:attr_id="${st.id }" th:model_id="${st.model_id}"><i class="fa fa-paste"></i> SKU</button>
+													<button data-style="zoom-in" class="btn btn-danger btn-sm for_sale ladda-button" type="button" th:attr_id="${st.id }"><i class="fa fa-trash"></i> 上架</button>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+									<div th:replace="../common/page"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div th:replace="../common/foot"></div>
+		</div>
+	</div>
+	
+	<!-- Mainly scripts -->
+	<script th:src="@{{sp}/js/jquery-2.1.1.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/bootstrap.min.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/metisMenu/jquery.metisMenu.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/slimscroll/jquery.slimscroll.min.js(sp=${pub_bucket})}"></script>
+
+	<!-- Custom and plugin javascript -->
+	<script th:src="@{{sp}/js/inspinia.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/pace/pace.min.js(sp=${pub_bucket})}"></script>
+	<script th:src="|${pub_bucket}/js/plugins/jsTree/jstree.min.js|"></script>	
+	<script th:src="@{{sp}/third/layer3/layer.js(sp=${pub_bucket})}" type="text/javascript"></script>
+	<script th:src="|${pub_bucket}/js/plugins/sweetalert/sweetalert.min.js|"></script>
+	<!-- iCheck -->
+    <script th:src="|${pub_bucket}/js/plugins/iCheck/icheck.min.js|"></script>
+    
+    <!-- Ladda -->
+    <script th:src="|${pub_bucket}/js/plugins/ladda/spin.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/ladda/ladda.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/ladda/ladda.jquery.min.js|"></script>
+	<script>
+		$(document).ready(function() {
+
+			$('#loading-example-btn').click(function() {
+				btn = $(this);
+				simpleLoad(btn, true)
+				if($(".goods_area").hasClass('col-lg-9')) {
+					$(".goods_area").removeClass('col-lg-9');
+					$(".goods_area").addClass('col-lg-12');
+					$(".catalog_area").fadeOut();
+				} else {
+					$(".catalog_area").fadeIn();
+					$(".goods_area").removeClass('col-lg-12');
+					$(".goods_area").addClass('col-lg-9');
+				}
+				simpleLoad(btn, false)
+			});
+		});
+
+		function simpleLoad(btn, state) {
+			if (state) {
+				btn.children().addClass('fa-spin');
+				btn.contents().last().replaceWith(" Loading");
+			} else {
+				setTimeout(function() {
+					btn.children().removeClass('fa-spin');
+					btn.contents().last().replaceWith(" 分组管理");
+				}, 2000);
+			}
+		}
+	</script>
+</body>
+
+<script type="text/javascript">
+$(function() {
+	$(".add_goods").on("click", function() {
+		location.href = '/scm/goods/add?g_id=0?' + new Date().getTime();
+	});
+	var l = $(".ladda-button").ladda();
+	$(".edit").on("click", function() {
+		location.href = '/scm/goods/add?g_id=' + $(this).attr("attr_id") + '&' + new Date().getTime();
+	});
+	$(".g_imgs").on("click", function() {
+		location.href = '/scm/goods/imgs?g_id=' + $(this).attr("attr_id") + '&' + new Date().getTime();
+	});
+	$(".skus").on("click", function() {
+		location.href = '/scm/goods/sku/list?g_id=' + $(this).attr("attr_id") + '&' + new Date().getTime();
+	});
+	$(".do_query").on("click", function() {
+		var g_no_name = $.trim($(".g_no_name").val())==undefined ? "":$.trim($(".g_no_name").val());
+		location.href = '/scm/goods/index?g_no_name='+encodeURI(encodeURI(g_no_name))+ '&' + new Date().getTime();
+	});
+	$('.i-checks').iCheck({
+        checkboxClass: 'icheckbox_square-green',
+        radioClass: 'iradio_square-green',
+    });
+	
+	var check_gs = [];
+	var clear_check = function() {
+        check_gs = [];
+        $(".blick_g").each(function(event) {
+            $(this).iCheck('uncheck');
+        });
+    }
+	clear_check();
+	$(".blick_g").on("ifChecked ifUnchecked", function(event) {
+		if ($(this).attr("id") == 'all_checkbox') {
+            check_gs = [];
+           // 如果是全选框
+           if (event.type == 'ifChecked') {
+               // 全选框选中
+               $(this).iCheck('check');
+               $("[name = 'goods_item']").each(function () {
+                    var id_ = $(this).attr("attr_id");
+                    $(this).iCheck('check');
+               });
+           } else {
+               // 全选框取消
+               $(this).iCheck('uncheck');
+               $("[name = 'goods_item']").each(function (event) {
+                   $(this).iCheck('uncheck');
+               });
+           }
+           return;
+       }
+		
+		var id = $(this).attr("attr_id");
+		if (event.type == 'ifChecked') {
+            $(this).iCheck('check');
+            check_gs.push(id);
+        } else {
+        	$(this).iCheck('uncheck');
+        	check_gs.splice($.inArray(id, check_gs), 1);
+        }
+	});
+	$(".batch_for_sale").on("click", function() {
+		if(check_gs.length==0) {
+			swal("提示", "请选择要操作的商品", "error");
+    		return;
+		}
+		$this = $(this);
+		$this.ladda('start');
+		$.get('/scm/goods/aj/for_sale?' + new Date().getTime(), {gs:check_gs.join(',')}, function(data) {
+			$this.ladda('stop');
+			if(data.available) {
+				clear_check();
+				swal("提示", "操作成功", "success");
+			} else {
+				swal("提示", "操作失败", "error");
+			}
+		});
+	});
+	$(".for_sale").on("click", function() {
+		$this = $(this);
+		$this.ladda('start');
+		$.get('/scm/goods/aj/for_sale?' + new Date().getTime(), {gs:$(this).attr("attr_id")}, function(data) {
+			$this.ladda('stop');
+			if(data.available) {
+				clear_check();
+				swal("提示", "操作成功", "success");
+			} else {
+				swal("提示", "操作失败", "error");
+			}
+		});
+	});
+});
+</script>
+
+<script type="text/javascript">
+$(function() {
+	$('#jstree1').jstree({
+		'core' : {
+			'check_callback' : true,
+			"data" : {  
+		        "dataType" : 'json', 
+		        "opts":{  
+	                method: "POST"
+		        },
+		        "url" : function(node){  
+		            return '/scm/catalog/aj/load?' + new Date().getTime(); 
+		        },  
+		        "data" : function(node){
+		        	if(node.id !="#"){
+		        		return {"id" : node.id};
+		        	}
+		            return {"id" : 0};//写自己的加载数据
+		        }
+		    }
+		},
+		'plugins' : [ 'types', 'dnd', 'contextmenu' ],
+		'types' : {
+			'default' : {'icon' : 'fa fa-folder'},
+			'html' : {'icon' : 'fa fa-file-code-o'},
+			'svg' : {'icon' : 'fa fa-file-picture-o'},
+			'css' : {'icon' : 'fa fa-file-code-o'},
+			'img' : {'icon' : 'fa fa-file-image-o'},
+			'js' : {'icon' : 'fa fa-file-text-o'}
+		},
+		contextmenu : {
+			"items" : function(node) {
+				return { 
+                    "view" : {
+                        label: "编辑节点",
+                        action: function(data) {
+                        	view_node(data);
+                        }
+                    }
+				} 
+			}
+		}
+	});
+	$('#jstree1').bind("activate_node.jstree", function (obj, e) {
+	    var currentNode = e.node;
+	    var full_path = (e.instance.get_path(currentNode));
+	    $(".cat_info").find("h5").html('当前分类：' + full_path.join('/'));
+	});
+});
+</script>
+</html>

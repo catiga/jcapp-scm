@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[[${str}]] | 出库管理</title>
+<link th:href="@{{sp}/css/bootstrap.min.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/font-awesome/css/font-awesome.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/css/animate.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/css/style.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/ladda/ladda-themeless.min.css|" rel="stylesheet">
+
+<link th:href="|${pub_bucket}/css/plugins/select2/select2.min.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/dataTables/datatables.min.css|" rel="stylesheet">
+
+<link th:href="|${pub_bucket}/css/plugins/jsTree/style.min.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/sweetalert/sweetalert.css|" rel="stylesheet">
+
+<link th:href="|${pub_bucket}/css/plugins/datapicker/datepicker3.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/clockpicker/clockpicker.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/daterangepicker/daterangepicker-bs3.css|" rel="stylesheet">
+</head>
+
+<body>
+	<div id="wrapper">
+		<div th:replace="../../common/nav"></div>
+		<div id="page-wrapper" class="gray-bg">
+			<div th:replace="../../common/top"></div>
+			<div class="row wrapper border-bottom white-bg page-heading">
+				<div class="col-sm-4">
+					<h2>库存变动管理</h2>
+					<ol class="breadcrumb">
+						<li><a href="javascript:;">Home</a></li>
+						<li><a href="javascript:;">出库管理</a></li>
+						<li class="active"><strong>报损登记</strong></li>
+					</ol>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-9" style="padding-right:0px">
+					<div class="wrapper wrapper-content animated fadeInLeft">
+						<div class="row">
+							<div class="col-lg-12">
+								<div class="row">
+									<div class="col-lg-12">
+										<div class="ibox float-e-margins">
+											<div class="ibox-title">
+												<h5>报损登记单</h5>
+												<div class="ibox-tools">
+													<a href="javascript:void(0)" class="btn btn-primary btn-xs save_upub ladda-button">保存</a>
+												</div>
+											</div>
+											<div class="ibox-content">
+												<div class="row">
+													<div class="col-md-3">
+														<div class="form-group">
+															<label for="select_wh">库存操作批次</label>
+															<select class="select_bt form-control">
+																<option></option>
+																<option th:each="b:${batches}" th:value="${b.id}" th:text="${b.bname}"></option>
+															</select>
+														</div>
+													</div>
+													<div class="col-md-3">
+														<div class="form-group">
+															<label for="select_wh">仓库</label>
+															<select class="select_wh form-control">
+																<option></option>
+																<option th:each="w:${whs}" th:value="${w.id}" th:text="${w.name}"></option>
+															</select>
+														</div>
+													</div>
+													<div class="col-md-3">
+														<div class="form-group">
+															<label for="select_uper">报损人</label> 
+															<select class="select_uper form-control">
+																<option></option>
+																<option th:each="u:${user}" th:value="${u.id}" th:text="${u.name}"></option>
+															</select>
+														</div>
+													</div>
+													<div class="col-md-3">
+														<div class="form-group" id="in_date">
+															<label class="font-noraml">登记日期</label>
+															<div class="input-group date">
+																<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+																<input type="text" data-date-format="yyyy-mm-dd" class="form-control in_house_date" placeholder="请选择报损日期" readonly>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="row">
+													<div class="col-md-6">
+														<div class="form-group">
+															<label for="hideEasing">说明</label> 
+															<input type="text" placeholder="请输入报损说明" class="form-control remark"/>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+				
+						<div class="row">
+							<div class="col-lg-12">
+								<div class="ibox float-e-margins">
+									<div class="ibox-title">
+										<h5>保存商品明细</h5>
+										<div class="ibox-tools">
+											<a data-toggle="modal" href="#modal-form" class="btn btn-primary btn-xs add_upub load_models">添加</a>
+										</div>
+									</div>
+									<div class="ibox-content">
+										<table class="table table-striped table-bordered table-hover" id="editable">
+											<thead>
+												<tr>
+													<th>商品编号</th>
+													<th>商品名称</th>
+													<th>SKU编号</th>
+													<th>SKU属性</th>
+													<th>报损数量</th>
+													<th>操作</th>
+												</tr>
+											</thead>
+											<tbody>
+												<!-- <tr class="gradeX">
+													<td class="sel_g">[选择商品]</td>
+													<td></td>
+													<td></td>
+													<td></td>
+													<td class="center"></td>
+													<td class="center sel_num">X</td>
+													<td>
+														<button data-style="zoom-in" class="ladda-button btn btn-danger btn-xs remove"><i class="fa fa-trash"></i> 删除</button>
+													</td>
+												</tr> -->
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="col-lg-3" style="padding-left:0px">
+					<div class="wrapper wrapper-content animated fadeInRight">
+						<div class="ibox float-e-margins">
+							<div class="ibox-title">
+								<h5>组织架构</h5>
+								<div class="ibox-tools">
+									<a class="collapse-link"> <i class="fa fa-chevron-up"></i></a> 
+									<a class="close-link"> <i class="fa fa-times"></i></a>
+								</div>
+							</div>
+							<div class="ibox-content">
+								<div id="jstree1"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div th:replace="../../common/foot"></div>
+		</div>
+	</div>
+	
+	<div id="modal-form" class="modal fade" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-sm-12 b-r goods_area">
+		                    <div class="ibox ">
+		                        <div class="ibox-title">
+		                        	<h5>选择商品</h5>
+		                        	<button type="button" class="close close_sku_list" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+		                        </div>
+		                        <div class="ibox-content GOODS_LIST">
+		                            <div class="spiner-example">
+		                                <div class="sk-spinner sk-spinner-wave">
+		                                    <div class="sk-rect1"></div>
+		                                    <div class="sk-rect2"></div>
+		                                    <div class="sk-rect3"></div>
+		                                    <div class="sk-rect4"></div>
+		                                    <div class="sk-rect5"></div>
+		                                </div>
+		                            </div>
+		                        </div>
+		                    </div>
+		                </div>
+		                <div class="col-sm-6 b-r hide goods_sku_area">
+		                    <div class="ibox ">
+		                        <div class="ibox-title">
+		                        	<h5>选择SKU</h5>
+		                        	<button type="button" class="close close_sku_list" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+		                        </div>
+		                        <div class="ibox-content SKU_LIST">
+		                            <div class="spiner-example">
+		                                <div class="sk-spinner sk-spinner-wave">
+		                                    <div class="sk-rect1"></div>
+		                                    <div class="sk-rect2"></div>
+		                                    <div class="sk-rect3"></div>
+		                                    <div class="sk-rect4"></div>
+		                                    <div class="sk-rect5"></div>
+		                                </div>
+		                            </div>
+		                        </div>
+		                    </div>
+		                </div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div id="templatemo-preferences-form" style="display:none;padding-left:15px;padding-right:15px">
+		<div class="row">
+			<div class="col-md-12 margin-bottom-15">
+				<label for="wh_num" class="control-label">报损数量</label>
+				<input type="text" class="form-control" id="wh_num" placeholder="请输入报损数量">
+			</div>
+		</div>
+		<div class="row templatemo-form-buttons">
+			<div class="col-md-12" style="margin-top:15px">
+				<button id="save_info" class="btn btn-primary save_item" style="width:100%">保存</button>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Mainly scripts -->
+	<script th:src="@{{sp}/js/jquery-2.1.1.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/bootstrap.min.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/metisMenu/jquery.metisMenu.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/slimscroll/jquery.slimscroll.min.js(sp=${pub_bucket})}"></script>
+
+	<!-- Custom and plugin javascript -->
+	<script th:src="@{{sp}/js/inspinia.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/pace/pace.min.js(sp=${pub_bucket})}"></script>
+	
+	<script th:src="@{{sp}/third/layer3/layer.js(sp=${pub_bucket})}" type="text/javascript"></script>
+	
+	<!-- Ladda -->
+    <script th:src="|${pub_bucket}/js/plugins/ladda/spin.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/ladda/ladda.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/ladda/ladda.jquery.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/jeditable/jquery.jeditable.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/dataTables/datatables.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/select2/select2.full.min.js|"></script>
+    
+    <script th:src="|${pub_bucket}/js/plugins/jsTree/jstree.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/validate/jquery.validate.min.js|"></script>
+    
+    <script th:src="|${pub_bucket}/js/plugins/sweetalert/sweetalert.min.js|"></script>
+    <!-- Data picker -->
+	<script th:src="|${pub_bucket}/js/plugins/datapicker/bootstrap-datepicker.js|"></script>
+    <!-- Clock picker -->
+	<script th:src="|${pub_bucket}/js/plugins/clockpicker/clockpicker.js|"></script>
+	<!-- Date range use moment.js same as full calendar plugin -->
+	<script th:src="|${pub_bucket}/js/plugins/fullcalendar/moment.min.js|"></script>
+	<!-- Date range picker -->
+	<script th:src="|${pub_bucket}/js/plugins/daterangepicker/daterangepicker.js|"></script>
+
+	<script>
+		$(document).ready(function() {
+
+			$('#loading-example-btn').click(function() {
+				btn = $(this);
+				simpleLoad(btn, true)
+
+				simpleLoad(btn, false)
+			});
+		});
+
+		function simpleLoad(btn, state) {
+			if (state) {
+				btn.children().addClass('fa-spin');
+				btn.contents().last().replaceWith(" Loading");
+			} else {
+				setTimeout(function() {
+					btn.children().removeClass('fa-spin');
+					btn.contents().last().replaceWith(" Refresh");
+				}, 2000);
+			}
+		}
+	</script>
+</body>
+
+<script type="text/javascript">
+$(function() {
+	var id = 0;
+	var l = $(".ladda-button").ladda();
+	
+	$('#in_date .input-group.date').datepicker({
+		todayBtn : "linked",
+		keyboardNavigation : false,
+		forceParse : false,
+		calendarWeeks : true,
+		autoclose : true,
+		format: "yyyy-mm-dd"
+	});
+	
+	var oTable = $('#editable').DataTable({"searching": false,"lengthChange": false,"ordering": false});
+	
+	$('.sel_g').editable('editable.php',{
+		data   : " {'E':'Letter E','F':'Letter F','G':'Letter G', 'selected':'F'}",
+	    type:'select',//实时编辑input框的type
+	    cancel:'取消',//取消编辑按钮的文字
+	    submit:'确定',//确认提交按钮的文字
+	    indicator:'保存中...',//提交处理过程中显示的提示文字
+	    tooltip:'单击编辑...'//鼠标悬停时的提示信息
+	});
+	$(".sel_num").editable('editable.php',{
+	    type:'text',//实时编辑input框的type
+	    cancel:'取消',//取消编辑按钮的文字
+	    submit:'确定',//确认提交按钮的文字
+	    indicator:'保存中...',//提交处理过程中显示的提示文字
+	    tooltip:'单击编辑...',//鼠标悬停时的提示信息
+	    onsubmit: function(settings, original) {
+	    	$(this).validate({
+	            errorPlacement: function(error, element) {
+	                var form = $(element).parent();
+	                form.next().remove();
+	                form.parent().append(error);
+	            },
+	            success: function(error, element) {
+	                var form = $(element).parent();
+	                form.next().remove();
+	            },
+	            rules: {
+	                value:{required:!0,min:1,digits:true}
+	            },
+	            messages: {
+	                value:{
+	                    required: '不能为空',
+	                    min: '最小报损数量为1',
+	                    digits:'请输入整数'
+	                }
+	            }
+	        });
+	        return $(this).valid();
+	    }
+	});
+    $(".select_uper").select2({
+    	placeholder : "选择报损人",
+		allowClear : true
+    });
+    $(".select_wh").select2({
+    	placeholder : "选择仓库",
+		allowClear : true
+    });
+    $(".select_bt").select2({
+    	placeholder : "选择批次",
+		allowClear : true
+    });
+    
+    $(".save_upub").on("click", function() {
+    	var url = '/scm/stockout/udam/aj/save';
+    	var select_bt = $(".select_bt").val();
+    	var select_uper = $(".select_uper").val();
+    	var select_wh = $(".select_wh").val();
+    	var remark = $.trim($(".remark").val());
+    	var in_house_date = $(".in_house_date").val();
+    	if(!select_bt) {
+    		swal("提示", "请选择库存批次", "error");
+    		return;
+    	}
+    	if(!select_uper) {
+    		swal("提示", "请选择报损人", "error");
+    		return;
+    	}
+    	if(!select_wh) {
+    		swal("提示", "请选择报损仓库", "error");
+    		return;
+    	}
+    	var rows = null;
+    	var flag = false;
+    	$(".data_row").each(function() {
+    		if (flag) {
+                return;
+            }
+    		var wh_num = $(this).find("input").eq(0).val();
+    		if(isNaN(wh_num)) {
+                layer.msg('请检查报损数量', {icon: 5});
+                return;
+            }
+            if(wh_num<0) {
+                layer.msg('请检查报损数量', {icon: 5});
+                return;
+            }
+    		var row = $(this).attr("id") + "_" + wh_num;
+    		rows = (rows==null?row:rows + "," + row);
+    	});
+    	if (flag) {
+            return;
+        }
+    	if(!rows) {
+    		swal("提示", "请选择报损商品", "error");
+    		return;
+    	}
+		$this = $(this);
+		$this.ladda('start');
+		$.post('/scm/stockout/udam/aj/save', {bt:select_bt,wh:select_wh,remark:remark,in_house_date:in_house_date,data:rows,uper:select_uper}, function(data) {
+			$this.ladda('stop');
+			if(data.available) {
+				var fail_ops = data.data;
+				console.log(fail_ops);
+				var sub_len = $(".data_row").length;
+				if(fail_ops) {
+					if(sub_len==fail_ops.length) {
+						swal({title: "Error!", text: "商品出库失败，可能库存不足", type: "error"}, function() {
+							return;
+						});
+					} else {
+						swal({title: "Good job!", text: "部分出库完成", type: "warning"}, function() {
+							init();
+						});
+					}
+				} else {
+					swal({title: "Good job!", text: "出库完成", type: "success"}, function() {
+						init();
+					});
+				}
+			} else {
+				var code = data.messages[0];
+				var msg = "没有商品数据：" + code;
+				if(code=="number_format_error") {
+					swal("提示", "报损数量错误", "error");
+				} else {
+					swal("提示", msg, "error");
+				}
+			}
+		});
+    });
+    
+    var init = function() {
+    	$(".select_bt").val("");
+    	$(".select_wh").val("");
+    	$(".select_uper").val("");
+    	$(".in_house_date").val('');
+    	$(".remark").val('');
+    	$('#editable').dataTable().fnClearTable();
+    	$('#editable').dataTable().fnDestroy();
+    };
+    
+    
+    $(".load_models").on("click", function() {
+    	var select_wh = $(".select_wh").val();
+    	if(!select_wh) {
+    		swal({
+                title: "提示",
+                text: "请先选择报损仓库!",
+                type: "error",
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "确定",
+                closeOnConfirm: true
+            }, function () {
+            	$(".close_sku_list").trigger("click");
+            });
+    		return;
+    	}
+    	$(".goods_area").removeClass('col-sm-6');
+		$(".goods_area").addClass('col-sm-12');
+		$(".goods_sku_area").addClass('hide');
+		$.get('/scm/stockout/udam/aj/load_goods?' + new Date().getTime(), {wh:select_wh}, function(data) {
+			if(data.available&&data.data!=null) {
+				var html = '<div class="tab-content">'
+				html += '<div id="tab-2" class="tab-pane active">';
+				html += '<div class="full-height-scroll">';
+				html += '<div class="table-responsive">';
+				html += '<table class="table table-striped table-hover">';
+				html += '<tbody>';
+				
+				for(x in data.data) {
+					var tmp_obj = data.data[x];
+					html += '<tr class="choose_goods client-link" goods_id="' + tmp_obj.id + '"  goods_num="'+  tmp_obj.goods_id +'" goods_name="'+tmp_obj.goods_name +'">';
+					html += '<td><a data-toggle="tab" href="javascript:void(0)" >' + tmp_obj.goods_name + '</a></td>';
+					html += '<td class="goods_id"><i class="fa fa-flag"></i> ' + tmp_obj.goods_id + '</td>';
+					html += '</tr>';
+				}
+				html += '</tbody></table></div></div></div></div>';
+				$(".GOODS_LIST").html(html);
+				$(".choose_goods").on("click", function() {
+					var goods_id = $(this).attr("goods_id");
+					var goods_num = $(this).attr("goods_num");
+					var goods_name = $(this).attr("goods_name");
+					$.get('/scm/stockout/udam/aj/load_sku?' + new Date().getTime(), {gid:goods_id,wh:select_wh}, function(data) {
+						if(data.data==null||data.data.length==0) {
+							var msg = "没有商品数据";
+							layer.msg(msg, {shift: 6});
+							return;
+						}
+						if(data.available) {
+							$(".goods_area").removeClass('col-sm-12');
+							$(".goods_area").addClass('col-sm-6');
+							$(".goods_sku_area").removeClass('hide');
+							
+							var html = '<div class="tab-content">'
+							html += '<div id="tab-2" class="tab-pane active">';
+							html += '<div class="full-height-scroll">';
+							html += '<div class="table-responsive">';
+							html += '<table class="table table-striped table-hover">';
+							html += '<tbody>';
+							
+							for(x in data.data) {
+								var tmp_obj = data.data[x];
+								html += '<tr>';
+								html += '<td><a data-toggle="tab" href="javascript:void(0)" class="client-link sku_no">' + tmp_obj.goods_sku_no + '</a></td>';
+								html += '<td class="sku_props"><i class="fa fa-flag"></i> ' + tmp_obj.goods_sku_name + '</td>';
+								
+								html += '<td class="sku_stock">' + tmp_obj.stock + '</td>';
+								
+								html += '<td class="client-status"><button class="choose_gm btn btn-primary btn-circle" sku_id="' + tmp_obj.goods_sku_id + '"><i class="fa fa-check"></i></button></td>';
+								html += '</tr>';
+							}
+							html += '</tbody></table></div></div></div></div>';
+							$(".SKU_LIST").html(html);
+							$(".choose_gm").on("click", function() {
+								var sku_id = $(this).attr("sku_id");
+								var sku_no = $.trim($(this).parent().parent().find(".sku_no").text());
+								var sku_props = $.trim($(this).parent().parent().find(".sku_props").text());
+								var btn_area = '<button data-style="zoom-in" class="ladda-button btn btn-danger btn-xs remove_dtrow"><i class="fa fa-trash"></i> 删除</button>';
+								var row_id = "row_" + goods_id; if(sku_id) {row_id += "_" + sku_id;}
+								if($("#" + row_id).length>0) { return; }
+								var input1 = '<input   type="text" placeholder="数量" class="form-control"  style="width:90%">'
+								  
+								var param = {"DT_RowId": row_id, "DT_RowClass": "data_row " + row_id,
+										"0": goods_num, "1": goods_name, "2": sku_no, "3": sku_props, "4": input1, "5": btn_area };
+								$('#editable').dataTable().fnAddData(param);
+							});
+						}
+					});
+				});
+			} else {
+				var code = data.messages[0];
+				var msg = "没有商品数据：" + code;
+				layer.msg(msg, {shift: 6});
+			}
+		});
+	});
+    
+    $("body").on("click", ".remove_dtrow", function(e) {
+    	e.stopPropagation();
+    	var id = $(this).parent().parent().attr("id");
+    	$('#editable').DataTable().rows("#" + id).remove().draw(false);
+    });
+    
+  /*   var row_id = null;
+    $("body").on("click", ".data_row", function() {
+    	row_id = $(this).attr("id");
+    	$("#wh_num").val('');
+		layer.open({
+			area : [ '60%', '80%'],
+			type : 1,
+			content : $("#templatemo-preferences-form")
+		});
+	});
+    $(".save_item").on("click", function() {
+    	var wh_num = parseInt($.trim($("#wh_num").val()));
+    	
+    	if(isNaN(wh_num)) {
+    		layer.msg('请检查报损数量', {icon: 5});
+    		return;
+    	}
+    	if(wh_num<0) {
+    		layer.msg('请检查报损数量', {icon: 5});
+    		return;
+    	}
+    	$("#" + row_id).find("td").eq(4).html(wh_num);
+    	layer.closeAll();
+    }); */
+});
+</script>
+
+<script>
+$(document).ready(function(){
+    $('#jstree1').jstree({
+		'core' : {
+			'check_callback' : true,
+			"data" : {  
+		        "dataType" : 'json', 
+		        "opts":{  
+	                method: "POST"
+		        },
+		        "url" : function(node){  
+		            return '/scm/common/org/load'; 
+		        },  
+		        "data" : function(node){
+		        	if(node.id !="#"){
+		        		return {"id" : node.id};
+		        	}
+		            return {"id" : 0};//写自己的加载数据
+		        }
+		    }
+		},
+		'plugins' : ['types', 'dnd'],
+		'types' : {
+			'default' : {'icon' : 'fa fa-folder'},
+			'html' : {'icon' : 'fa fa-file-code-o'},
+			'svg' : {'icon' : 'fa fa-file-picture-o'},
+			'css' : {'icon' : 'fa fa-file-code-o'},
+			'img' : {'icon' : 'fa fa-file-image-o'},
+			'js' : {'icon' : 'fa fa-file-text-o'}
+		}
+	});
+    $('#jstree1').bind("activate_node.jstree", function (event,data) {
+    	var cat_id = data.node.id;
+    	var full_path =  data.node.text;
+    	$.get('/scm/common/org/person?' + new Date().getTime(), {id:cat_id}, function(data) {
+    		var html = '<option></option>';
+    		if(data.available) {
+    			for(x in data.data) {
+    				html += '<option value="' + data.data[x].id + '">' + data.data[x].username + '</option>';
+    			}
+    		}
+    		$(".select_uper").html(html);
+    		$(".select_uper").select2({
+    	    	placeholder : "选择" + full_path + "报损人",
+    			allowClear : true
+    	    });
+    	});
+	});
+});
+</script>
+</html>

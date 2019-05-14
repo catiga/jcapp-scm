@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[[${str}]] | 组合套餐库</title>
+<link th:href="@{{sp}/css/bootstrap.min.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/font-awesome/css/font-awesome.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/css/animate.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/css/style.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/dropzone/basic.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/dropzone/dropzone.css|" rel="stylesheet">
+</head>
+
+<body>
+	<div id="wrapper">
+		<div th:replace="../common/nav"></div>
+		<div id="page-wrapper" class="gray-bg">
+			<div th:replace="../common/top"></div>
+
+			<div class="wrapper wrapper-content animated fadeIn" style="padding-bottom:0px">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="ibox float-e-margins border-bottom">
+							<div class="ibox-title">
+								<h5>文件选择</h5>
+								<div class="ibox-tools">
+									<a class="collapse-link pop_up_area"><i class="fa fa-chevron-up"></i></a>
+								</div>
+							</div>
+							<div class="ibox-content" style="display: none;">
+								<div class="form-group">
+								    <label class="title">选择组合套餐图片</label>
+								    <div id="dropz" class="dropzone"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+
+			<div class="wrapper wrapper-content" style="padding-top:0px">
+				<div class="row">
+					<div class="col-lg-3">
+						<div class="ibox float-e-margins">
+							<div class="ibox-content">
+								<div class="file-manager">
+									<h5>[[${goods.name}]]</h5>
+									<!-- 
+									<a href="#" class="file-control active">Ale</a>
+									<a href="#" class="file-control">Documents</a>
+									<a href="#" class="file-control">Audio</a> 
+									<a href="#" class="file-control">Images</a>
+									 -->
+									 <div class="hr-line-dashed"></div>
+									<button class="btn btn-primary btn-block choose_file">选择图片</button>
+									<div class="hr-line-dashed"></div>
+									<h5>分类</h5>
+									<ul class="folder-list" style="padding: 0">
+										<li><a href="###" class="with_code" attr_code='-1'><i class="fa fa-folder"></i> 全部</a></li>
+										<li><a href="###" class="with_code" attr_code='image'><i class="fa fa-folder"></i> 图片</a></li>
+										<li><a href="###" class="with_code" attr_code='video'><i class="fa fa-folder"></i> 视频</a></li>
+									</ul>
+									<h5 class="tag-title">标签</h5>
+									<ul class="tag-list" style="padding: 0">
+										<!-- <li><a href="###">Family</a></li>  -->
+									</ul>
+									<div class="clearfix"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-9 animated fadeInRight">
+						<div class="row">
+							<div class="col-lg-12">
+								<div class="file-box myfiles" th:each="st:${imgs}" th:ct="${st.ct_code}">
+									<div class="file">
+										<a href="#"> 
+											<span class="corner"></span>
+											<div class="icon" th:if="${st.img_type}!='0000'"><i class="fa fa-file"></i></div>
+											<div class=image th:if="${st.img_type}=='0000'">
+												<img alt="image" class="img-responsive" th:src="|${root_path}/${st.img_url}|">
+											</div>
+											<div class="file-name">
+												[[${st.content_type}]] <br /> 
+												<small>Added: [[${#dates.format(st.c_time, 'yyyy-MM-dd')}]]</small>
+												<button class="btn btn-primary btn-circle on_index" th:st_url="${st.img_url}" type="button"><i class="fa fa-list"></i></button>
+											</div>
+										</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div th:replace="../common/foot"></div>
+		</div>
+	</div>
+	
+	<div id="preview-template" style="display:none">
+		<div class="dz-preview dz-file-preview">
+			<div class="dz-details">
+				<div class="dz-filename"><span data-dz-name></span></div>
+				<div class="dz-size" data-dz-size></div>
+				<img data-dz-thumbnail />
+			</div>
+			<div class="progress progress-small progress-striped active">
+				<div class="progress-bar progress-bar-success" data-dz-uploadprogress></div>
+			</div>
+			<div class="dz-success-mark"><span></span></div><div class="dz-error-mark"><span></span></div>
+			<div class="dz-error-message"><span data-dz-errormessage></span></div>
+		</div>
+	</div>
+	<!-- Mainly scripts -->
+	<script th:src="@{{sp}/js/jquery-2.1.1.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/bootstrap.min.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/metisMenu/jquery.metisMenu.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/slimscroll/jquery.slimscroll.min.js(sp=${pub_bucket})}"></script>
+
+	<!-- Custom and plugin javascript -->
+	<script th:src="@{{sp}/js/inspinia.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/pace/pace.min.js(sp=${pub_bucket})}"></script>
+	
+	<script th:src="@{{sp}/third/layer3/layer.js(sp=${pub_bucket})}" type="text/javascript"></script>
+	
+	<script th:src="|${pub_bucket}/js/plugins/dropzone/dropzone.js|"></script>
+</body>
+
+<script type="text/javascript">
+$(function() {
+	$('.file-box').each(function() {
+		animationHover(this, 'pulse');
+	});
+});
+</script>
+
+
+
+<script type="text/javascript" th:inline="javascript">
+$(function() {
+	$(".choose_file").on("click", function() {$(".pop_up_area").trigger('click')});
+	var g_id = [[${goods.id}]];
+	Dropzone.autoDiscover = false;
+    $("#dropz").dropzone({ 
+    	url: "/scm/gdpack/aj/upload?g_id=" + g_id,
+    	addRemoveLinks: true,        
+    	method:"post",
+        paramName:"f",
+        maxFiles:10,//一次性上传的文件数量上限
+        maxFilesize: 2, //MB
+        acceptedFiles: ".jpg,.gif,.png", //上传的类型
+        parallelUploads: 3,
+        dictMaxFilesExceeded: "一次最多只能上传10个文件！",
+        dictResponseError: '文件上传失败!',
+        dictInvalidFileType: "不能上传该类型文件,文件类型只能是*.jpg,*.gif,*.png。",
+        dictFallbackMessage:"浏览器不受支持",
+        dictFileTooBig:"文件过大上传文件最大支持.",
+        previewTemplate: document.querySelector('#preview-template').innerHTML,//设置显示模板
+        init:function(){
+            this.on("addedfile", function(file) { 
+            //上传文件时触发的事件
+            });
+            this.on("queuecomplete",function(file) {
+                //上传完成后触发的方法
+                console.log(file);
+            });
+            this.on("removedfile",function(file){
+                //删除文件时触发的方法
+                console.log(file);
+            });
+		}
+    });
+    
+    $(".with_code").on("click", function() {
+    	var $this = $(this);
+    	if($this.attr("attr_code")!='-1') {
+    		$(".myfiles").each(function() {
+    			if($this.attr('attr_code')==$(this).attr("ct")) {
+    				$(this).show()
+    			} else {
+    				$(this).hide();
+    			}
+    		});
+    	} else {
+    		$(".myfiles").each(function() {
+    			$(this).show();
+    		});
+    	}
+    });
+    
+    $(".on_index").on("click", function(){
+    	$.get('/scm/gdpack/aj/on_index', {id:g_id,f:$(this).attr('st_url')}, function(data) {
+    		if(data.available) {
+    			layer.msg('商品首页图设置成功');
+    		} else {
+    			var code = data.messages[0];
+				var msg = "商品首页图设置失败：" + code;
+				layer.msg(msg, {shift: 6});
+    		}
+    	})
+    });
+});
+</script>
+
+</html>

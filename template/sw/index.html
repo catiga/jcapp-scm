@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[[${str}]] | 库存预警设置</title>
+<link th:href="@{{sp}/css/bootstrap.min.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/font-awesome/css/font-awesome.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/css/animate.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="@{{sp}/css/style.css(sp=${pub_bucket})}" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/iCheck/custom.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/jsTree/style.min.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/sweetalert/sweetalert.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/ladda/ladda-themeless.min.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/dataTables/datatables.min.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/select2/select2.min.css|" rel="stylesheet">
+</head>
+
+<body>
+	<div id="wrapper">
+		<div th:replace="../common/nav"></div>
+		<div id="page-wrapper" class="gray-bg">
+			<div th:replace="../common/top"></div>
+			<div class="row wrapper border-bottom white-bg page-heading hide">
+				<div class="col-sm-4">
+					<h2>库存预警表</h2>
+					<ol class="breadcrumb">
+						<li><a href="javascript:;">Home</a></li>
+						<li class="active"><strong>库存预警信息</strong></li>
+					</ol>
+				</div>
+			</div>
+
+			<div class="wrapper wrapper-content animated fadeInRight ecommerce" style="padding-bottom:0px;">
+				<div class="ibox-content m-b-sm border-bottom">
+					<div class="row">
+						<div class="col-sm-4">
+							<div class="form-group">
+								<label class="control-label" for="ware_house">仓库</label>
+								<select name="ware_house" id="ware_house" class="form-control ware_house">
+									<option></option>
+									<option th:each="w:${all_whs}" th:value="${w.id}" th:text="${w.name}" th:selected="${w.id==wh_id}"></option>
+								</select>
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="form-group">
+								<label class="control-label" for="ware_house">商品编码</label>
+								<input type="text" id="g_num" name="g_num" placeholder="输入商品编码" class="input-sm form-control" th:value="${g_num}">
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="form-group">
+								<label class="control-label" for="ware_house">SKU编码</label>
+								<div class="input-group">
+									<input type="text" id="sku_num" name="sku_num" placeholder="输入SKU编码" class="input-sm form-control" th:value="${sku_num}"> 
+									<span class="input-group-btn">
+										<button type="button" class="btn btn-sm btn-primary do_query"> 查询</button>
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-lg-3 catalog_area" style="display:none">
+					<div class="wrapper wrapper-content animated fadeInUp">
+						<div class="ibox float-e-margins">
+							<div class="ibox-title">
+								<h5>商品分组结构</h5>
+								<div class="ibox-tools">
+									<a class="collapse-link"> <i class="fa fa-chevron-up"></i></a> 
+									<a class="close-link"> <i class="fa fa-times"></i></a>
+								</div>
+							</div>
+							<div class="ibox-content">
+								<div id="jstree1"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-12 goods_area">
+					<div class="wrapper wrapper-content animated fadeInUp">
+						<div class="ibox">
+							<div class="ibox-content">
+								<div class="table-responsive">
+                                	<table class="table table-striped">
+										<thead>
+		                                    <tr>
+		                                    	<th>#</th>
+												<th>编号</th>
+												<th>名称</th>
+												<th>sku编号</th>
+												<th>sku属性</th>
+												<th>合计上限</th>
+												<th>合计下限</th>
+												<th>操作</th>
+		                                    </tr>
+	                                    </thead>
+										<tbody>
+											<tr th:each="st:${page.result}" th:attr_id="${st.id }">
+												<td class="check-mail">
+							                        <input type="checkbox" class="i-checks blick_g" th:attr_id="${st.id}">
+							                    </td>
+												<td>[[${st.goods_no }]]</td>
+												<td>[[${st.goods_name}]]</td>
+												<td>[[${st.goods_sku_no}]]</td>
+												<td>[[${st.goods_sku_name}]]</td>
+												<td>[[${st.totuplimit}]]</td>
+												<td>[[${st.totlowlimit}]]</td>
+												<td>
+													<button data-style="zoom-in" class="ladda-button btn btn-primary btn-sm detail" th:attr_id="${st.id}"><i class="fa fa-pencil"></i> 详情 </button>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+									<div th:replace="../common/page"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div th:replace="../common/foot"></div>
+		</div>
+	</div>
+
+
+
+
+	<div id="templatemo-preferences-form" style="display: none; padding-left: 15px; padding-right: 15px;">
+		<div class="ibox float-e-margins">
+			<div class="ibox-title">
+				<h5>预警详细设置</h5>
+			</div>
+			<div class="ibox-content">
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th>仓库名称</th>
+							<th>预警上限</th>
+							<th>预警下限</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="w:${all_whs}" class="wh_clz" th:attr_id="${w.id}">
+							<td>[[${w.name}]]</td>
+							<td class="sel_num" op='1'></td>
+							<td class="sel_num" op='0'></td>
+						</tr>
+					</tbody>
+				</table>
+
+			</div>
+		</div>
+	</div>
+
+	<!-- Mainly scripts -->
+	<script th:src="@{{sp}/js/jquery-2.1.1.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/bootstrap.min.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/metisMenu/jquery.metisMenu.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/slimscroll/jquery.slimscroll.min.js(sp=${pub_bucket})}"></script>
+
+	<!-- Custom and plugin javascript -->
+	<script th:src="@{{sp}/js/inspinia.js(sp=${pub_bucket})}"></script>
+	<script th:src="@{{sp}/js/plugins/pace/pace.min.js(sp=${pub_bucket})}"></script>
+	<script th:src="|${pub_bucket}/js/plugins/jsTree/jstree.min.js|"></script>	
+	<script th:src="@{{sp}/third/layer3/layer.js(sp=${pub_bucket})}" type="text/javascript"></script>
+	<script th:src="|${pub_bucket}/js/plugins/sweetalert/sweetalert.min.js|"></script>
+	<!-- iCheck -->
+    <script th:src="|${pub_bucket}/js/plugins/iCheck/icheck.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/validate/jquery.validate.min.js|"></script>
+    <!-- Ladda -->
+    <script th:src="|${pub_bucket}/js/plugins/ladda/spin.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/ladda/ladda.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/ladda/ladda.jquery.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/jeditable/jquery.jeditable.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/dataTables/datatables.min.js|"></script>
+    <script th:src="|${pub_bucket}/js/plugins/select2/select2.full.min.js|"></script>
+	<script>
+		$(document).ready(function() {
+
+			$('#loading-example-btn').click(function() {
+				btn = $(this);
+				simpleLoad(btn, true)
+				if($(".goods_area").hasClass('col-lg-9')) {
+					$(".goods_area").removeClass('col-lg-9');
+					$(".goods_area").addClass('col-lg-12');
+					$(".catalog_area").fadeOut();
+				} else {
+					$(".catalog_area").fadeIn();
+					$(".goods_area").removeClass('col-lg-12');
+					$(".goods_area").addClass('col-lg-9');
+				}
+				simpleLoad(btn, false)
+			});
+		});
+
+		function simpleLoad(btn, state) {
+			if (state) {
+				btn.children().addClass('fa-spin');
+				btn.contents().last().replaceWith(" Loading");
+			} else {
+				setTimeout(function() {
+					btn.children().removeClass('fa-spin');
+					btn.contents().last().replaceWith(" 分组管理");
+				}, 2000);
+			}
+		}
+	</script>
+</body>
+
+<script type="text/javascript">
+$(function() {
+	$(".ware_house").select2({placeholder:'选择仓库',allowClear:true});
+	$('.i-checks').iCheck({
+        checkboxClass: 'icheckbox_square-green',
+        radioClass: 'iradio_square-green',
+    });
+	var check_gs = [];
+	$(".blick_g").on("ifChecked ifUnchecked", function(event) {
+		var id = $(this).attr("attr_id");
+		if (event.type == 'ifChecked') {
+            $(this).iCheck('check');
+            check_gs.push(id);
+        } else {
+        	$(this).iCheck('uncheck');
+        	check_gs.splice($.inArray(id, check_gs), 1);
+        }
+	});
+	$(".batch_for_sale").on("click", function() {
+		if(check_gs.length==0) {
+			swal("提示", "请选择要操作的商品", "error");
+    		return;
+		}
+		$this = $(this);
+		$this.ladda('start');
+		$.get('/scm/goods/aj/for_sale', {gs:check_gs.join(',')}, function(data) {
+			$this.ladda('stop');
+			if(data.available) {
+				swal("提示", "操作成功", "success");
+			} else {
+				swal("提示", "操作失败", "error");
+			}
+		});
+	});
+	$(".for_sale").on("click", function() {
+		$this = $(this);
+		$this.ladda('start');
+		$.get('/scm/goods/aj/for_sale', {gs:check_gs.join(',')}, function(data) {
+			$this.ladda('stop');
+			if(data.available) {
+				swal("提示", "操作成功", "success");
+			} else {
+				swal("提示", "操作失败", "error");
+			}
+		});
+	});
+	$(".do_query").on("click", function() {
+		var wh = $("#ware_house").val();
+		var g_num = $.trim($("#g_num").val());
+		var sku_num = $.trim($("#sku_num").val());
+		sku_num = encodeURIComponent(encodeURIComponent(sku_num));
+		location.href = '/scm/sw/index?wh_id='+wh+'&g_num='+g_num+'&sku_num='+sku_num;
+	});
+	var l = $(".ladda-button").ladda();
+	var total_id = 0;
+	$(".detail").on("click", function() {
+		var $this = $(this);
+		total_id = $(this).attr("attr_id");
+		$this.ladda('start');
+		//获取详细设置
+		$.post('/scm/sw/aj/detail', {id:total_id}, function(data) {
+			$this.ladda('stop');
+			if(data.available) {
+				if(data.data!=null&&data.data.length>0) {
+					$(".wh_clz").each(function() {
+						var wh_id = $(this).attr("attr_id");
+						for(x in data.data) {
+							if(data.data[x]['wh_id']==wh_id) {
+								$(this).find('td').eq(1).html(data.data[x]['up_limit']);
+								$(this).find('td').eq(2).html(data.data[x]['low_limit']);
+							}
+						}
+					});
+				}
+				layer.open({
+					area : [ '60%', '80%'],
+					type : 1,
+					content : $("#templatemo-preferences-form")
+				});
+			} else {
+				alert('error');
+			}
+		});
+	});
+	
+	$(".sel_num").editable('/scm/sw/aj/flush_detail',{
+	    type:'text',//实时编辑input框的type
+	    cancel:'取消',//取消编辑按钮的文字
+	    submit:'确定',//确认提交按钮的文字
+	    indicator:'保存中...',//提交处理过程中显示的提示文字
+	    tooltip:'单击编辑...',//鼠标悬停时的提示信息
+	    submitdata: function(value, settings) {
+	    	var wh_id = $(this).parent().attr("attr_id");
+	    	var op = $(this).attr("op");
+	    	return {total_id:total_id,op:op,wh_id:wh_id};
+	    },
+	    onsubmit: function(settings, original) {
+	    	$(this).validate({
+	            errorPlacement: function(error, element) {
+	                var form = $(element).parent();
+	                form.next().remove();
+	                form.parent().append(error);
+	            },
+	            success: function(error, element) {
+	                var form = $(element).parent();
+	                form.next().remove();
+	            },
+	            rules: {
+	                value:{required:!0,min:1,digits:true}
+	            },
+	            messages: {
+	                value:{
+	                    required: '不能为空',
+	                    min: '最小数量为1',
+	                    digits:'请输入整数'
+	                }
+	            }
+	        });
+	        return $(this).valid();
+	    },
+	    callback: function(value, settings) {
+	    	value = eval('(' + value + ')');
+	    	if(value.available) {
+	    		$(this).html(value.data);
+	    	} else {
+	    		swal("提示", '操作失败：' + value.messages[1], "error");
+	    		$(this).html('');
+	    	}
+	    }
+	});
+});
+</script>
+
+<script type="text/javascript">
+$(function() {
+	$('#jstree1').jstree({
+		'core' : {
+			'check_callback' : true,
+			"data" : {  
+		        "dataType" : 'json', 
+		        "opts":{  
+	                method: "POST"
+		        },
+		        "url" : function(node){  
+		            return '/scm/catalog/aj/load'; 
+		        },  
+		        "data" : function(node){
+		        	if(node.id !="#"){
+		        		return {"id" : node.id};
+		        	}
+		            return {"id" : 0};//写自己的加载数据
+		        }
+		    }
+		},
+		'plugins' : [ 'types', 'dnd', 'contextmenu' ],
+		'types' : {
+			'default' : {'icon' : 'fa fa-folder'},
+			'html' : {'icon' : 'fa fa-file-code-o'},
+			'svg' : {'icon' : 'fa fa-file-picture-o'},
+			'css' : {'icon' : 'fa fa-file-code-o'},
+			'img' : {'icon' : 'fa fa-file-image-o'},
+			'js' : {'icon' : 'fa fa-file-text-o'}
+		},
+		contextmenu : {
+			"items" : function(node) {
+				return { 
+                    "view" : {
+                        label: "编辑节点",
+                        action: function(data) {
+                        	view_node(data);
+                        }
+                    }
+				} 
+			}
+		}
+	});
+	$('#jstree1').bind("activate_node.jstree", function (obj, e) {
+	    var currentNode = e.node;
+	    var full_path = (e.instance.get_path(currentNode));
+	    $(".cat_info").find("h5").html('当前分类：' + full_path.join('/'));
+	});
+});
+</script>
+</html>
