@@ -485,7 +485,7 @@ class GoodsService {
 		}
 		def cats = cat_service.build_catalog_hierars(cat.id, '');
 		logger.info('get_cat_goods:' + cats);
-		String sql = 'select * from GoodsInfo where flag!=? and id in (select g_id from GfCatalog where flag!=? and c_id like "' + cats + ',%")';
+		String sql = 'select * from GoodsInfo where flag!=? and id in (select g_id from GfCatalog where flag!=? and c_id like "' + cats + '%")';
 		return jc_template.find(GoodsInfo.class, sql, -1, -1);
 	}
 	
