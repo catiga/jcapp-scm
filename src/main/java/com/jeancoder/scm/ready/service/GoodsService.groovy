@@ -3,6 +3,8 @@ package com.jeancoder.scm.ready.service
 import java.sql.Timestamp
 
 import com.jeancoder.app.sdk.JC
+import com.jeancoder.app.sdk.source.LoggerSource
+import com.jeancoder.core.log.JCLogger
 import com.jeancoder.core.util.JackSonBeanMapper
 import com.jeancoder.jdbc.JcPage
 import com.jeancoder.jdbc.JcTemplate
@@ -30,6 +32,8 @@ class GoodsService {
 	JcTemplate jc_template = JcTemplate.INSTANCE();
 	
 	CatalogService cat_service = CatalogService.INSTANCE();
+	
+	JCLogger logger = LoggerSource.getLogger();
 	
 	public static GoodsService INSTANCE() {
 		return __instance__;
@@ -480,6 +484,7 @@ class GoodsService {
 			return null;
 		}
 		def cats = cat_service.build_catalog_hierars(cat.id, '');
+		logger.info('get_cat_goods:' + cats);
 		String sql = 'select * from GoodsInfo where flag!=? and id in (select g_id from GfCatalog where flag!=? and c_id like "' + cats + ',%")';
 		return jc_template.find(GoodsInfo.class, sql, -1, -1);
 	}
