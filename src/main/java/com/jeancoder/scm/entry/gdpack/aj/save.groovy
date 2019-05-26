@@ -21,7 +21,7 @@ CmpGoodsService cmp_g_s = CmpGoodsService.INSTANCE();
 
 def id = JC.request.param('id');
 GoodsPack pack = null;
-if(id!=null) {
+if(id!=null&&id!=''&&id!='0') {
 	pack = cmp_g_s.get_pack(id);
 	if(pack==null) {
 		return SimpleAjax.notAvailable('obj_not_found,商品组合未找到');
