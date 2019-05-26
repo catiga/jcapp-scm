@@ -21,6 +21,7 @@ CmpGoodsService cmp_g_s = CmpGoodsService.INSTANCE();
 
 def id = JC.request.param('id');
 GoodsPack pack = null;
+def update = true;
 if(id!=null&&id!=''&&id!='0') {
 	pack = cmp_g_s.get_pack(id);
 	if(pack==null) {
@@ -29,6 +30,7 @@ if(id!=null&&id!=''&&id!='0') {
 	if(pack.pid!=GlobalHolder.proj.id) {
 		return SimpleAjax.notAvailable('belong_error,商品组合编辑权限不足');
 	}
+	update = false;
 } else {
 	pack = new GoodsPack();
 	pack.pid = GlobalHolder.proj.id;
@@ -44,8 +46,6 @@ def gpsn = JC.request.param('gpsn');
 try {
 	if(gpsn) {
 		Integer.valueOf(gpsn);
-	} else {
-		gpsn = GoodsNoGenerator.generateNo();
 	}
 } catch(any) {
 	return SimpleAjax.notAvailable('param_error,套餐编号请输入数字');
@@ -137,7 +137,7 @@ pack.rec_price = real_rec_price;
 pack.cost_price = real_cost_price;
 
 //先保存基础pack
-if(pack==null) {
+if(!update) {
 	id = cmp_g_s.save_pack_info(pack);
 	if(id==-1) {
 		//内码重复
