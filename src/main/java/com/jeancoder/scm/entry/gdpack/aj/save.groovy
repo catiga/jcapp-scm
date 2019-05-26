@@ -8,6 +8,7 @@ import com.jeancoder.scm.ready.entity.GdMerge
 import com.jeancoder.scm.ready.entity.GoodsInfo
 import com.jeancoder.scm.ready.entity.GoodsPack
 import com.jeancoder.scm.ready.entity.GoodsSku
+import com.jeancoder.scm.ready.gen.GoodsNoGenerator
 import com.jeancoder.scm.ready.service.CmpGoodsService
 import com.jeancoder.scm.ready.service.GoodsService
 import com.jeancoder.scm.ready.service.MergeGoodsService
@@ -20,7 +21,7 @@ CmpGoodsService cmp_g_s = CmpGoodsService.INSTANCE();
 
 def id = JC.request.param('id');
 GoodsPack pack = null;
-if(id) {
+if(id!=null) {
 	pack = cmp_g_s.get_pack(id);
 	if(pack==null) {
 		return SimpleAjax.notAvailable('obj_not_found,商品组合未找到');
@@ -39,6 +40,16 @@ def gpname = JC.request.param('gpname');
 def gpinfo = JC.request.param('gpinfo');
 def gpunit = JC.request.param('gpunit');
 def gpsn = JC.request.param('gpsn');
+//套餐编号只能为整数
+try {
+	if(gpsn) {
+		Integer.valueOf(gpsn);
+	} else {
+		gpsn = GoodsNoGenerator.generateNo();
+	}
+} catch(any) {
+	return SimpleAjax.notAvailable('param_error,套餐编号请输入数字');
+}
 def sale_price = JC.request.param('gp_sale_price');
 def rec_price = JC.request.param('gp_rec_price');
 def cost_price = JC.request.param('gp_cost_price');
@@ -126,7 +137,7 @@ pack.rec_price = real_rec_price;
 pack.cost_price = real_cost_price;
 
 //先保存基础pack
-if(!id) {
+if(pack==null) {
 	id = cmp_g_s.save_pack_info(pack);
 	if(id==-1) {
 		//内码重复
