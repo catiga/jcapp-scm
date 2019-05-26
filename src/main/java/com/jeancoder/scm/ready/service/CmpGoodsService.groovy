@@ -67,9 +67,17 @@ class CmpGoodsService {
 		return jc_template.find(GoodsPack.class, sql, params.toArray());
 	}
 	
-	public JcPage<GoodsPack> find_packs(JcPage<GoodsPack> page) {
-		String sql = 'select * from GoodsPack where flag!=? and pid=? order by a_time desc';
-		return jc_template.find(GoodsPack.class, page, sql, -1, GlobalHolder.proj.id);
+	public JcPage<GoodsPack> find_packs(JcPage<GoodsPack> page, String g_no = null, BigInteger pid = null) {
+		String sql = 'select * from GoodsPack where flag!=?';
+		def params = []; params.add(-1);
+		if(pid==null && GlobalHolder.proj!=null) {
+			pid = GlobalHolder.proj.id;
+			sql += ' and pid=?'; params.add(pid);
+		}
+		if(g_no!=null) {
+			sql += ' and sn like "' + g_no + '%"';
+		}
+		return jc_template.find(GoodsPack.class, page, sql, params.toArray());
 	}
 	
 	public JcPage<GoodsPack> find_packs_by_num(JcPage<GoodsPack> page, def g_no) {

@@ -21,7 +21,7 @@ page.pn = pn;
 page.ps = 20;
 
 CmpGoodsService ss_service = CmpGoodsService.INSTANCE();
-page = ss_service.find_packs(page);
+page = ss_service.find_packs(page, g_no);
 
 Result view = new Result();
 view.setView("gdpack/index");
@@ -32,7 +32,6 @@ view.addObject('g_no', g_no);
 
 view.addObject('now_proj', GlobalHolder.proj);
 
-//def img_root = 'https://cdn.iplaysky.com'
 def img_root = GlobalHolder.INSTANCE.img_path();
 view.addObject('root_path', img_root);
 
