@@ -30,12 +30,12 @@ if(id!=null&&id!=''&&id!='0') {
 	if(pack.pid!=GlobalHolder.proj.id) {
 		return SimpleAjax.notAvailable('belong_error,商品组合编辑权限不足');
 	}
-	update = false;
 } else {
 	pack = new GoodsPack();
 	pack.pid = GlobalHolder.proj.id;
 	pack.a_time = new Timestamp(Calendar.getInstance().getTimeInMillis());
 	pack.flag = 0;
+	update = false;
 }
 
 def gpname = JC.request.param('gpname');
