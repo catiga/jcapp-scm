@@ -29,7 +29,7 @@ def project = JC.internal.call('project', '/incall/project_by_id', [pid:pid]);
 def img_path = '//';
 try {
 	project = JackSonBeanMapper.jsonToMap(project);
-	img_path = img_path + '/' + project['domain'] + '/img_server';
+	img_path = img_path + project['domain'] + '/img_server';
 } catch(any) {
 }
 
@@ -90,7 +90,11 @@ if(page_merge.result) {
 }
 
 //ret_data.each({it-> it[0].sku_img = 'http://pe1s.static.pdr365.com/' + it[1].goods_picturelink});
-ret_data.each({it-> it[0].sku_img = img_path + '/' + it[1].goods_picturelink});
+ret_data.each({it->
+	if(it[1].goods_picturelink) {
+		it[0].sku_img = img_path + '/' + it[1].goods_picturelink
+	} 
+});
 def result = ret_data;
 
 
