@@ -99,8 +99,8 @@ class GoodsService {
 		if(goods_num==null||goods_num.toString().trim().equals('')) {
 			return null;
 		}
-		String sql = 'select * from GoodsInfo where goods_id=? and flag!=?';
-		def params = []; params.add(goods_num); params.add(-1);
+		String sql = 'select * from GoodsInfo where ( goods_id=? or goods_out_no=? or goods_code=? ) and flag!=?';
+		def params = []; params.add(goods_num); params.add(goods_num); params.add(goods_num); params.add(-1);
 		SysProjectInfo now_project = JC.internal.call(SysProjectInfo, 'project', '/incall/project_by_id', [pid:pid]);
 		if(!now_project.root) {
 			sql += ' and (proj_id=? or proj_id=?)';
