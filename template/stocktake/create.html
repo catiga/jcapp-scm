@@ -291,7 +291,7 @@ $(function() {
 		$(this).html(find_unit_name($(this).html()));
 	})
 	
-	var oTable = $('#editable').DataTable({"searching": false,"lengthChange": false,"ordering": false});
+	var oTable = $('#editable').DataTable({"searching": false,"lengthChange": false,"ordering": false, "bPaginate": false});
 	
 	$('#in_date .input-group.date').datepicker({
 		todayBtn : "linked",
@@ -452,8 +452,7 @@ $(function() {
     	});
     });
     
-    
-    
+    /*
     $('.sel_g').editable('editable.php',{
 		data   : " {'E':'Letter E','F':'Letter F','G':'Letter G', 'selected':'F'}",
 	    type:'select',//实时编辑input框的type
@@ -462,6 +461,7 @@ $(function() {
 	    indicator:'保存中...',//提交处理过程中显示的提示文字
 	    tooltip:'单击编辑...'//鼠标悬停时的提示信息
 	});
+    */
 	
     $(".sel_num").editable('/scm/stocktake/aj/flush',{
 	    type:'text',//实时编辑input框的type
