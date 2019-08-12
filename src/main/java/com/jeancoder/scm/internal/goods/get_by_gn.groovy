@@ -16,6 +16,9 @@ if(goods==null||goods.empty) {
 	return SimpleAjax.notAvailable('obj_not_found,商品未找到');
 }
 
+return SimpleAjax.available('', goods);
+
+/*
 GoodsInfo g = null;
 if(goods.size()==1) {
 	g = goods.get(0);
@@ -30,3 +33,4 @@ List<GoodsImg> goods_imgs = GoodsService.INSTANCE().find_goods_imgs(g.id, '100')
 GoodsContent goods_content = GoodsService.INSTANCE().get_content(g.id);
 
 return SimpleAjax.available('', [g, goods_imgs, goods_content]);
+*/
