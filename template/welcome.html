@@ -5,24 +5,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>[[${str}]] | 欢迎页</title>
-<link th:href="@{{sp}/css/bootstrap.min.css(sp=${pub_bucket})}"
-	rel="stylesheet">
-<link
-	th:href="@{{sp}/font-awesome/css/font-awesome.css(sp=${pub_bucket})}"
-	rel="stylesheet">
-<link th:href="@{{sp}/css/animate.css(sp=${pub_bucket})}"
-	rel="stylesheet">
-<link th:href="|${pub_bucket}/css/plugins/sweetalert/sweetalert.css|"
-	rel="stylesheet">
-<link th:href="@{{sp}/css/style.css(sp=${pub_bucket})}" rel="stylesheet">
-<link th:href="|${pub_bucket}/css/plugins/select2/select2.min.css|"
-	rel="stylesheet">
+<link th:href="|${pub_bucket}/css/bootstrap.min.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/font-awesome/css/font-awesome.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/animate.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/sweetalert/sweetalert.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/style.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/select2/select2.min.css|" rel="stylesheet">
 
-<link
-	th:href="|${pub_bucket}/css/plugins/ladda/ladda-themeless.min.css|"
-	rel="stylesheet">
-<link th:href="|${pub_bucket}/css/plugins/sweetalert/sweetalert.css|"
-	rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/ladda/ladda-themeless.min.css|" rel="stylesheet">
+<link th:href="|${pub_bucket}/css/plugins/sweetalert/sweetalert.css|" rel="stylesheet">
 </head>
 
 <body>
@@ -52,26 +43,25 @@
 
 									<div class="row diff-wrapper">
 										<div class="col-md-4">
-											<h4>系统配置</h4>
+											<h4>货品管理</h4>
 
 											<div class="original">
-											项目管理：创建与管理系统项目，项目之间数据隔离，适用于不同门店之间管理使用.<br/>
-											功能管理：
+											货品库：管理一般商品，合成品，套装等.<br/>
+											SKU管理：管理商品SKU
 											</div>
 										</div>
 										<div class="col-md-4">
-											<h4>权限系统</h4>
+											<h4>分组管理</h4>
 
 											<div class="changed">
-											用户管理：
-											角色管理：
-											组织架构：
+											分组设置：管理商品分组分类
+											渠道设置：管理商品分组显示渠道
 											</div>
 										</div>
 										<div class="col-md-4">
-											<h4>门店管理</h4>
+											<h4>在售商品管理</h4>
 											<div class="diff1">
-											管理系统门店信息
+											商品上下架，开售信息管理
 											</div>
 										</div>
 									</div>
