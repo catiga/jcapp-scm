@@ -90,6 +90,7 @@
 												[[${st.content_type}]] <br /> 
 												<small>Added: [[${#dates.format(st.c_time, 'yyyy-MM-dd')}]]</small>
 												<button class="btn btn-primary btn-circle on_index" th:st_url="${st.img_url}" type="button"><i class="fa fa-list"></i></button>
+												<button class="btn btn-danger btn-circle remove_index" th:img_id="${st.id}" type="button"><i class="fa fa-times"></i></button>
 											</div>
 										</a>
 									</div>
@@ -225,6 +226,22 @@ $(function() {
     		}
     	})
     });
+    
+    $("body").on("click", ".remove_index", function(){
+    	let img_id = $(this).attr('img_id');
+    	let obj = this;
+    	$.get('/scm/goods/aj/remove_index?' + new Date().getTime(), {id:g_id,img_id:img_id}, function(data) {
+    		if(data.available) {
+    			layer.msg('操作成功');
+    			$(obj).parent().parent().parent().parent().remove();
+    		} else {
+    			var code = data.messages[0];
+				var msg = "商品图片删除失败：" + code;
+				layer.msg(msg, {shift: 6});
+    		}
+    	})
+    });
+    
     $(".go_back").on("click", function() {
     	history.go(-1);
     });
