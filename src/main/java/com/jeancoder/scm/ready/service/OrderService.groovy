@@ -44,8 +44,13 @@ class OrderService {
 		if(ds!=null) {
 			sql += ' and dss=?';
 		}
-		if(oss!=null) {
-			sql += ' and oss in (?)'; params.add(oss);
+		if(oss!=null && oss) {
+			sql += ' and oss in (';
+			for(x in oss) {
+				sql += '?,';
+				params.add(x);
+			}
+			sql = sql.substring(0, sql.length() - 1) + ')';
 		}
 		sql += ' order by a_time desc';
 		return JcTemplate.INSTANCE().find(OrderInfo, sql, params.toArray());

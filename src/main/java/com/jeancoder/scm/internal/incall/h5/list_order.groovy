@@ -12,15 +12,6 @@ if(!oss) {
 	oss = null;
 } else {
 	oss = oss.split(',');
-	def buff = new StringBuffer();
-	if(oss && !oss.empty) {
-		for(x in oss) {
-			buff.append("'" + x + "',");
-		}
-		oss = buff.substring(0, buff.length - 1);
-	} else {
-		oss = null;
-	}
 }
 
 if(!ds) {
