@@ -4,25 +4,31 @@ import com.jeancoder.app.sdk.JC
 import com.jeancoder.scm.ready.service.OrderService
 import com.jeancoder.scm.ready.entity.OrderInfo
 
-/**
- * '/incall/cashier/create_order?gs=******'
- * 创建商品订单
- * 商品协议串
- * 参数名称：gs, s_id
- * gs参数格式：tyc,商品id,SKU_ID,数量,remark;商品id,SKU_ID,数量,remark
- *           普通商品：tyc=100
- *           套餐商品：tyc=200
- * s_id参数：门店id
- * @author jackielee
- */
-
-//首先校验当前用户
 def apid = JC.internal.param('apid');
+def oss = JC.internal.param('oss');			//逗号分割的订单状态
+def ds = JC.internal.param('ds');			// 150:190  电商订单或到店订单
 
-def ds = JC.internal.param('ds');
+if(!oss) {
+	oss = null;
+} else {
+	oss = oss.split(',');
+	def buff = new StringBuffer();
+	if(oss && !oss.empty) {
+		for(x in oss) {
+			buff.append("'" + x + "',");
+		}
+		oss = buff.substring(0, buff.length - 1);
+	} else {
+		oss = null;
+	}
+}
+
+if(!ds) {
+	ds = null;
+}
 
 OrderService order_service= OrderService.INSTANCE();
-def orders = order_service.find_user_order(apid, null, null);
+def orders = order_service.find_user_order(apid, ds, oss);
 
 if(orders==null||orders.empty) {
 	return new ArrayList<OrderInfo>();
