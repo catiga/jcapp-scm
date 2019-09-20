@@ -563,7 +563,7 @@ CREATE TABLE `data_inventory_check_item`  (
 DROP TABLE IF EXISTS `dsc_setting`;
 CREATE TABLE `dsc_setting`  (
   `id` bigint(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `codec` varchar(16) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `codec` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `remark` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `a_time` datetime(0) NULL DEFAULT NULL,
