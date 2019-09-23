@@ -11,15 +11,37 @@ def pid = JC.internal.param('pid')?.toString()?.trim();
 def o_id = JC.internal.param('o_id')?.toString()?.trim();
 def o_rem = JC.internal.param('o_rem')?.toString()?.trim();
 
-if(!o_rem) {
-	return SimpleAjax.notAvailable('param_error,未设置备注信息');
+def addr_id = JC.internal.param('addr_id')?.toString()?.trim();
+
+if(o_rem) {
+	o_rem = URLDecoder.decode(o_rem, 'UTF-8');
+	o_rem = URLDecoder.decode(o_rem, 'UTF-8');
 }
-o_rem = URLDecoder.decode(o_rem, 'UTF-8');
-o_rem = URLDecoder.decode(o_rem, 'UTF-8');
+
+def addr = null;
+if(addr_id) {
+	SimpleAjax addr_aj = JC.internal.call(SimpleAjax, 'crm', '/h5/address/get', [pid:pid, id:addr_id]);
+	if(addr_aj && addr_aj.available) {
+		addr = addr_aj.data;
+	}
+}
 
 OrderInfo order = OrderService.INSTANCE().get(pid, o_id);
 if(order==null) {
 	return SimpleAjax.notAvailable('obj_not_found,订单未找到');
+}
+
+if(addr!=null) {
+	order.buyeraddr = addr.address;
+	order.buyercitycode = addr.city_code;
+	order.buyercityname = addr.city;
+	order.buyername = addr.name;
+	order.buyerphone = addr.mobile;
+	order.buyerprovincecode = addr.province_code;
+	order.buyerprovincename = addr.province;
+	order.buyerzonecode = addr.zone_code;
+	order.buyerzonename = addr.zone;
+	JcTemplate.INSTANCE().update(order);
 }
 
 //修改订单备注
