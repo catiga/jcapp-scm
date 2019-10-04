@@ -97,7 +97,7 @@
 							                        <input type="checkbox" name="goods_item" class="i-checks blick_g" th:attr_id="${st.id}">
 							                    </td>
 												<td class='gpimg'>
-													<img th:if="${st.pic_url!=null}" th:src="|http://pe1s.static.pdr365.com/${st.pic_url}|"/>
+													<img th:if="${st.pic_url!=null}" th:src="|${img_path}/${st.pic_url}|"/>
 													<img th:if="${st.pic_url==null}" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1532405662569&di=495b69bea3fe35a647d4892c01cfe93a&imgtype=0&src=http%3A%2F%2Fwww.wutangshipin.org%2FA0000000%2F57266.jpg"/>
 												</td>
 												<td>[[${st.sn }]]</td>
@@ -348,6 +348,7 @@ $(function() {
 </script>
 
 <script type="text/javascript">
+let img_path = '[[${img_path}]]';
 $(function() {
 	$('#jstree1').jstree({
 		'core' : {
@@ -403,7 +404,7 @@ $(function() {
 	    		var html = '';
 	    		for(x in data.data) {
 	    			html += '<tr>';
-	    			html += '<td class="gpimg"><img src="http://pe1s.static.pdr365.com/' + data.data[x].pic_url + '"/></td>';
+	    			html += '<td class="gpimg"><img src="' + img_path + '/' + data.data[x].pic_url + '"/></td>';
 	    			html += '<td>' + data.data[x].sn + '</td>';
 	    			html += '<td>' + data.data[x].name + '</td>';
 	    			html += '<td>' + data.data[x].unit + '</td>';

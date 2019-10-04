@@ -5,6 +5,7 @@ import com.jeancoder.core.result.Result
 import com.jeancoder.jdbc.JcPage
 import com.jeancoder.scm.ready.entity.GoodsInfo
 import com.jeancoder.scm.ready.service.GoodsService
+import com.jeancoder.scm.ready.util.GlobalHolder
 import com.jeancoder.scm.ready.util.UnitUtil
 
 GoodsService goods_service = GoodsService.INSTANCE();
@@ -32,4 +33,5 @@ view.addObject("page", page);
 view.addObject('units', UnitUtil.toList());
 view.addObject('g_no', g_no);
 
+view.addObject('img_path', GlobalHolder.INSTANCE.img_path());
 return view;

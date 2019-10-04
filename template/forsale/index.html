@@ -362,6 +362,7 @@ $(function() {
 
 <script type="text/javascript" th:inline="javascript">
 var units = [[${units}]];
+let img_path = '[[${img_path}]]';
 var find_unit_name = function(code) {
 	for(xxx in units) {
 		if(units[xxx].code==code) {
@@ -425,7 +426,7 @@ $(function() {
 	    		var html = '';
 	    		for(x in data.data) {
 	    			html += '<tr>';
-	    			html += '<td class="gpimg"><img src="http://pe1s.static.pdr365.com/' + data.data[x].goods_picturelink + '"/></td>';
+	    			html += '<td class="gpimg"><img src="' + img_path + '/' + data.data[x].goods_picturelink + '"/></td>';
 	    			html += '<td>' + data.data[x].goods_id + '</td>';
 	    			html += '<td>' + data.data[x].goods_name + '</td>';
 	    			html += '<td>' + data.data[x].weight + '</td>';
