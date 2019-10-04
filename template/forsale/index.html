@@ -98,7 +98,7 @@
 							                        <input type="checkbox" name="goods_item" class="i-checks blick_g" th:attr_id="${st.id}">
 							                    </td>
 												<td class='gpimg'>
-													<img th:if="${st.goods_picturelink!=null}" th:src="|http://pe1s.static.pdr365.com/${st.goods_picturelink}|"/>
+													<img th:if="${st.goods_picturelink!=null}" th:src="|${img_path}/${st.goods_picturelink}|"/>
 													<img th:if="${st.goods_picturelink==null}" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1532405662569&di=495b69bea3fe35a647d4892c01cfe93a&imgtype=0&src=http%3A%2F%2Fwww.wutangshipin.org%2FA0000000%2F57266.jpg"/>
 												</td>
 												<td>[[${st.goods_id }]]</td>
