@@ -16,6 +16,11 @@ import com.jeancoder.scm.ready.service.GoodsService
 def cdn_root_path = '/data/cdn/jc';
 def rel_path = 'scm/goods';
 
+SimpleAjax sys_conf = JC.internal.call(SimpleAjax, 'project', '/sys/get_root_path', null);
+if(sys_conf && sys_conf.available) {
+	cdn_root_path = sys_conf.data;
+}
+
 def g_id = JC.request.param('g_id');
 
 def img_type = JC.request.param('img_type')?.trim()?:'0000';

@@ -15,6 +15,11 @@ import com.jeancoder.scm.ready.util.GlobalHolder
 def cdn_root_path = '/data/cdn/jc';
 def rel_path = 'scm/catlog';
 
+SimpleAjax sys_conf = JC.internal.call(SimpleAjax, 'project', '/sys/get_root_path', null);
+if(sys_conf && sys_conf.available) {
+	cdn_root_path = sys_conf.data;
+}
+
 CatalogService service = CatalogService.INSTANCE();
 
 Catalog catalog = null;
