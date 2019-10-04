@@ -177,16 +177,11 @@
 						</div>
 					</div>
 				</div>
-				
-				
-				
-				
-				
-				
 			</div>
 			<div th:replace="../common/foot"></div>
 		</div>
 	</div>
+	<input type="hidden" id="img_path" th:value="${img_path}"/>
 	
 	<!-- Mainly scripts -->
 	<script th:src="@{{sp}/js/jquery-2.1.1.js(sp=${pub_bucket})}"></script>
@@ -362,7 +357,7 @@ $(function() {
 
 <script type="text/javascript" th:inline="javascript">
 var units = [[${units}]];
-let img_path = '[[${img_path}]]';
+let img_path = $("#img_path").val();
 var find_unit_name = function(code) {
 	for(xxx in units) {
 		if(units[xxx].code==code) {

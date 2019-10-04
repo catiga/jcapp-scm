@@ -169,13 +169,11 @@
 						</div>
 					</div>
 				</div>
-				
-				
-				
 			</div>
 			<div th:replace="../common/foot"></div>
 		</div>
 	</div>
+	<input type="hidden" id="img_path" th:value="${img_path}"/>
 	
 	<!-- Mainly scripts -->
 	<script th:src="@{{sp}/js/jquery-2.1.1.js(sp=${pub_bucket})}"></script>
@@ -348,7 +346,7 @@ $(function() {
 </script>
 
 <script type="text/javascript">
-let img_path = '[[${img_path}]]';
+let img_path = $("#img_path").val();
 $(function() {
 	$('#jstree1').jstree({
 		'core' : {
