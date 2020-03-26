@@ -17,7 +17,6 @@ def pn = Integer.valueOf(JC.internal.param('pn')?.toString()?.trim()?:1);
 def ps = 200;
 
 def pid = JC.internal.param('pid');
-def token = JC.internal.param('token');
 
 def cat_id = JC.internal.param('cat_id');
 Catalog node = null;
