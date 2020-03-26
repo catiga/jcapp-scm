@@ -10,7 +10,6 @@ import com.jeancoder.scm.ready.util.GlobalHolder
 CatalogService cat_service = CatalogService.INSTANCE();
 
 def pid = JC.internal.param('pid');
-def token = JC.internal.param('token');
 def parent = JC.internal.param('parent');
 //获取前端传入的访问渠道参数
 def dscs = JC.internal.param('dscs');

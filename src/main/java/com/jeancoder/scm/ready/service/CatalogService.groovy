@@ -33,9 +33,12 @@ class CatalogService {
 		if(parent!=null) {
 			sql = sql + ' and parent_id=?';
 			params.add(parent.id);
-		} else {
+		}
+		/* 
+		else {
 			sql = sql + ' and parent_id is null';
 		}
+		*/
 		sql = sql + ' and (show_dsc=?'; params.add('0');	//取全部显示的
 		if(cat_son_ids) {
 			sql = sql + ' or id in (';
