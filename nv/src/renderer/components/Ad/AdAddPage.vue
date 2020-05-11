@@ -93,6 +93,7 @@
 
 <script>
     import api from '@/config/api';
+	import qs from 'qs'
 
     export default {
         data() {
@@ -135,7 +136,7 @@
                 this.related_pop = false;
             },
             relateGoodsClick() {
-                this.axios.post('ad/getallrelate', {id: this.infoForm.id}).then((response) => {
+                this.axios.post(this.root + 'ad/getallrelate', qs.stringify({id: this.infoForm.id})).then((response) => {
                     if (response.data.errno === 0) {
                         this.chooseRelateGoods = response.data.data
                     }
@@ -150,7 +151,7 @@
             adRemove(file, fileList) {
                 this.infoForm.image_url = '';
                 let id = this.infoForm.id;
-                this.axios.post('ad/deleteAdImage', {id: id}).then((response) => {
+                this.axios.post(this.root + 'ad/deleteAdImage', qs.stringify({id: id})).then((response) => {
                     this.$message({
                         type: 'success',
                         message: '删除成功'
@@ -200,7 +201,7 @@
                 }
                 this.$refs['infoForm'].validate((valid) => {
                     if (valid) {
-                        this.axios.post('ad/store', this.infoForm).then((response) => {
+                        this.axios.post(this.root + 'ad/store', qs.stringify(this.infoForm)).then((response) => {
                             if (response.data.errno === 0) {
                                 this.$message({
                                     type: 'success',
@@ -235,7 +236,7 @@
                 }
                 //加载广告详情
                 let that = this
-                this.axios.get('ad/info', {
+                this.axios.get(this.root + 'ad/info', {
                     params: {
                         id: that.infoForm.id
                     }
@@ -255,9 +256,9 @@
         },
         components: {},
         mounted() {
+        	this.root = api.rootUrl;
             this.infoForm.id = this.$route.query.id || 0;
             this.getInfo();
-            this.root = api.rootUrl;
             this.getQiniuToken();
             this.qiniuZone = api.qiniu;
         }

@@ -616,6 +616,8 @@
     import VueBarcode from '../../../../node_modules/vue-barcode';
     import ElButton from "../../../../node_modules/element-ui/packages/button/src/button.vue";
     // Vue.component(VueBarcode.name, VueBarcode);
+    
+    import api from '@/config/api';
 
     export default {
         data() {
@@ -688,7 +690,7 @@
             },
             getAllRegion() {
                 let that = this;
-                this.axios.get('order/getAllRegion').then((response) => {
+                this.axios.get(this.root + 'order/getAllRegion').then((response) => {
                     this.options = response.data.data;
                 })
             },
@@ -705,7 +707,7 @@
                         return false;
                     }
                 }
-                this.axios.get('order/orderDelivery', {
+                this.axios.get(this.root + 'order/orderDelivery', {
                     params: {
                         orderId: this.order_id,
                         shipper: this.nowDeliveryId,
@@ -792,10 +794,10 @@
                 })
             },
             changeMemo(id, text) {
-                this.axios.post('order/saveAdminMemo', {
+                this.axios.post(this.root + 'order/saveAdminMemo', qs.stringify({
                     text: text,
                     id: id
-                }).then((response) => {
+                })).then((response) => {
                     if (response.data.errno === 0) {
                         this.$message({
                             type: 'success',
@@ -888,7 +890,7 @@
                 this.getList()
             },
             getList() {
-                this.axios.get('order', {
+                this.axios.get(this.root + 'order/list', {
                     params: {
                         page: this.page,
                         orderSn: this.filterForm.order_sn,
@@ -1196,13 +1198,13 @@
 
             },
             getAutoStatus() {
-                this.axios.get('order/getAutoStatus').then((response) => {
+                this.axios.get(this.root + 'order/getAutoStatus').then((response) => {
                     let ele = response.data.data;
                     ele == 1 ? this.autoGoDelivery = true : this.autoGoDelivery = false
                 })
             },
             getOrderInfo(sn) {
-                this.axios.get('order/detail', {
+                this.axios.get(this.root + 'order/detail', {
                     params: {
                         orderId: this.order_id,
                     }
@@ -1242,6 +1244,7 @@
         //     this.getList();
         // },
         mounted() {
+        	this.root = api.rootUrl;
             this.getList();
             this.getAutoStatus();
             // this.getSenderInfo();

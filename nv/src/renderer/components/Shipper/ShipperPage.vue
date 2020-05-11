@@ -73,7 +73,9 @@
 </template>
 
 <script>
-
+	import api from '@/config/api';
+    import qs from 'qs'
+    
     export default {
         data() {
             return {
@@ -144,7 +146,7 @@
                 this.infoForm.autoDelivery == true ? this.infoForm.autoDelivery = 1 : this.infoForm.autoDelivery = 0;
                 this.$refs['infoForm'].validate((valid) => {
                     if (valid) {
-                        this.axios.post('admin/storeShipperSettings', this.infoForm).then((response) => {
+                        this.axios.post(this.root + 'shipper/storeShipperSettings', qs.stringify(this.infoForm)).then((response) => {
                             if (response.data.errno === 0) {
                                 this.$message({
                                     type: 'success',
@@ -165,7 +167,7 @@
                 });
             },
             getList() {
-                this.axios.get('shipper').then((response) => {
+                this.axios.get(this.root + 'shipper/list').then((response) => {
                     this.infoForm = response.data.data.set;
                     this.tableData = response.data.data.info;
                     this.infoForm.autoDelivery == 1 ? this.infoForm.autoDelivery = true : this.infoForm.autoDelivery = false
@@ -180,6 +182,7 @@
         },
         components: {},
         mounted() {
+        	this.root = api.rootUrl;
             this.getList();
             this.getAllRegion();
         }

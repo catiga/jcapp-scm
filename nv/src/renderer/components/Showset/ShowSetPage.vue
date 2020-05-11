@@ -49,6 +49,7 @@
 
 <script>
     import api from '@/config/api';
+    import qs from 'qs'
 
     export default {
         data() {
@@ -69,7 +70,7 @@
             onSubmitInfo() {
                 this.$refs['infoForm'].validate((valid) => {
                     if (valid) {
-                        this.axios.post('admin/showsetStore', this.infoForm).then((response) => {
+                        this.axios.post(this.root + 'admin/showsetStore', qs.stringify(this.infoForm)).then((response) => {
                             if (response.data.errno === 0) {
                                 this.$message({
                                     type: 'success',
@@ -94,7 +95,7 @@
                 }
                 //加载优惠券详情
                 let that = this
-                this.axios.get('admin/showset').then((response) => {
+                this.axios.get(this.root + 'admin/showset').then((response) => {
                     let resInfo = response.data.data;
                     that.infoForm = resInfo;
                 })
@@ -103,6 +104,7 @@
         },
         components: {},
         mounted() {
+        	this.root = api.rootUrl;
             this.getInfo();
         }
     }

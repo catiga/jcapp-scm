@@ -5,7 +5,7 @@
                 <img src="static/images/loading2.gif"/>
             </div>
             <div class="body">
-                <p class="tips">JC_SCM_MGR</p>
+                <p class="tips">商品管理</p>
                 <el-form ref="form" :model="form" :rules="rules" label-position="top">
                     <el-form-item label="" prop="username">
                         <el-input v-model="form.username" placeholder="用户名"></el-input>
@@ -26,7 +26,9 @@
 </template>
 <script>
     import api from '@/config/api';
-
+    
+    import qs from 'qs'
+    
     export default {
         data() {
             return {
@@ -41,7 +43,7 @@
                     ],
                     password: [
                         {required: true, message: '请输入密码', trigger: 'blur'},
-                        {min: 6, message: '密码不得低于6个字符', trigger: 'blur'},
+                        {min: 4, message: '密码不得低于4个字符', trigger: 'blur'},
                     ],
                 },
                 loading: false,
@@ -56,10 +58,10 @@
                     }
                     this.loading = true;
                     let root = this.root;
-                    this.axios.post(root + 'auth/login', {
+                    this.axios.post(root + 'auth/login', qs.stringify({
                         username: this.form.username,
                         password: this.form.password
-                    }).then((res) => {
+                    })).then((res) => {
                         let call = res.data;
                         console.log(call);
                         this.loading = false;

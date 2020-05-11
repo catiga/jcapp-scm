@@ -218,6 +218,7 @@
 
 <script>
     import api from '@/config/api';
+    import qs from 'qs'
 
     export default {
         data() {
@@ -395,11 +396,11 @@
                 }
 
                 let that = this;
-                this.axios.post('shipper/saveTable', {
+                this.axios.post(this.root + 'shipper/saveTable', qs.stringify({
                     table: that.tableData,
                     defaultData: that.defaultData,
                     info: that.infoForm
-                }).then((response) => {
+                })).then((response) => {
                     if (response.data.errno === 0) {
                         this.$message({
                             type: 'success',
@@ -532,7 +533,7 @@
             },
             getAllAreaData() {
                 let that = this;
-                this.axios.post('shipper/getareadata').then((response) => {
+                this.axios.post(this.root + 'shipper/getareadata').then((response) => {
                     if (response.data.errno === 0) {
                         that.areaData = response.data.data;
                         // console.log(that.areaData);
@@ -584,9 +585,9 @@
 
             getAreaData() {
                 let that = this
-                this.axios.post('shipper/freightdetail', {
+                this.axios.post(this.root + 'shipper/freightdetail', qs.stringify({
                     id: that.infoForm.id
-                }).then((response) => {
+                })).then((response) => {
                     that.infoForm = response.data.data.freight;
                     that.tableData = response.data.data.data;
                     // console.log(this.tableData);
@@ -600,9 +601,9 @@
                 }
                 //加载快递公司详情
                 let that = this
-                this.axios.post('shipper/freightdetail', {
+                this.axios.post(this.root + 'shipper/freightdetail', qs.stringify({
                     id: that.infoForm.id
-                }).then((response) => {
+                })).then((response) => {
                     that.infoForm = response.data.data.freight;
                     that.tableData = response.data.data.data;
                     that.defaultData = response.data.data.defaultData;
@@ -613,6 +614,7 @@
         },
         components: {},
         mounted() {
+        	this.root = api.rootUrl;
             this.infoForm.id = this.$route.query.id || 0;
             // console.log(this.infoForm.id);
             this.getInfo();

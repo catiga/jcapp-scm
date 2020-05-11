@@ -35,7 +35,9 @@
 </template>
 
 <script>
-
+	import api from '@/config/api';
+    import qs from 'qs'
+    
     export default {
         data() {
             return {
@@ -61,7 +63,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.axios.post('shipper/destory', {id: row.id}).then((response) => {
+                    this.axios.post(this.root + 'shipper/destory', qs.stringify({id: row.id})).then((response) => {
                         console.log(response.data)
                         if (response.data.errno === 0) {
                             this.$message({
@@ -76,7 +78,7 @@
                 });
             },
             getList() {
-                this.axios.get('shipper/freight').then((response) => {
+                this.axios.get(this.root + 'shipper/freight').then((response) => {
                     console.log(response);
                     this.tableData = response.data.data
                 })
@@ -84,6 +86,7 @@
         },
         components: {},
         mounted() {
+        	this.root = api.rootUrl;
             this.getList();
         }
     }

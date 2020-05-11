@@ -32,6 +32,7 @@
 
 <script>
     import api from '@/config/api';
+    import qs from 'qs'
     export default {
         data() {
             return {
@@ -55,7 +56,7 @@
                 }
                 this.$refs['infoForm'].validate((valid) => {
                     if (valid) {
-                        this.axios.post('specification/add', info).then((response) => {
+                        this.axios.post(this.root + 'category/spec/add', qs.stringify(info)).then((response) => {
                             if (response.data.errno === 0) {
                                 this.$message({
                                     type: 'success',
@@ -82,7 +83,7 @@
                 }
                 this.$refs['infoForm'].validate((valid) => {
                     if (valid) {
-                        this.axios.post('specification/update', info).then((response) => {
+                        this.axios.post(this.root + 'category/spec/update', qs.stringify(info)).then((response) => {
                             if (response.data.errno === 0) {
                                 this.$message({
                                     type: 'success',
@@ -107,7 +108,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.axios.post('specification/delete', {id: row.id}).then((response) => {
+                    this.axios.post(this.root + 'category/spec/delete', qs.stringify({id: row.id})).then((response) => {
                         console.log(response.data)
                         if (response.data.errno === 0) {
                             this.$message({
@@ -136,9 +137,9 @@
                     return false
                 }
                 let that = this
-                this.axios.post('specification/detail', {
+                this.axios.post(this.root + 'category/detail', qs.stringify({
                         id: that.infoForm.id
-                }).then((response) => {
+                })).then((response) => {
                     let resInfo = response.data.data;
                     console.log(resInfo);
                     that.infoForm = resInfo;
@@ -147,6 +148,7 @@
         },
         components: {},
         mounted() {
+        	this.root = api.rootUrl;
             this.infoForm.id = this.$route.query.id || 0;
             
             this.getInfo();

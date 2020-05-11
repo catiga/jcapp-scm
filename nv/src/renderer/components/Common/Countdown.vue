@@ -6,6 +6,8 @@
  </span>
 </template>
 <script>
+	import api from '@/config/api';
+	
     export default {
         data() {
             return {
@@ -28,12 +30,12 @@
             }
         },
         mounted() {
+        	this.root = api.rootUrl;
             this.getInfo();
-
         },
         methods: {
             getInfo() {
-                this.axios.get('index',).then((response) => {
+                this.axios.get(this.root + 'index/total',).then((response) => {
                     console.log(response);
                     this.infoData = response.data.data;
                     let time = response.data.data.timestamp;

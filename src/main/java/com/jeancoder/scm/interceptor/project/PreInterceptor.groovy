@@ -8,7 +8,6 @@ import com.jeancoder.scm.ready.util.GlobalHolder
 import com.jeancoder.scm.ready.util.NativeUtil
 
 @urlmapped("/")
- 
 
 JCRequest req = JC.request.get();
 GlobalHolder.remove();

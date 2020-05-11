@@ -215,6 +215,8 @@
     import {quillEditor} from 'vue-quill-editor'
     import ElForm from "../../../../node_modules/element-ui/packages/form/src/form.vue";
     import ElFormItem from "../../../../node_modules/element-ui/packages/form/src/form-item.vue"; //调用富文本编辑器
+    import qs from 'qs'
+    
     const toolbarOptions = [
         ['bold', 'italic', 'underline', 'strike'],
         ['blockquote', 'code-block'],
@@ -497,7 +499,7 @@
             },
             getGalleryList() {
                 let goodsId = this.infoForm.id;
-                this.axios.post('goods/getGalleryList', {goodsId: goodsId}
+                this.axios.post(this.root + 'goods/getGalleryList', qs.stringify({goodsId: goodsId})
                 ).then((response) => {
                     this.gallery_list = response.data.data.galleryData;
                 })
@@ -653,7 +655,7 @@
                         goods_id: id
                     }
                     let that = this
-                    this.axios.post('goods/gallery', info).then((response) => {
+                    this.axios.post(this.root + 'goods/gallery', qs.stringify(info)).then((response) => {
                         that.getGalleryList();
                     })
                 }
@@ -689,7 +691,7 @@
                 }
                 //加载商品详情
                 let that = this
-                this.axios.get('goods/info', {
+                this.axios.get(this.root + 'goods/info', {
                     params: {
                         id: that.infoForm.id
                     }
@@ -708,7 +710,7 @@
             // 获取所有分类
             getAllCategory() {
                 let that = this;
-                this.axios.get('goods/getAllCategory', {
+                this.axios.get(this.root + 'goods/getAllCategory', {
                     params: {}
                 }).then((response) => {
                     that.options = response.data.data;
@@ -716,7 +718,7 @@
             },
             getAllSpecification() {
                 let that = this;
-                this.axios.get('goods/getAllSpecification').then((response) => {
+                this.axios.get(this.root + 'goods/getAllSpecification').then((response) => {
                     let resInfo = response.data.data;
                     console.log(resInfo);
                     that.specOptionsList = resInfo;
@@ -724,7 +726,7 @@
             },
             getExpressData() {
                 let that = this
-                this.axios.get('goods/getExpressData', {
+                this.axios.get(this.root + 'goods/getExpressData', {
                     params: {}
                 }).then((response) => {
                     let options = response.data.data;
@@ -780,6 +782,7 @@
             }
         },
         mounted() {
+        	this.root = api.rootUrl;
             this.infoForm.id = this.$route.query.id || 0;
             this.getInfo();
             this.getAllCategory();
@@ -790,7 +793,6 @@
                 this.getSpecData();
                 this.getGalleryList();
             }
-            this.root = api.rootUrl;
             this.qiniuZone = api.qiniu;
         },
     }

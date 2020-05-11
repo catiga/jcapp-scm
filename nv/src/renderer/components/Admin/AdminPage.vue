@@ -30,6 +30,8 @@
 </template>
 
 <script>
+import api from '@/config/api';
+import qs from 'qs'
 
 export default {
 	data() {
@@ -72,7 +74,7 @@ export default {
 			this.getList()
 		},
 		getList() {
-			this.axios.get('admin').then((response) => {
+			this.axios.get(this.root + 'admin').then((response) => {
                 this.tableData = response.data.data;
 				console.log(this.tableData);
 			})
@@ -81,6 +83,7 @@ export default {
 	components: {
 	},
 	mounted() {
+		this.root = api.rootUrl;
 		this.getList();
         if(!this.loginInfo){
             this.loginInfo = JSON.parse(window.localStorage.getItem('userInfo') || null);

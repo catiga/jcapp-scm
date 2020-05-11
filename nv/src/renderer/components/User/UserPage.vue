@@ -67,6 +67,8 @@
 </template>
 
 <script>
+import api from '@/config/api';
+import qs from 'qs'
 
 export default {
 	data() {
@@ -91,7 +93,7 @@ export default {
             this.fake = 0;
 		},
         submitNick(index, row){
-            this.axios.post('user/updateInfo', { id: row.id,nickname:row.nickname }).then((response) => {
+            this.axios.post(this.root + 'user/updateInfo', qs.stringify({ id: row.id,nickname:row.nickname })).then((response) => {
 
             })
 		},
@@ -132,7 +134,7 @@ export default {
 			this.getList()
 		},
 		getList() {
-			this.axios.get('user', {
+			this.axios.get(this.root + 'user/list', {
 				params: {
 					page: this.page,
                     nickname: this.filterForm.nickname
@@ -155,6 +157,7 @@ export default {
 
 	},
 	mounted() {
+		this.root = api.rootUrl;
 		let thePage = localStorage.getItem('userPage');
         if(thePage == null){
             thePage = 1;

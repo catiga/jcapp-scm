@@ -51,6 +51,8 @@
 </template>
 
 <script>
+import api from '@/config/api';
+import qs from 'qs'
 
 export default {
 	data() {
@@ -77,7 +79,7 @@ export default {
 			this.getList()
 		},
 		getList() {
-			this.axios.get('shopcart', {
+			this.axios.get(this.root + 'shopcart/list', {
 				params: {
 					page: this.page,
 					name: this.filterForm.name
@@ -93,6 +95,7 @@ export default {
 
 	},
 	mounted() {
+		this.root = api.rootUrl;
 		this.getList();
 	}
 }

@@ -1,0 +1,3 @@
+package com.jeancoder.scm.entry.incall.api.shipper
+
+return ["errno":0,"errmsg":"","data":["info":[["id":1,"name":"顺丰速运","code":"SF","sort_order":1,"MonthCode":"5800278123","CustomerName":null,"enabled":1],["id":5,"name":"圆通速递","code":"YTO","sort_order":5,"MonthCode":null,"CustomerName":null,"enabled":1],["id":15,"name":"顺丰特惠","code":"SF","sort_order":15,"MonthCode":"5800279123","CustomerName":null,"enabled":1]],"set":["id":1,"autoDelivery":1,"Name":"海鸥实验室","Tel":"13599888877","ProvinceName":"浙江省","CityName":"舟山市","ExpAreaName":"普陀区","Address":"嘉绿景苑","discovery_img_height":418,"discovery_img":"http://banner.zshxtop.com/924c1a17-eb9f-4d2e-9861-1fb168248065","goods_id":1000265,"city_id":123,"province_id":12,"district_id":1362,"countdown":1589184911,"reset":1]]];

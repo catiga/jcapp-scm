@@ -42,6 +42,7 @@
 
 <script>
     import api from '@/config/api';
+    import qs from 'qs'
 
     export default {
         data() {
@@ -75,7 +76,7 @@
             onSubmitInfo() {
                 this.$refs['infoForm'].validate((valid) => {
                     if (valid) {
-                        this.axios.post('shipper/store', this.infoForm).then((response) => {
+                        this.axios.post(this.root + 'shipper/store', qs.stringify(this.infoForm)).then((response) => {
                             if (response.data.errno === 0) {
                                 this.$message({
                                     type: 'success',
@@ -101,7 +102,7 @@
 
                 //加载快递公司详情
                 let that = this
-                this.axios.get('shipper/info', {
+                this.axios.get(this.root + 'shipper/info', {
                     params: {
                         id: that.infoForm.id
                     }
@@ -114,6 +115,7 @@
         },
         components: {},
         mounted() {
+        	this.root = api.rootUrl;
             this.infoForm.id = this.$route.query.id || 0;
             this.getInfo();
             console.log(api)

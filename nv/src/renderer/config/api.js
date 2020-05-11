@@ -1,5 +1,7 @@
-const rootUrl = 'http://www.hiolabs.com:8360/admin/';
-// const rootUrl = 'http://127.0.0.1:8360/admin/';
+const rootUrl = 'http://e.local:8080/scm/incall/api/';
+//const rootUrl = 'http://domain';
+//const rootUrl = 'http://www.hiolabs.com:8360/admin/';
+
 
 const api = {
     rootUrl : rootUrl,

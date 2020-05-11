@@ -163,7 +163,9 @@
 </template>
 
 <script>
-
+	import api from '@/config/api';
+	import qs from 'qs'
+	
     export default {
         data() {
             return {
@@ -390,7 +392,7 @@
                 })
             },
             getList() {
-                this.axios.get('goods', {
+                this.axios.get(this.root + 'goods/all', {
                     params: {
                         page: this.page,
 						size: this.size,
@@ -403,7 +405,7 @@
                 })
             },
             getOnSaleList() {
-                this.axios.get('goods/onsale', {
+                this.axios.get(this.root + 'goods/onsale', {
                     params: {
                         page: this.page,
 						size: this.size
@@ -415,7 +417,7 @@
                 })
             },
             getOutList() {
-                this.axios.get('goods/out', {
+                this.axios.get(this.root + 'goods/out', {
                     params: {
                         page: this.page,
 						size: this.size
@@ -427,7 +429,7 @@
                 })
             },
             getDropList() {
-                this.axios.get('goods/drop', {
+                this.axios.get(this.root + 'goods/drop', {
                     params: {
                         page: this.page,
 						size: this.size
@@ -442,7 +444,7 @@
                 this.num = num;
                 this.pIndex = 4;
                 this.activeClass = num;
-                this.axios.get('goods/sort', {
+                this.axios.get(this.root + 'goods/sort', {
                     params: {
                         page: this.page,
 						size: this.size,
@@ -455,7 +457,7 @@
                 })
             },
             changeStatus($event, para) {
-                this.axios.get('goods/saleStatus', {
+                this.axios.get(this.root + 'goods/saleStatus', {
                     params: {
                         status: $event,
                         id: para
@@ -475,7 +477,7 @@
                 })
             },
             changeShowStatus($event, para) {
-                this.axios.get('goods/indexShowStatus', {
+                this.axios.get(this.root + 'goods/indexShowStatus', {
                     params: {
                         status: $event,
                         id: para
@@ -487,6 +489,7 @@
         },
         components: {},
         mounted() {
+        	this.root = api.rootUrl;
             this.getOnSaleList();
         }
     }

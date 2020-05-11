@@ -79,7 +79,8 @@
 <script>
     import api from '@/config/api';
     import ElFormItem from "../../../../node_modules/element-ui/packages/form/src/form-item.vue";
-
+    import qs from 'qs'
+    
     export default {
         data() {
             return {
@@ -170,7 +171,7 @@
                 console.log(this.infoForm.level);
                 this.$refs['infoForm'].validate((valid) => {
                     if (valid) {
-                        this.axios.post('category/store', this.infoForm).then((response) => {
+                        this.axios.post(this.root + 'category/store', qs.stringify(this.infoForm)).then((response) => {
                             if (response.data.errno === 0) {
                                 this.$message({
                                     type: 'success',
@@ -198,7 +199,7 @@
                 this.infoForm.icon_url = url + res.key;
             },
             getTopCategory() {
-                this.axios.get('category/topCategory').then((response) => {
+                this.axios.get(this.root + 'category/topCategory').then((response) => {
                     this.parentCategory = this.parentCategory.concat(response.data.data);
                 })
             },
@@ -208,7 +209,7 @@
                 }
                 //加载分类详情
                 let that = this
-                this.axios.get('category/info', {
+                this.axios.get(this.root + 'category/info', {
                     params: {
                         id: that.infoForm.id
                     }
@@ -232,10 +233,10 @@
         },
         components: {ElFormItem},
         mounted() {
+        	this.root = api.rootUrl;
             this.getTopCategory();
             this.infoForm.id = this.$route.query.id || 0;
             this.getInfo();
-            this.root = api.rootUrl;
             this.qiniuZone = api.qiniu;
             this.getQiniuToken();
         }

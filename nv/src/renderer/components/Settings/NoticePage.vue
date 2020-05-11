@@ -57,6 +57,8 @@
 </template>
 
 <script>
+	import api from '@/config/api';
+    import qs from 'qs'
 
     export default {
         data() {
@@ -90,7 +92,7 @@
                     })
                     return false;
                 }
-                this.axios.post('notice/update', this.noticeData).then((response) => {
+                this.axios.post(this.root + 'notice/update', qs.stringify(this.noticeData)).then((response) => {
                     if (response.data.errno === 0) {
                         this.$message({
                             type: 'success',
@@ -122,7 +124,7 @@
                     })
                     return false;
                 }
-                this.axios.post('notice/add', this.noticeData).then((response) => {
+                this.axios.post(this.root + 'notice/update', qs.stringify(this.noticeData)).then((response) => {
                     if (response.data.errno === 0) {
                         this.$message({
                             type: 'success',
@@ -149,11 +151,6 @@
                 this.dialog = true;
                 this.is_add = false;
             },
-            submitContent(index, row) {
-                this.axios.post('notice/updateContent', {id: row.id, content: row.content}).then((response) => {
-
-                })
-            },
             handleRowDelete(index, row) {
                 this.$confirm('确定要删除?', '提示', {
                     confirmButtonText: '确定',
@@ -161,7 +158,7 @@
                     type: 'warning'
                 }).then(() => {
 
-                    this.axios.post('notice/destory', {id: row.id}).then((response) => {
+                    this.axios.post(this.root + 'notice/destory', qs.stringify({id: row.id})).then((response) => {
                         console.log(response.data)
                         if (response.data.errno === 0) {
                             this.$message({
@@ -177,13 +174,14 @@
                 });
             },
             getList() {
-                this.axios.get('notice').then((response) => {
+                this.axios.get(this.root + 'notice/list').then((response) => {
                     this.tableData = response.data.data;
                 })
             }
         },
         components: {},
         mounted() {
+        	this.root = api.rootUrl;
             this.getList();
         }
     }

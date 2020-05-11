@@ -153,6 +153,8 @@
 
 <script>
     import Countdown from './Common/Countdown';
+    import api from '@/config/api';
+    
     export default {
         data() {
             return {
@@ -180,7 +182,7 @@
                 console.log('????');
             },
             getInfo() {
-                this.axios.get('index',).then((response) => {
+                this.axios.get(this.root + 'index/total',).then((response) => {
                     this.infoData = response.data.data;
                 })
             },
@@ -205,7 +207,7 @@
                 }
             },
             getMainInfo(index) {
-                this.axios.get('index/main', {
+                this.axios.get(this.root + 'index/main', {
                     params: {
                         pindex: index
                     }
@@ -222,6 +224,7 @@
             Countdown
         },
         mounted() {
+        	this.root = api.rootUrl;
             this.getInfo();
             this.getMainInfo(0);
             if(!this.loginInfo){

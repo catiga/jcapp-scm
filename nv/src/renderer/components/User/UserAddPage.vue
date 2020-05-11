@@ -200,6 +200,7 @@
 
 <script>
     import api from '@/config/api';
+	import qs from 'qs'
 
     export default {
         data() {
@@ -236,7 +237,8 @@
         methods: {
             saveAddress() {
                 this.nowAddressData.addOptions = this.addOptions;
-                this.axios.post('user/saveaddress', this.nowAddressData).then((response) => {
+                console.log(this.nowAddressData);
+                this.axios.post(this.root + 'user/saveaddress', qs.stringify(this.nowAddressData)).then((response) => {
                     if (response.data.errno === 0) {
                         this.$message({
                             type: 'success',
@@ -254,11 +256,15 @@
                 })
             },
             addressEdit(item) {
+            	console.log(item);
                 this.nowAddressData = item;
                 this.addOptions.push(
                     item.province_id,
+                    item.province_name,
                     item.city_id,
+                    item.city_name,
                     item.district_id,
+                    item.district_name
                 )
 
                 this.dialogAddressVisible = true
@@ -288,12 +294,12 @@
                 }
             },
             submitNick(index, row) {
-                this.axios.post('user/updateInfo', {id: row.id, nickname: row.nickname}).then((response) => {
+                this.axios.post(this.root + 'user/updateInfo', qs.stringify({id: row.id, nickname: row.nickname})).then((response) => {
 
                 })
             },
             submitName(index, row) {
-                this.axios.post('user/updateName', {id: row.id, name: row.name}).then((response) => {
+                this.axios.post(this.root + 'user/updateName', qs.stringify({id: row.id, name: row.name})).then((response) => {
                     if (response.data.errno === 0) {
                         this.$message({
                             type: 'success',
@@ -308,7 +314,7 @@
                 })
             },
             submitMobile(index, row) {
-                this.axios.post('user/updateMobile', {id: row.id, mobile: row.mobile}).then((response) => {
+                this.axios.post(this.root + 'user/updateMobile', qs.stringify({id: row.id, mobile: row.mobile})).then((response) => {
                     if (response.data.errno === 0) {
                         this.$message({
                             type: 'success',
@@ -348,7 +354,7 @@
                     return false
                 }
                 let that = this;
-                this.axios.get('user/datainfo', {
+                this.axios.get(this.root + 'user/datainfo', {
                     params: {
                         id: that.infoForm.id
                     }
@@ -362,7 +368,7 @@
                     return false
                 }
                 let that = this;
-                this.axios.get('user/info', {
+                this.axios.get(this.root + 'user/info', {
                     params: {
                         id: that.infoForm.id
                     }
@@ -376,7 +382,7 @@
                     return false
                 }
                 let that = this;
-                this.axios.get('user/order', {
+                this.axios.get(this.root + 'user/order', {
                     params: {
                         id: that.infoForm.id,
                         page: this.page,
@@ -392,7 +398,7 @@
                     return false
                 }
                 let that = this;
-                this.axios.get('user/address', {
+                this.axios.get(this.root + 'user/address', {
                     params: {
                         id: that.infoForm.id,
                         page: this.page,
@@ -409,7 +415,7 @@
                     return false
                 }
                 let that = this;
-                this.axios.get('user/cartdata', {
+                this.axios.get(this.root + 'user/cartdata', {
                     params: {
                         id: that.infoForm.id,
                         page: this.page,
@@ -425,7 +431,7 @@
                     return false
                 }
                 let that = this
-                this.axios.get('user/foot', {
+                this.axios.get(this.root + 'user/foot', {
                     params: {
                         id: that.infoForm.id,
                         page: this.page,
@@ -438,19 +444,19 @@
             },
             getAllRegion() {
                 let that = this;
-                this.axios.get('order/getAllRegion').then((response) => {
+                this.axios.get(this.root + 'order/getAllRegion').then((response) => {
                     this.options = response.data.data;
                 })
             },
         },
         components: {},
         mounted() {
+        	this.root = api.rootUrl;
             this.infoForm.id = this.$route.query.id || 0;
             this.getInfo();
             this.getOrder();
             this.datainfo();
             this.getAllRegion();
-            // this.root = api.rootUrl;
             if (!this.loginInfo) {
                 this.loginInfo = JSON.parse(window.localStorage.getItem('userInfo') || null);
             }

@@ -249,7 +249,9 @@
 
 <script>
     import ElButton from "../../../../node_modules/element-ui/packages/button/src/button.vue";
-
+    import api from '@/config/api';
+    import qs from 'qs'
+    
     export default {
         data() {
             return {
@@ -315,8 +317,7 @@
                 this.statusVisible = true;
             },
             statusConfirm(){
-                this.axios.post('order/changeStatus', {status: this.statusValue,orderSn:this.infoForm.order_sn}).then((response) => {
-//                    console.log(response.data);
+                this.axios.post(this.root + 'order/changeStatus', qs.stringify({status: this.statusValue,orderSn:this.infoForm.order_sn})).then((response) => {
                     this.getInfo();
                     this.statusVisible = false;
                 })
@@ -326,7 +327,7 @@
                 if (pindex == 1) {
                     if (this.is_finish == 0) {
                         this.on_posting = 1;
-                        this.axios.post('order/getOrderExpress', {orderId: this.infoForm.id}).then((response) => {
+                        this.axios.post(this.root + 'order/getOrderExpress', qs.stringify({orderId: this.infoForm.id})).then((response) => {
                             this.expressData = response.data.data;
                             this.expressData.traces = JSON.parse(this.expressData.traces);
                             this.is_finish = response.data.data.is_finish;
@@ -414,14 +415,11 @@
 
             },
             saveAdminMemo() {
-
-                this.axios.post('order/saveAdminMemo', {
+                this.axios.post(this.root + 'order/saveAdminMemo', qs.stringify({
                     text: this.infoForm.admin_memo,
                     id: this.infoForm.id
-                }).then((response) => {
-                    console.log('++---------------------------++');
+                })).then((response) => {
                     console.log(response);
-                    console.log('++---------------------------++');
                     if (response.data.errno === 0) {
                         this.$message({
                             type: 'success',
@@ -438,7 +436,7 @@
             saveAddress() {
                 this.nowAddressData.order_sn = this.infoForm.order_sn;
                 this.nowAddressData.addOptions = this.addOptions;
-                this.axios.post('order/saveAddress', this.nowAddressData).then((response) => {
+                this.axios.post(this.root + 'order/saveAddress', qs.stringify(this.nowAddressData)).then((response) => {
                     console.log('++---------------------------++');
                     console.log(response);
                     console.log('++---------------------------++');
@@ -477,7 +475,7 @@
             },
             getAllRegion() {
                 let that = this;
-                this.axios.get('order/getAllRegion').then((response) => {
+                this.axios.get(this.root + 'order/getAllRegion').then((response) => {
                     this.options = response.data.data;
                 })
             },
@@ -485,7 +483,7 @@
                 if (this.infoForm.id <= 0) {
                     return false
                 }
-                this.axios.get('order/detail', {
+                this.axios.get(this.root + 'order/detail', {
                     params: {
                         orderId: this.infoForm.id
                     }
@@ -520,6 +518,7 @@
         components: {ElButton},
         mounted() {
 //            console.log(this.$route.query);
+			this.root = api.rootUrl;
             this.infoForm.id = this.$route.query.id || 0;
             this.getInfo();
             this.getAllRegion();

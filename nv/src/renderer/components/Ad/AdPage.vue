@@ -58,6 +58,8 @@
 </template>
 
 <script>
+import api from '@/config/api';
+import qs from 'qs'
 
 export default {
 	data() {
@@ -75,11 +77,11 @@ export default {
             console.log(this.tableData);
 		},
         submitSort(index, row){
-            this.axios.post('ad/updateSort', { id: row.id,sort:row.sort_order }).then((response) => {
+            this.axios.post(this.root + 'ad/updateSort', qs.stringify({ id: row.id,sort:row.sort_order })).then((response) => {
             })
         },
         changeStatus($event, para) {
-            this.axios.get('ad/saleStatus', {
+            this.axios.get(this.root + 'ad/saleStatus', {
                 params: {
                     status: $event,
                     id: para
@@ -106,7 +108,7 @@ export default {
 				type: 'warning'
 			}).then(() => {
 
-				this.axios.post('ad/destory', { id: row.id }).then((response) => {
+				this.axios.post(this.root + 'ad/destory', qs.stringify({ id: row.id })).then((response) => {
 					console.log(response.data)
 					if (response.data.errno === 0) {
 						this.$message({
@@ -126,7 +128,7 @@ export default {
 			this.getList()
 		},
 		getList() {
-			this.axios.get('ad', {
+			this.axios.get(this.root + 'ad/list', {
 				params: {
 					page: this.page,
 				}
@@ -142,6 +144,7 @@ export default {
 
 	},
 	mounted() {
+		this.root = api.rootUrl;
 		this.getList();
 	}
 }

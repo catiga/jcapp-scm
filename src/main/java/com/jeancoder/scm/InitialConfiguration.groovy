@@ -9,6 +9,7 @@ JC.interceptor.add("project/PreInterceptor", "project/PostInterceptor");
 JC.interceptor.add("token/PreInterceptor", null);
 JC.interceptor.add("mod/PreInterceptor", null);
 JC.interceptor.add('general/PreInterceptor', null);
+JC.interceptor.add('incall/PreInterceptor', null);
 
 
 
