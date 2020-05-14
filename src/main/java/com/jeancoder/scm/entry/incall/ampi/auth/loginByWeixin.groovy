@@ -33,6 +33,11 @@ def user_info = request_data['userInfo'];
 
 SimpleAjax ret_result = JC.internal.call(SimpleAjax, 'crm', '/wechat/app/check_code', [pid:GlobalHolder.proj.id,code:code, fg_user_info:user_info]);
 
+logger.info(JackSonBeanMapper.toJson(ret_result));
+if(!ret_result.available) {
+	return ProtObj.fail('wx_check_code_fail', '微信授权操作失败，请重试');
+}
+
 def userInfo = [:];
 userInfo['avatar'] = ret_result.data['head'];
 userInfo['nickname'] = ret_result.data['nickname'];
