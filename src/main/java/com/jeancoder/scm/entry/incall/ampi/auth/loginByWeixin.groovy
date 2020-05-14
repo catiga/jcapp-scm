@@ -3,18 +3,41 @@ package com.jeancoder.scm.entry.incall.ampi.auth
 import com.jeancoder.app.sdk.JC
 import com.jeancoder.core.log.JCLogger
 import com.jeancoder.core.log.JCLoggerFactory
+import com.jeancoder.core.util.JackSonBeanMapper
+import com.jeancoder.scm.ready.ajax.SimpleAjax
+import com.jeancoder.scm.ready.incall.api.ProtObj
+import com.jeancoder.scm.ready.util.GlobalHolder
 
 def hp_wxapp_app_id = 'wx7a8d97a1f1a98596';
 def hp_wxapp_app_key = '34fcc7920dd4622756a93e2a55c5411d';
 
 JCLogger logger = JCLoggerFactory.getLogger('');
 
-def request_data = new String(JC.request.get().getInputStream().getBytes(), 'UTF-8');
+def request_data = null;
+try {
+	request_data = new String(JC.request.get().getInputStream().getBytes(), 'UTF-8');
+	request_data = JackSonBeanMapper.jsonToMap(request_data);
+}catch(any) {
+	return ProtObj.fail('param_error', '微信授权错误，请重试');
+}
+if(request_data==null) {
+	return ProtObj.fail('param_error', '微信授权失败，请重试');
+}
 
-logger.info(request_data);
+def code = request_data['code'];
+if(code==null) {
+	return ProtObj.fail('param_code_empty', '微信授权参数错误，请重试');
+}
+
+def user_info = request_data['userInfo'];
+
+SimpleAjax ret_result = JC.internal.call(SimpleAjax, 'crm', '/wechat/app/check_code', [pid:GlobalHolder.proj.id,code:code, fg_user_info:user_info]);
 
 def userInfo = [:];
-userInfo['avatar'] = 'http://hbimg.b0.upaiyun.com/a10dfc94500be4eda3469e5d2ef942ddc56b1fd27de7-uOLg3r_fw658';
-userInfo['nickname'] = '腾腾';
+userInfo['avatar'] = ret_result.data['head'];
+userInfo['nickname'] = ret_result.data['nickname'];
+def token = ret_result.data['token'];
 
-return com.jeancoder.scm.ready.incall.api.ProtObj.success([token:'123456', userInfo:userInfo, is_new:0]);
+return ProtObj.success([token:token, userInfo:userInfo, is_new:0]);
+
+
