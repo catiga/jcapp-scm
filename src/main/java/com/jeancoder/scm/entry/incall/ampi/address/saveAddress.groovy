@@ -15,7 +15,7 @@ def request_data = new String(JC.request.get().getInputStream().getBytes(), 'UTF
 
 def front_user_case = JC.request.attr('front_user_case');
 if(front_user_case==null) {
-	return ProtObj.fail('need_login', '请登录后操作');
+	return ProtObj.fail(-1, '请登录后操作');
 }
 def ap_id = front_user_case['ap_id'];
 def pid = front_user_case['pid'];
@@ -26,7 +26,7 @@ try {
 	request_data = null;
 }
 if(request_data==null) {
-	return ProtObj.fail('param_error', '请输入正确的地址信息参数');
+	return ProtObj.fail(110001, '请输入正确的地址信息参数');
 }
 def id = request_data['id'];
 def name = request_data['name'];
@@ -46,7 +46,7 @@ def param_dic = [id:id, name:name, mobile:mobile,
 	pid:pid, ap_id:ap_id]
 SimpleAjax result = JC.internal.call(SimpleAjax, 'crm', '/h5/address/save', param_dic);
 if(!result.available) {
-	return ProtObj.fail('op_fail', '地址信息保存失败');
+	return ProtObj.fail(110002, '地址信息保存失败');
 }
 
 return ProtObj.success(1);

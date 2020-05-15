@@ -9,7 +9,7 @@ def id = JC.request.param('id');
 def front_user_case = JC.request.attr('front_user_case');
 
 if(front_user_case==null) {
-	return ProtObj.fail('need_login', '请登录后操作');
+	return ProtObj.fail(-1, '请登录后操作');
 }
 
 def ap_id = front_user_case['ap_id'];
@@ -17,13 +17,13 @@ def pid = front_user_case['pid'];
 
 SimpleAjax ajax = JC.internal.call(SimpleAjax, 'crm', '/h5/address/get', [id:id, pid:pid]);
 if(!ajax.available) {
-	return ProtObj.fail('obj_not_found', '地址信息未找到');
+	return ProtObj.fail(110001, '地址信息未找到');
 }
 
 def x = ajax.data;
 
 if(x['ap_id']!=ap_id) {
-	return ProtObj.fail('obj_be_error', '地址信息未找到');
+	return ProtObj.fail(110002, '地址信息未找到');
 }
 
 def full_region = '';

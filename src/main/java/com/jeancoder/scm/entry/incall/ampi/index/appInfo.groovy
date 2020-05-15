@@ -1,5 +1,173 @@
 package com.jeancoder.scm.entry.incall.ampi.index
 
+import com.jeancoder.app.sdk.JC
+import com.jeancoder.scm.ready.entity.Catalog
+import com.jeancoder.scm.ready.entity.GoodsInfo
+import com.jeancoder.scm.ready.entity.GoodsSku
+import com.jeancoder.scm.ready.service.CatalogIndexService
+import com.jeancoder.scm.ready.util.GlobalHolder
+
+//首先获取推荐到首页的分类
+def dscs = JC.request.param('dscs');	//前端传过来的要获取的访问分类的渠道
+def pid = GlobalHolder.proj.id;
+
+List<Catalog> channels = CatalogIndexService.INSTANCE.find_dsc_catalogs(pid, dscs, null);
+def channel = [];
+if(channels) {
+	for(x in channels) {
+		def t_obj = [id:x.id, name:x.cat_name_cn, keywords:x.cat_name_en, front_desc:x.cat_info, sort_order:x.seq, show_index:x.seq, is_show:x.cat_show, 
+			icon_url:x.cat_icon, img_url:x.cat_icon, level:1, front_name:x.cat_name_cn, p_height:155, is_category:1, is_channel:1];
+		channel.add(t_obj);
+	}
+}
+//开始寻找每个channel下的商品
+def categoryList = [];
+if(channel) {
+	for(x in channel) {
+		def t_obj = [id:x['id'], name:x['name'], height:155, banner:x['img_url']];
+		//查找对应分类下的商品
+		def result = CatalogIndexService.INSTANCE.find_catalog_merge_goods(pid, x['id'], null, 1, 6);
+		def goodsList = [];
+		if(result) {
+			for(y in result) {
+				def goods = y[1];
+				def goods_sku = y[0];
+				goodsList.add(build_index_goods_data(goods, goods_sku));
+			}
+		}
+		
+		t_obj['goodsList'] = goodsList;
+		categoryList.add(t_obj);
+	}
+}
+
+
+return [
+	"errno": 0,
+	"errmsg": "",
+	"data": [
+		"channel": channel,
+		"banner": [[
+			"id": 30,
+			"link_type": 0,
+			"link": "",
+			"goods_id": 1109034,
+			"image_url": "http://yanxuan.nosdn.127.net/0251bd141f5b55bd4311678750a6b344.jpg",
+			"end_time": 1894780212,
+			"enabled": 1,
+			"sort_order": 1,
+			"is_delete": 0
+		], [
+			"id": 31,
+			"link_type": 0,
+			"link": "",
+			"goods_id": 1130039,
+			"image_url": "http://yanxuan.nosdn.127.net/19b1375334f2e19130a3ba0e993d7e91.jpg",
+			"end_time": 1894780212,
+			"enabled": 1,
+			"sort_order": 2,
+			"is_delete": 0
+		], [
+			"id": 28,
+			"link_type": 0,
+			"link": "",
+			"goods_id": 1109004,
+			"image_url": "http://yanxuan.nosdn.127.net/ed50cbf7fab10b35f676e2451e112130.jpg",
+			"end_time": 1894780212,
+			"enabled": 1,
+			"sort_order": 3,
+			"is_delete": 0
+		], [
+			"id": 32,
+			"link_type": 0,
+			"link": "",
+			"goods_id": 1064003,
+			"image_url": "http://yanxuan.nosdn.127.net/b2de2ebcee090213861612909374f9f8.jpg",
+			"end_time": 1894780212,
+			"enabled": 1,
+			"sort_order": 3,
+			"is_delete": 0
+		]],
+		"notice": [[
+			"id": 8,
+			"content": "完全开源小程序商城 - github搜索：海风小店",
+			"end_time": 1669996799,
+			"is_delete": 0
+		], [
+			"id": 9,
+			"content": "可测试支付流程，但不发货不退款",
+			"end_time": 1669996799,
+			"is_delete": 0
+		], [
+			"id": 111,
+			"content": "如果可以，请在github点个star，谢谢",
+			"end_time": 1669996799,
+			"is_delete": 0
+		]],
+		"categoryList": categoryList
+	]
+];
+
+def build_index_goods_data(GoodsInfo goods, GoodsSku goods_sku) {
+	def _9999 = new BigDecimal(99999999);
+	def _100 = new BigDecimal(100);
+	
+	def category_id = 0;
+	def cost_price = '1-1';
+	def freight_template_id = goods.ftpl;
+	def freight_type = goods.freepost;
+	
+	def goods_brief = goods.goods_remark;
+	def goods_desc = goods.goods_remark;
+	def goods_number = goods_sku.stock;
+	def goods_unit = goods.unit;
+	def has_done = 1;
+	def has_gallery = 1;
+	def https_pic_url = goods.goods_picturelink;
+	def id = goods.id;
+	def sku_id = goods_sku.id;
+	
+	def tyc = goods.gt;
+	
+	def is_delete = 0;
+	def is_index = 1;
+	def is_new = 1;
+	def is_on_sale = 1;
+	def keywords = "";
+	def list_pic_url = goods.goods_picturelink_big;
+	def min_cost_price = goods.goods_price;
+	if(min_cost_price==null) {
+		min_cost_price = _9999;
+	}
+	min_cost_price = min_cost_price.divide(_100);
+	
+	def min_retail_price = goods.goods_price;
+	if(min_retail_price==null) {
+		min_retail_price = _9999;
+	}
+	min_retail_price = min_retail_price.divide(_100);
+	
+	def name = goods.goods_name;
+	def retail_price = goods.goods_price;
+	if(retail_price==null) {
+		retail_price = _9999;
+	}
+	retail_price = retail_price.divide(_100);
+	
+	def sell_volume = 2923;
+	def sort_order = 1;
+	
+	
+	return [category_id:category_id, cost_price:cost_price, freight_template_id:freight_template_id, freight_type:freight_type,
+		goods_brief:goods_brief, goods_desc:goods_desc, goods_number:goods_number, goods_unit:goods_unit, has_done:has_done, has_gallery:has_gallery,
+		https_pic_url:https_pic_url, id:id, sku_id:sku_id, is_delete:is_delete, is_index:is_index, is_new:is_new, is_on_sale:is_on_sale,
+		keywords:keywords, list_pic_url:list_pic_url, min_cost_price:min_cost_price, min_retail_price:min_retail_price,
+		name:name, retail_price:retail_price, sell_volume:sell_volume, sort_order:sort_order,
+		tyc:tyc
+		];
+}
+
+/*
 return [
 	"errno": 0,
 	"errmsg": "",
@@ -374,4 +542,8 @@ return [
 			"height": 155
 		]]
 	]
-]
+];
+*/
+
+
+

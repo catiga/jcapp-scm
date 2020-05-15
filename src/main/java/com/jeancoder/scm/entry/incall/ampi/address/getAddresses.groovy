@@ -7,7 +7,7 @@ import com.jeancoder.scm.ready.incall.api.ProtObj
 def front_user_case = JC.request.attr('front_user_case');
 
 if(front_user_case==null) {
-	return ProtObj.fail('need_login', '请登录后操作');
+	return ProtObj.fail(-1, '请登录后操作');
 }
 
 def ap_id = front_user_case['ap_id'];

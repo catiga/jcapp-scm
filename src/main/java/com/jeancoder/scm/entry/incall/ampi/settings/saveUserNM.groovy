@@ -11,18 +11,18 @@ import com.jeancoder.scm.ready.util.GlobalHolder
 def request_data = new String(JC.request.get().getInputStream().getBytes(), 'UTF-8');
 
 if(request_data==null) {
-	return ProtObj.fail('param_empty', '请检查参数');
+	return ProtObj.fail(110001, '请检查参数');
 }
 try {
 	request_data = JackSonBeanMapper.jsonToMap(request_data);
 } catch(any) {
-	return ProtObj.fail('param_error', '信息参数错误');
+	return ProtObj.fail(110001, '信息参数错误');
 }
 
 def front_user_case = JC.request.attr('front_user_case');
 
 if(front_user_case==null) {
-	return ProtObj.fail('need_login', '请登录后操作');
+	return ProtObj.fail(-1, '请登录后操作');
 }
 
 def realname = request_data['name'];
@@ -36,4 +36,4 @@ SimpleAjax ret = JC.internal.call(SimpleAjax, 'crm', '/h5/p/save_info', [name:re
 if(ret.available)
 	return ProtObj.success(1);
 else
-	return ProtObj.fail('op_fail', '信息保存失败');
+	return ProtObj.fail(110002, '信息保存失败');

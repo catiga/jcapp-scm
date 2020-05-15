@@ -19,6 +19,8 @@ class ShoppingCart {
 	
 	String user_name;
 	
+	String nick_name;
+	
 	BigInteger goods_id;
 	
 	String goods_name;
@@ -28,8 +30,6 @@ class ShoppingCart {
 	BigInteger goods_sku_id;
 	
 	String goods_sku_name;
-	
-	String goods_sku_rich;
 	
 	Integer number;
 	

@@ -18,15 +18,15 @@ try {
 	request_data = new String(JC.request.get().getInputStream().getBytes(), 'UTF-8');
 	request_data = JackSonBeanMapper.jsonToMap(request_data);
 }catch(any) {
-	return ProtObj.fail('param_error', '微信授权错误，请重试');
+	return ProtObj.fail(110001, '微信授权错误，请重试');
 }
 if(request_data==null) {
-	return ProtObj.fail('param_error', '微信授权失败，请重试');
+	return ProtObj.fail(110002, '微信授权失败，请重试');
 }
 
 def code = request_data['code'];
 if(code==null) {
-	return ProtObj.fail('param_code_empty', '微信授权参数错误，请重试');
+	return ProtObj.fail(110003, '微信授权参数错误，请重试');
 }
 
 def user_info = request_data['userInfo'];
@@ -35,7 +35,7 @@ SimpleAjax ret_result = JC.internal.call(SimpleAjax, 'crm', '/wechat/app/check_c
 
 logger.info(JackSonBeanMapper.toJson(ret_result));
 if(!ret_result.available) {
-	return ProtObj.fail('wx_check_code_fail', '微信授权操作失败，请重试');
+	return ProtObj.fail(220001, '微信授权操作失败，请重试');
 }
 
 def userInfo = [:];
