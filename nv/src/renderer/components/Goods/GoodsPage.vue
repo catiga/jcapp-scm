@@ -463,7 +463,7 @@
                         id: para
                     }
                 }).then((response) => {
-
+                	console.log(response);
                 })
             },
             changeProductStatus($event, para) {

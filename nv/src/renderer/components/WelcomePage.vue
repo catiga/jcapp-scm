@@ -15,7 +15,7 @@
             </div>
             <div class="github">
                 <a target="_blank" href="https://github.com/iamdarcy">github地址</a>
-                <div class="l">请您在github给个star。 技术交流QQ群：824781955</div>
+                <div class="l">欢迎使用JCAPP。 技术咨询联系QQ：7307368</div>
             </div>
             <div class="header clearfix">
                 <el-card class="box-card card-red">

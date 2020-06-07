@@ -26,15 +26,18 @@
 			</div>
 			<div class="form-table-box" v-if="fake == 0">
 				<el-table :data="tableData" style="width: 100%" border stripe>
-					<el-table-column prop="id" label="ID" width="60">
+					<el-table-column prop="ap_id" label="ID" width="60">
 					</el-table-column>
 					<el-table-column label="头像" width="80">
 						<template scope="scope">
 							<img :src="scope.row.avatar" alt="" style="width: 50px;height: 50px">
 						</template>
 					</el-table-column>
-					<!--<el-table-column prop="username" label="会员名称">-->
-					<!--</el-table-column>-->
+					<el-table-column prop="username" label="会员名称">
+						<template scope="scope">
+							<el-input v-model="scope.row.username" placeholder="会员名称" @blur="submitNick(scope.$index, scope.row)"></el-input>
+						</template>
+					</el-table-column>
 					<el-table-column prop="nickname" label="昵称">
 						<template scope="scope">
 							<el-input v-model="scope.row.nickname" placeholder="昵称" @blur="submitNick(scope.$index, scope.row)"></el-input>
@@ -104,7 +107,8 @@ export default {
 			this.getList()
 		},
 		handleRowEdit(index, row) {
-			this.$router.push({ name: 'user_add', query: { id: row.id } })
+			console.log(row);
+			this.$router.push({ name: 'user_add', query: { id: row.ap_id } })
 		},
 		handleRowDelete(index, row) {
 

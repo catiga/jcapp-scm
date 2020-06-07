@@ -79,14 +79,17 @@
                                           placeholder="备注"></el-input>
                             </div>
                             <div class="right">
-                                <el-button v-if="item.print_status == 1 && item.order_status == 300" class="d-btn"
+                                <el-button v-if="item.print_status == 1 && (item.order_status == '1000' || item.order_status=='1010')" class="d-btn"
                                            type="primary" @click="deliveryConfirm(item.id)" size="mini">发货
                                 </el-button>
-                                <el-button v-if="item.order_status == 101" size="mini"
+                                <el-button v-if="item.order_status == '0000'" size="mini"
                                            @click="orderEdit(item)">修改价格
                                 </el-button>
-                                <el-button v-else-if="item.order_status == 300 || item.order_status == 301" size="mini"
+                                <el-button v-else-if="item.order_status == '1000' || item.order_status == '1010'" size="mini"
                                            @click="orderEdit(item)">打印快递单
+                                </el-button>
+                                <el-button v-else-if="item.order_status == '2000' || item.order_status == '2900'" class="d-btn"
+                                           type="primary" @click="orderEdit(item)" size="mini">确认收货
                                 </el-button>
                                 <el-button class="right-detail" type="text" @click="viewDetail(item.id)"
                                            size="mini">
@@ -103,6 +106,8 @@
                 </el-pagination>
             </div>
         </div>
+        
+        <!-- 对话框相关 -->
         <el-dialog
                 title="提示"
                 :visible.sync="dialogVisible"
@@ -238,7 +243,7 @@
             </el-form>
             <div slot="footer" class="dialog-footer print-footer">
                 <div class="f-left">
-                    <el-checkbox v-if="isShow && orderInfo.order_status == 300" v-model="autoGoDelivery">打印完成后自动发货
+                    <el-checkbox v-if="isShow && orderInfo.order_status == '1000'" v-model="autoGoDelivery">打印完成后自动发货
                     </el-checkbox>
                 </div>
                 <div class="f-right" v-if="dform.method != 1">
@@ -618,6 +623,7 @@
     // Vue.component(VueBarcode.name, VueBarcode);
     
     import api from '@/config/api';
+    import qs from 'qs';
 
     export default {
         data() {
@@ -721,16 +727,16 @@
                 });
             },
             getDeliveyInfo() {
-                this.axios.get('delivery').then((response) => {
+                this.axios.get(this.root + 'order/delivery').then((response) => {
                     this.deliveryCom = response.data.data;
                 })
             },
             changeExpressValue(info) {
                 if (this.expressType == 1) {
-                    this.axios.post('order/saveExpressValueInfo', {
+                    this.axios.post(this.root + 'order/saveExpressValueInfo', qs.stringify({
                         express_value: info.express_value,
                         id: info.id
-                    }).then((response) => {
+                    })).then((response) => {
                         if (response.data.errno === 0) {
                             this.$message({
                                 type: 'success',
@@ -756,10 +762,10 @@
                 })
             },
             changeRemarkInfo(info) {
-                this.axios.post('order/saveRemarkInfo', {
+                this.axios.post(this.root + 'order/saveRemarkInfo', qs.stringify({
                     remark: info.remark,
                     id: info.id
-                }).then((response) => {
+                })).then((response) => {
                     if (response.data.errno === 0) {
                         this.$message({
                             type: 'success',
@@ -776,10 +782,10 @@
             changeInfo(info) {
                 let id = info.id;
                 let print_info = info.print_info;
-                this.axios.post('order/savePrintInfo', {
+                this.axios.post(this.root + 'order/savePrintInfo', qs.stringify({
                     print_info: print_info,
                     id: id
-                }).then((response) => {
+                })).then((response) => {
                     if (response.data.errno === 0) {
                         this.$message({
                             type: 'success',
@@ -835,22 +841,22 @@
             handleClick(tab, event) {
                 let pindex = tab._data.index;
                 if (pindex == 0) {
-                    this.order_status = '101,801'
+                    this.order_status = '0000';	//未付款
                 }
                 else if (pindex == 1) {
-                    this.order_status = 300
+                    this.order_status = '1000,1010';	//待发货，包括支付成功和货到付款订单状态
                 }
                 else if (pindex == 2) {
-                    this.order_status = 301
+                    this.order_status = '2000';	//待收货状态
                 }
                 else if (pindex == 3) {
-                    this.order_status = 401
+                    this.order_status = '3000';	//已收货状态
                 }
                 else if (pindex == 4) {
-                    this.order_status = '102,103'
+                    this.order_status = '9000';	//关闭
                 }
                 else if (pindex == 5) {
-                    this.order_status = '101,102,103,202,203,300,301,302,303,401,801,802'
+                    this.order_status = '';		//全部
                 }
                 this.getList();
             },
@@ -908,19 +914,30 @@
             },
             orderEdit(item) {
                 this.rePrintStatus = 0;
-                console.log(0);
+                console.log(0 + '-' + item.order_status);
                 this.order_id = item.id;
-                if (item.order_status == 300 || item.order_status == 301) {
+                /*
+                if (item.order_status == '2000') {
+                	//已发货状态
                     this.rePrintStatus = 0;
                     this.checkExpressInfo();
                     console.log(1);
                 }
-                else if (item.order_status == 101) {
+                */
+                if (item.order_status == '1000' || item.order_status == '1010') {
+                	//已付款未发货，或者货到付款状态
+                    this.rePrintStatus = 0;
+                    this.checkExpressInfo();
+                    console.log(1);
+                }
+                else if (item.order_status == '0000') {
+                	//初始化状态
                     this.getOrderInfo(this.order_id);
                     this.dialogPriceVisible = true;
                     console.log(2);
                 }
-                else if (item.order_status == 301 && item.is_fake == 1) {
+                else if (item.order_status == '2000') {
+                	//已发货状态
                     this.dialogVisible2 = true;
                     console.log(3);
                 }
@@ -982,14 +999,20 @@
             },
             checkExpressInfo() {
                 this.getOrderInfo(this.order_id);
-                this.axios.get('order/checkExpress', {
+                this.axios.get(this.root + 'order/checkExpress', {
                     params: {
-                        orderId: this.order_id,
+                        order_id: this.order_id,
                     }
                 }).then((response) => {
                     console.log(response.data);
                     if (response.data.errno === 0) {
                         this.dialogExpressVisible = true;
+                    } else if(response.data.errno === 110001) {
+                    	//订单未找到提示
+                    	this.$message({
+	                        type: 'error',
+	                        message: response.data.errmsg
+	                    });
                     }
                     else {
                         this.expressType = 0;
@@ -998,7 +1021,7 @@
                 })
             },
             receiveConfirm() {
-                this.axios.get('order/orderReceive', {
+                this.axios.get(this.root + 'order/orderReceive', {
                     params: {
                         orderId: this.order_id,
                     }
@@ -1021,14 +1044,16 @@
                     return false;
                 }
                 console.log(expressType);
+                console.log('测试测试');
+                console.log(this.senderOptions);
                 this.sender.senderOptions = this.senderOptions;
                 this.receiver.receiveOptions = this.receiveOptions;
-                this.axios.post('order/getMianExpress', {
+                this.axios.post(this.root + 'order/getMianExpress', qs.stringify({
                     orderId: this.orderInfo.id,
                     sender: this.sender,
                     receiver: this.receiver,
                     expressType: expressType
-                }).then((response) => {
+                })).then((response) => {
                     let expressInfo = response.data.data.latestExpressInfo;
                     if (expressInfo.ResultCode == 100) {
                         this.rawHtml = expressInfo.PrintTemplate;
@@ -1066,9 +1091,9 @@
                 // });
             },
             deliveryConfirm(id) {
-                this.axios.post('order/goDelivery', {
+                this.axios.post(this.root + 'order/goDelivery', qs.stringify({
                     order_id: id,
-                }).then((response) => {
+                })).then((response) => {
                     if (response.data.errno === 0) {
                         this.getList();
                         this.$message({

@@ -159,7 +159,7 @@
                 this.$router.push({name: 'category_add', query: {id: row.id}})
             },
             specEdit(index, row) {
-                console.log(row.id);
+                console.log('编辑spec=' + row.id);
                 this.$router.push({name: 'specification_detail', query: {id: row.id}})
             },
             specDelete(index, row) {

@@ -12,12 +12,12 @@
         <div class="content-main">
             <div class="form-table-box">
                 <el-form ref="infoForm" :rules="infoRules" :model="infoForm" label-width="120px">
-                    <!-- <el-form-item label="上级分类" prop="name">
+                    <el-form-item label="上级分类" prop="name">
                         <el-select v-model="infoForm.parent_id" placeholder="请选择上级分类">
                             <el-option v-for="item in parentCategory" :key="item.id" :label="item.name"
                                        :value="item.id"></el-option>
                         </el-select>
-                    </el-form-item> -->
+                    </el-form-item>
                     <el-form-item label="分类名称" prop="name">
                         <el-input v-model="infoForm.name"></el-input>
                     </el-form-item>
@@ -25,7 +25,7 @@
                         <el-input type="textarea" v-model="infoForm.front_name" :rows="1"></el-input>
                         <div class="form-tip"></div>
                     </el-form-item>
-                    <el-form-item label="分类图片" prop="img_url" v-if="infoForm.parent_id == 0">
+                    <el-form-item label="分类图片" prop="img_url">
                         <img v-if="infoForm.img_url" :src="infoForm.img_url" class="image-show">
                         <el-upload
                                 class="upload-demo"
@@ -42,10 +42,10 @@
                         </el-upload>
                         <div class="form-tip">图片尺寸：顶级分类为690*自定义, 只能上传jpg/png文件</div>
                     </el-form-item>
-                    <el-form-item label="分类图片高度" prop="name" v-if="infoForm.parent_id == 0">
+                    <el-form-item label="分类图片高度" prop="name">
                         <el-input v-model="infoForm.p_height"></el-input>
                     </el-form-item>
-                    <el-form-item label="图标" prop="icon_url" v-if="infoForm.parent_id == 0">
+                    <el-form-item label="图标" prop="icon_url">
                         <img v-if="infoForm.icon_url" :src="infoForm.icon_url" class="image-show">
                         <el-upload
                                 class="upload-demo"
@@ -199,7 +199,8 @@
                 this.infoForm.icon_url = url + res.key;
             },
             getTopCategory() {
-                this.axios.get(this.root + 'category/topCategory').then((response) => {
+            	console.log(this.infoForm);
+                this.axios.get(this.root + 'category/topCategory?id=' + this.infoForm.id).then((response) => {
                     this.parentCategory = this.parentCategory.concat(response.data.data);
                 })
             },
@@ -234,8 +235,8 @@
         components: {ElFormItem},
         mounted() {
         	this.root = api.rootUrl;
-            this.getTopCategory();
             this.infoForm.id = this.$route.query.id || 0;
+            this.getTopCategory();
             this.getInfo();
             this.qiniuZone = api.qiniu;
             this.getQiniuToken();

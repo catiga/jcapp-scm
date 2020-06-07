@@ -56,6 +56,7 @@
                                              width="100"></el-table-column>
                             <el-table-column prop="retail_price" label="售价" width="100"></el-table-column>
                             <el-table-column prop="number" label="购买数量" width="100"></el-table-column>
+                            <el-table-column prop="remark" label="备注" width="100"></el-table-column>
                             <el-table-column label="小计" width="100">
                                 <template scope="scope">
                                     <label>{{scope.row.retail_price * scope.row.number }}</label>
@@ -257,24 +258,24 @@
             return {
                 statusList: [
                     {
-                        value: '101',
+                        value: '0000',
                         label: '待付款'
                     },
                     {
-                        value: '102',
+                        value: '9000',
                         label: '交易关闭'
                     },
                     {
-                        value: '300',
+                        value: '1000',
                         label: '待发货'
                     },
                     {
-                        value: '301',
+                        value: '2000',
                         label: '已发货'
                     },
                     {
-                        value: '401',
-                        label: '交易成功'
+                        value: '3000',
+                        label: '已收货'
                     },
                 ],
                 statusVisible:false,
@@ -317,7 +318,8 @@
                 this.statusVisible = true;
             },
             statusConfirm(){
-                this.axios.post(this.root + 'order/changeStatus', qs.stringify({status: this.statusValue,orderSn:this.infoForm.order_sn})).then((response) => {
+            	console.log(this.infoForm);
+                this.axios.post(this.root + 'order/changeStatus', qs.stringify({status: this.statusValue,orderSn:this.infoForm.order_sn, orderId:this.infoForm.id})).then((response) => {
                     this.getInfo();
                     this.statusVisible = false;
                 })
@@ -328,10 +330,18 @@
                     if (this.is_finish == 0) {
                         this.on_posting = 1;
                         this.axios.post(this.root + 'order/getOrderExpress', qs.stringify({orderId: this.infoForm.id})).then((response) => {
-                            this.expressData = response.data.data;
-                            this.expressData.traces = JSON.parse(this.expressData.traces);
-                            this.is_finish = response.data.data.is_finish;
-                            this.on_posting = 0;
+                        	if (response.data.errno === 0) {
+		                        this.expressData = response.data.data;
+	                            this.expressData.traces = JSON.parse(this.expressData.traces);
+	                            this.is_finish = response.data.data.is_finish;
+	                            this.on_posting = 0;
+		                    } else {
+		                    	this.on_posting = 0;
+		                        this.$message({
+		                            type: 'error',
+		                            message: '提示：' + response.data.errmsg
+		                        });
+		                    }
                         })
                     }
                 }
@@ -419,7 +429,6 @@
                     text: this.infoForm.admin_memo,
                     id: this.infoForm.id
                 })).then((response) => {
-                    console.log(response);
                     if (response.data.errno === 0) {
                         this.$message({
                             type: 'success',
@@ -435,7 +444,29 @@
             },
             saveAddress() {
                 this.nowAddressData.order_sn = this.infoForm.order_sn;
+                this.nowAddressData.order_id = this.infoForm.id;
                 this.nowAddressData.addOptions = this.addOptions;
+                let ao_names = [];
+            	for(let x in this.options) {
+            		let prov_obj = this.options[x];
+            		if(this.addOptions[0]==prov_obj.id) {
+            			ao_names.push(prov_obj.label);
+            			for(let y in prov_obj.children) {
+            				let city_obj = prov_obj.children[y];
+            				if(this.addOptions[1]==city_obj.id) {
+            					ao_names.push(city_obj.label);
+            					console.log(city_obj);
+            					for(let z in city_obj.children) {
+            						let zone_obj = city_obj.children[z];
+            						if(this.addOptions[2]==zone_obj.id) {
+            							ao_names.push(zone_obj.label);
+            						}
+            					}
+            				}
+            			}
+            		}
+            	}
+                this.nowAddressData.ao_names = ao_names;
                 this.axios.post(this.root + 'order/saveAddress', qs.stringify(this.nowAddressData)).then((response) => {
                     console.log('++---------------------------++');
                     console.log(response);

@@ -102,13 +102,14 @@
                     }
                 });
             },
-            specDelete(index, row) {
+            specDelete() {
+            	let that = this;
                 this.$confirm('确定要删除?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.axios.post(this.root + 'category/spec/delete', qs.stringify({id: row.id})).then((response) => {
+                    this.axios.post(this.root + 'category/spec/delete', qs.stringify({id: that.infoForm.id})).then((response) => {
                         console.log(response.data)
                         if (response.data.errno === 0) {
                             this.$message({
@@ -130,19 +131,24 @@
                 this.$router.go(-1);
             },
             getInfo() {
-                console.log(this.infoForm.id);
-            console.log(this.infoForm.id);
-            console.log(this.infoForm.id);
                 if (this.infoForm.id <= 0) {
                     return false
                 }
                 let that = this
-                this.axios.post(this.root + 'category/detail', qs.stringify({
+                this.axios.post(this.root + 'category/spec/info', qs.stringify({
                         id: that.infoForm.id
                 })).then((response) => {
-                    let resInfo = response.data.data;
-                    console.log(resInfo);
-                    that.infoForm = resInfo;
+                	if(response.data.errno==0) {
+                		let resInfo = response.data.data;
+                    	that.infoForm = resInfo;
+                	} else {
+                		this.$confirm(response.data.errmsg, '提示', {
+                			confirmButtonText: '返回列表页',
+                			type: 'warning'
+                		}).then(()=> {
+                			this.$router.go(-1);
+                		});
+                	}
                 })
             }
         },
