@@ -69,7 +69,13 @@ class OrderInfo {
 	BigInteger ouid;
 	
 	String ouname;
+	
 	String pay_type;
+	
+	String remark;	//整单备注
+	
+	String admin_memo;	//商家备注
+	
 	@JCNotColumn
 	List<OrderItem> items;
 	

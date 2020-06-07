@@ -308,9 +308,8 @@ class GoodsService {
 		String sql = "select * from GoodsModel where flag!=?";
 		def params = []; params.add(-1);
 		if(GlobalHolder.proj.root!=1) {
-			sql += ' and (proj_id=? or proj_id=?)';
+			sql += ' and (proj_id=?)';
 			params.add(GlobalHolder.proj.id);
-			params.add(BigInteger.valueOf(1l));
 		}
 		sql += ' order by c_time desc';
 		List<GoodsModel> result = jc_template.find(GoodsModel, sql, params.toArray());
@@ -318,8 +317,13 @@ class GoodsService {
 	}
 	
 	public GoodsModel get_model(def id) {
-		String sql = "select * from GoodsModel where flag!=? and (proj_id=? or proj_id=?) and id=?";
-		return jc_template.get(GoodsModel.class, sql, -1, GlobalHolder.proj.id, BigInteger.valueOf(1l), id);
+		String sql = "select * from GoodsModel where flag!=? and id=?";
+		def params = []; params.add(-1); params.add(id);
+		if(GlobalHolder.proj.root!=1) {
+			sql += ' and (proj_id=?)';
+			params.add(GlobalHolder.proj.id);
+		}
+		return jc_template.get(GoodsModel.class, sql, params.toArray());
 	}
 	
 	public BigInteger save_model(GoodsModel model) {

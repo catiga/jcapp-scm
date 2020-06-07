@@ -1,3 +1,54 @@
 package com.jeancoder.scm.entry.incall.api.user
 
-return ["errno":0,"errmsg":"","data":["userData":["count":650,"totalPages":65,"pageSize":10,"currentPage":1,"data":[["id":1696,"nickname":"LU-PanJing","name":"","username":"微信用户1d250a2c-2a30-4a02-8627-fe377a597bc7","password":"oLMM44yprmjGVrDhDDRTcT9tlmqE","gender":2,"birthday":0,"register_time":"2020-05-11 10:35:02","last_login_time":"2020-05-11 10:35:02","last_login_ip":"","mobile":"","register_ip":"","avatar":"https://wx.qlogo.cn/mmopen/vi_32/JNDa64AQZxhz4iajwLwtkUJD3E2es8VHyedyURrjROAM6ibGvfNqKcdB4ksF3OLEuxpKXxEfCGibEXiad8Ld4W47Wg/132","weixin_openid":"oLMM44yprmjGVrDhDDRTcT9tlmqE","name_mobile":0,"country":"Algeria","province":"","city":""],["id":1695,"nickname":"zhao","name":"","username":"微信用户2474a8d6-6ea6-4311-893f-f2d74ac3613c","password":"oLMM44x2VVaFf9LRDKtyISLaoXJI","gender":1,"birthday":0,"register_time":"2020-05-11 10:29:17","last_login_time":"2020-05-11 10:29:17","last_login_ip":"","mobile":"","register_ip":"","avatar":"https://wx.qlogo.cn/mmopen/vi_32/YxPokDoSfZnmL3FKpJcEHu4tRibCV6GHVVPepAavNCpvO4P2JYZIzhP7ibUrRN07ZjbE7ibbeSyBJY1OGduo3p04w/132","weixin_openid":"oLMM44x2VVaFf9LRDKtyISLaoXJI","name_mobile":0,"country":"China","province":"Guangdong","city":"Shenzhen"],["id":1694,"nickname":"TOTOe","name":"","username":"微信用户1ee8e444-b593-48f6-847d-af4999a5bfbd","password":"oLMM445k-AF4KAXpSVWV8Z28nfC4","gender":1,"birthday":0,"register_time":"2020-05-11 08:36:18","last_login_time":"2020-05-11 08:36:18","last_login_ip":"","mobile":"","register_ip":"","avatar":"https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJnqqVBe8KCL2zbjsS2LbEGP8QHT9c8u1fWFEqiauZia2a269g3eIicZ5u4BORAh8n2ulfnKKsKEgLng/132","weixin_openid":"oLMM445k-AF4KAXpSVWV8Z28nfC4","name_mobile":0,"country":"China","province":"Hunan","city":"Changsha"],["id":1693,"nickname":"天涯","name":"","username":"微信用户3aa16350-eabf-4df1-aac8-a173a7e245af","password":"oLMM446Iu-aXGrPE8y3tRkco-Q1M","gender":1,"birthday":0,"register_time":"2020-05-11 01:10:42","last_login_time":"2020-05-11 01:10:42","last_login_ip":"","mobile":"","register_ip":"","avatar":"https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTLdjibSZBoU4bnAjqEwHzaNicLVhrjGuBhjWsvBlWpDptVXkUc9NogOpbIruce3w0mC84ibkjODCDbKA/132","weixin_openid":"oLMM446Iu-aXGrPE8y3tRkco-Q1M","name_mobile":0,"country":"China","province":"Guangdong","city":"Shenzhen"],["id":1692,"nickname":"波波","name":"","username":"微信用户5da13abd-c949-4b2c-b882-0455ad3170af","password":"oLMM444q4va8-ifLV9FExP3L2Sp4","gender":1,"birthday":0,"register_time":"2020-05-10 23:40:03","last_login_time":"2020-05-10 23:40:03","last_login_ip":"","mobile":"","register_ip":"","avatar":"https://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83ep8DPbQE2QBQwu6IrC4DDfB8y0wrbRVwDNDJSicUmLeBFn2I4Q9LMoJHEwsib1E1VjmYOdkHXraHWDA/132","weixin_openid":"oLMM444q4va8-ifLV9FExP3L2Sp4","name_mobile":0,"country":"China","province":"Jiangsu","city":"Wuxi"],["id":1691,"nickname":"MY","name":"","username":"微信用户4959af54-2cdc-437f-9bea-f8824441d796","password":"oLMM4492kkRW9WqGs8segTARL_AQ","gender":1,"birthday":0,"register_time":"2020-05-10 21:31:56","last_login_time":"2020-05-10 21:31:56","last_login_ip":"","mobile":"","register_ip":"","avatar":"https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJWRN7bnxPceJce0TEqWf500XzwA27EOkQzyY4AQH3icIEBOz74fQ5fpnXU0Sk3kmjp1fZVY5XnduQ/132","weixin_openid":"oLMM4492kkRW9WqGs8segTARL_AQ","name_mobile":0,"country":"China","province":"Guangdong","city":"Guangzhou"],["id":1690,"nickname":"人定胜天","name":"怎搞","username":"微信用户89e7199a-500e-41d2-bc8c-9c3c8968d76c","password":"oLMM440LegAEbX-f-c3UlrXqFf7U","gender":1,"birthday":0,"register_time":"2020-05-10 01:30:14","last_login_time":"2020-05-10 01:30:14","last_login_ip":"","mobile":"234123213123213","register_ip":"","avatar":"https://wx.qlogo.cn/mmopen/vi_32/uYlNI8iaK5cG4Wq1ibicEIyP4vjlXzyPZnH1OpUwRfxszkQytgqhdiaqm4sRcNmUYdVfuSdRRAsHYN6icFDTdDiaMq7Q/132","weixin_openid":"oLMM440LegAEbX-f-c3UlrXqFf7U","name_mobile":0,"country":"China","province":"Gansu","city":"Linxia"],["id":1689,"nickname":"朵朵爸爸","name":"","username":"微信用户2967b872-9c94-4c4f-8220-2c8d61dc03cb","password":"oLMM441Y0dJMsffCrYqjPQnL7J4w","gender":1,"birthday":0,"register_time":"2020-05-09 23:07:43","last_login_time":"2020-05-09 23:07:43","last_login_ip":"","mobile":"","register_ip":"","avatar":"https://wx.qlogo.cn/mmopen/vi_32/pic9klVpKnk4uFEL9vKsPvoN9PpTIiaTia8wU9UqcticicrI7Ygq2BsWlg5C9tShTwoshkibfCSzfvia5HuiaLSyRacn5A/132","weixin_openid":"oLMM441Y0dJMsffCrYqjPQnL7J4w","name_mobile":0,"country":"China","province":"Jiangsu","city":"Nanjing"],["id":1688,"nickname":"Nelson","name":"","username":"微信用户0da7a431-e4af-441b-8096-f149d4eac71d","password":"oLMM44_tae7rH3-CbnpUr4Au_BPk","gender":1,"birthday":0,"register_time":"2020-05-09 22:40:25","last_login_time":"2020-05-09 22:40:25","last_login_ip":"","mobile":"","register_ip":"","avatar":"https://wx.qlogo.cn/mmopen/vi_32/gRKtMgIT8tic0heAAWsXZGRhUekyxV4W29HLdw4Jksib5V18Io11t5uSNOjvbRuA8U8yydDibaUEU4vpSNJatziaCQ/132","weixin_openid":"oLMM44_tae7rH3-CbnpUr4Au_BPk","name_mobile":0,"country":"China","province":"Chongqing","city":"Yubei"],["id":1687,"nickname":"得意！","name":"","username":"微信用户4e6808b7-94ed-42e3-b6e8-16e527db9b2f","password":"oLMM446rqsiuZrCn1BFsXH8-Cmr0","gender":1,"birthday":0,"register_time":"2020-05-09 17:28:01","last_login_time":"2020-05-09 17:28:01","last_login_ip":"","mobile":"","register_ip":"","avatar":"https://wx.qlogo.cn/mmopen/vi_32/H9u8Y6mb3TWMpSCGDvMzH2jV57iaduRibOG1BwjOu0a8m3SnfDkg2JoVRBhvflL7WU2TNvbTykyCdNVviaEksxbUg/132","weixin_openid":"oLMM446rqsiuZrCn1BFsXH8-Cmr0","name_mobile":0,"country":"Albania","province":"","city":""]]]]];
+import java.text.SimpleDateFormat
+
+import com.jeancoder.app.sdk.JC
+import com.jeancoder.jdbc.JcPage
+import com.jeancoder.scm.ready.ajax.SimpleAjax
+import com.jeancoder.scm.ready.util.GlobalHolder
+
+SimpleDateFormat _sdf_ = new SimpleDateFormat('yyyy-MM-dd HH:mm:ss');
+
+def pn = JC.request.param('page');
+try {
+	pn = Integer.valueOf(pn);
+	if(pn<1) {
+		pn = 1;
+	}
+} catch(any) {
+	pn = 1;
+}
+SimpleAjax ajax = JC.internal.call(SimpleAjax, 'crm', '/api/admin/user_list', [pn:pn, ps:5, pid:GlobalHolder.proj.id]);
+
+def count = 0;
+def totalPages = 0;
+def pageSize = 0;
+def currentPage = 0;
+
+def data = [];
+if(ajax && ajax.available) {
+	def page = ajax.data;
+	count = page.totalCount;
+	totalPages = page.totalPages;
+	pageSize = page.ps;
+	currentPage = page.pn;
+	for(x in ajax.data.result) {
+		def a_time = '';
+		def c_time = '';
+		if(x.a_time) {
+			a_time = _sdf_.format(new Date(x.a_time));
+		}
+		if(x.c_time) {
+			c_time = _sdf_.format(new Date(x.c_time));
+		}
+		def u_obj = ["id":x.id, ap_id:x.ap_id, "nickname":x.nickname, "name":x.realname, "username":x.realname,"password":"",
+			"gender":x.sex,"birthday":x.birthday,"register_time":a_time,"last_login_time":c_time,"last_login_ip":"",
+			"mobile":"","register_ip":"","avatar":x.head,"weixin_openid":"","name_mobile":x.mobile,"country":x.countryname,"province":"","city":""];
+		data.add(u_obj);
+	}
+}
+
+
+return ["errno":0,"errmsg":"",
+	"data":["userData":["count":count,"totalPages":totalPages,"pageSize":pageSize,"currentPage":currentPage, "data":data]]
+];

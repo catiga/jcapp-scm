@@ -5,6 +5,7 @@ import java.sql.Timestamp
 import com.jeancoder.jdbc.bean.JCBean
 import com.jeancoder.jdbc.bean.JCForeign
 import com.jeancoder.jdbc.bean.JCID
+import com.jeancoder.jdbc.bean.JCNotColumn
 
 @JCBean(tbname = "data_goods_info")
 class GoodsInfo {
@@ -73,4 +74,6 @@ class GoodsInfo {
 	
 	Timestamp a_time;
 
+	@JCNotColumn
+	BigInteger on_sale;
 }
