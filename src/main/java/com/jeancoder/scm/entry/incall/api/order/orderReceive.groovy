@@ -1,0 +1,25 @@
+package com.jeancoder.scm.entry.incall.api.order
+
+import com.jeancoder.app.sdk.JC
+import com.jeancoder.jdbc.JcTemplate
+import com.jeancoder.scm.ready.entity.OrderInfo
+import com.jeancoder.scm.ready.incall.api.ProtObj
+import com.jeancoder.scm.ready.order.OrderConstants
+import com.jeancoder.scm.ready.service.OrderService
+
+def order_id = JC.request.param('orderId');
+
+OrderInfo order = OrderService.INSTANCE().get(order_id);
+
+if(order==null) {
+	return ProtObj.fail(110001, '订单未找到');
+}
+
+if(order.oss!=OrderConstants._order_status_delivering_) {
+	return ProtObj.fail(210001, '订单状态禁止确认收货操作');
+}
+
+order.oss = OrderConstants._order_status_taked_;
+JcTemplate.INSTANCE().update(order);
+
+return ProtObj.success(1);

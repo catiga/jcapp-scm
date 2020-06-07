@@ -29,7 +29,7 @@
 			</div>
 			
 			<div class="row">
-				<div class="col-lg-12">
+				<div class="col-lg-12 sku_main_area">
 					<div class="wrapper wrapper-content animated fadeInUp">
 						<div class="ibox">
 							<div class="ibox-title">
@@ -59,8 +59,8 @@
 													<small>更新时间 [[${#dates.format(st.c_time, 'yyyy-MM-dd')}]]</small>
 												</td>
 												<td>[[${st.m_name_en }]]</td>
-												<td>[[${#dates.format(st.a_time, 'yyyy-MM-dd')}]]</td>
 												<td><a href="javascript:;" class="sku_props" th:attr_id="${st.id}">[管理属性组]</a></td>
+												<td>[[${#dates.format(st.a_time, 'yyyy-MM-dd')}]]</td>
 												<td>
 													<button data-style="zoom-in" class="ladda-button btn btn-primary btn-sm edit" th:attr_id="${st.id }"><i class="fa fa-pencil"></i> 编辑 </button>
 												</td>
@@ -72,11 +72,8 @@
 						</div>
 					</div>
 				</div>
-			</div>
-			
-			
-			<div class="row sku_prop_area hide">
-				<div class="col-lg-12">
+				
+				<div class="col-lg-4 sku_prop_area hide">
 					<div class="wrapper wrapper-content animated fadeIn">
 						<div class="row">
 							<div class="col-lg-12">
@@ -85,58 +82,62 @@
 										<h5>SKU属性组管理区</h5>
 										<div class="ibox-tools">
 											<a class="collapse-link"> <i class="fa fa-chevron-up"></i></a>
-											<a class="dropdown-toggle" data-toggle="dropdown" href="#"> <i class="fa fa-wrench"></i></a>
-											<ul class="dropdown-menu dropdown-user">
-											</ul>
-											<a class="close-link"> <i class="fa fa-times"></i></a>
 										</div>
 									</div>
 									<div class="ibox-content">
 										<div class="row">
-											<div class="col-md-4">
-												<div class="form-group">
-													<label for="title_name">SKU模型名称</label> 
-													<input id="title_name" type="text" class="form-control" placeholder="Enter a title ..." />
+											<div class="col-lg-12" style="border-bottom:1px solid #e7eaec">
+												<div class="col-md-6">
+													<div class="form-group">
+														<label for="title_name">SKU模型名称</label> 
+														<input id="title_name" type="text" class="form-control" placeholder="编辑模型名称" />
+													</div>
 												</div>
-												<div class="form-group">
-													<label for="title_key">SKU模型代码</label>
-													<input id="title_key" type="text" class="form-control" placeholder="Enter a title ..." />
-												</div>
-											</div>
-											<div class="col-md-4">
-												<div class="form-group">
-													<label for="hideEasing">&nbsp;</label> 
-													<input type="text" placeholder="请输入属性名称" class="form-control sku_prop_name"/>
-												</div>
-												<div class="form-group">
-													<label for="hideEasing">&nbsp;</label> 
-													<input type="text" placeholder="请输入属性名称" class="form-control sku_prop_name"/>
-												</div>
-												<div class="form-group">
-													<label for="hideEasing">&nbsp;</label> 
-													<input type="text" placeholder="请输入属性名称" class="form-control sku_prop_name"/>
-												</div>
-												<div class="form-group">
-													<label for="hideEasing">&nbsp;</label> 
-													<input type="text" placeholder="请输入属性名称" class="form-control sku_prop_name"/>
+												<div class="col-md-6">
+													<div class="form-group">
+														<label for="title_key">SKU模型代码</label>
+														<input id="title_key" type="text" class="form-control" placeholder="编辑模型代码" />
+													</div>
 												</div>
 											</div>
-											<div class="col-md-4">
-												<div class="form-group">
-													<label for="hideEasing">&nbsp;</label> 
-													<input type="text" placeholder="请输入属性名称" class="form-control sku_prop_name"/>
+											
+											<div class="col-lg-12">
+												<h5>SKU属性组</h5>
+												<div class="col-md-6">
+													<div class="form-group">
+														<label for="hideEasing">&nbsp;</label> 
+														<input type="text" placeholder="属性名称1" class="form-control sku_prop_name"/>
+													</div>
+													<div class="form-group">
+														<label for="hideEasing">&nbsp;</label> 
+														<input type="text" placeholder="属性名称2" class="form-control sku_prop_name"/>
+													</div>
+													<div class="form-group">
+														<label for="hideEasing">&nbsp;</label> 
+														<input type="text" placeholder="属性名称3" class="form-control sku_prop_name"/>
+													</div>
+													<div class="form-group">
+														<label for="hideEasing">&nbsp;</label> 
+														<input type="text" placeholder="属性名称4" class="form-control sku_prop_name"/>
+													</div>
 												</div>
-												<div class="form-group">
-													<label for="hideEasing">&nbsp;</label> 
-													<input type="text" placeholder="请输入属性名称" class="form-control sku_prop_name"/>
-												</div>
-												<div class="form-group">
-													<label for="hideEasing">&nbsp;</label> 
-													<input type="text" placeholder="请输入属性名称" class="form-control sku_prop_name"/>
-												</div>
-												<div class="form-group">
-													<label for="hideEasing">&nbsp;</label> 
-													<input type="text" placeholder="请输入属性名称" class="form-control sku_prop_name"/>
+												<div class="col-md-6">
+													<div class="form-group">
+														<label for="hideEasing">&nbsp;</label> 
+														<input type="text" placeholder="属性名称5" class="form-control sku_prop_name"/>
+													</div>
+													<div class="form-group">
+														<label for="hideEasing">&nbsp;</label> 
+														<input type="text" placeholder="属性名称6" class="form-control sku_prop_name"/>
+													</div>
+													<div class="form-group">
+														<label for="hideEasing">&nbsp;</label> 
+														<input type="text" placeholder="属性名称7" class="form-control sku_prop_name"/>
+													</div>
+													<div class="form-group">
+														<label for="hideEasing">&nbsp;</label> 
+														<input type="text" placeholder="属性名称8" class="form-control sku_prop_name"/>
+													</div>
 												</div>
 											</div>
 										</div>
@@ -151,7 +152,7 @@
 										<div class="row m-t-lg">
 											<div class="col-lg-12">
 												<small>备注</small>
-												<pre id="toastrOptions" class="p-m">管理SKU模型的属性组，最多可以添加八个属性值</pre>
+												<pre id="toastrOptions" class="p-m">管理SKU模型的属性组，可以添加八个属性值</pre>
 											</div>
 										</div>
 									</div>
@@ -161,11 +162,6 @@
 					</div>
 				</div>
 			</div>
-			
-			
-			
-			
-			
 			
 			<div th:replace="../common/foot"></div>
 		</div>
@@ -304,7 +300,10 @@ $(function() {
 				$("#title_name").val(data.data.model.m_name_cn);
 				$("#title_key").val(data.data.model.m_name_en);
 				$(".sku_prop_area").removeClass('hide');
-				for(x in data.data.props) {$(".sku_prop_name").eq(x).val(data.data.props[x].attr_k);}
+				$(".sku_main_area").removeClass('col-lg-12');$(".sku_main_area").addClass('col-lg-8');
+				for(x in data.data.props) {
+					$(".sku_prop_name").eq(x).val(data.data.props[x].attr_k);
+				}
 			} else {
 				var code = data.messages[0];
 				var msg = "操作失败：" + code;
@@ -343,6 +342,7 @@ $(function() {
 	
 	$("#shutdown_area").on("click", function() {
 		$('.sku_prop_area').addClass('hide');
+		$(".sku_main_area").removeClass('col-lg-8');$(".sku_main_area").addClass('col-lg-12');
 	})
 });
 </script>
