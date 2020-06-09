@@ -25,7 +25,7 @@ if(result) {
 	for(x in result) {
 		def cat_show = x.cat_show==1? true: false;
 		
-		def c = ["id":x.id,"name":x.cat_name_cn,"keywords":"","front_desc":x.cat_info,"parent_id":x.parent_id,"sort_order":x.seq,"show_index":1,
+		def c = ["id":x.id,"name":x.cat_name_cn,"keywords":x.cat_name_en,"front_desc":x.cat_info,"parent_id":x.parent_id,"sort_order":x.seq,"show_index":1,
 			"is_show":cat_show,"icon_url":x.cat_icon,"img_url":x.cat_icon,"level":1,"front_name":x.cat_name_cn,"p_height":155,"is_category":true,"is_channel":true];
 		
 		data.add(c);

@@ -26,17 +26,18 @@
                         <div class="form-tip"></div>
                     </el-form-item>
                     <el-form-item label="分类图片" prop="img_url">
-                        <img v-if="infoForm.img_url" :src="infoForm.img_url" class="image-show">
+                        <img v-if="infoForm.img_url" :src="url + infoForm.img_url" class="image-show">
                         <el-upload
                                 class="upload-demo"
                                 name="file"
-                                :action="qiniuZone"
+                                accept="image/jpeg,image/gif,image/png,image/jpg"
+                                :action="uploadAction"
                                 :on-remove="bannerRemove"
                                 :before-remove="beforeBannerRemove"
                                 :file-list="fileList"
                                 :on-success="handleUploadBannerSuccess"
                                 :data="picData"
-                                :before-upload="getQiniuToken"
+                                :before-upload="checkFile"
                         >
                             <el-button v-if="!infoForm.img_url" size="small" type="primary">点击上传</el-button>
                         </el-upload>
@@ -46,17 +47,18 @@
                         <el-input v-model="infoForm.p_height"></el-input>
                     </el-form-item>
                     <el-form-item label="图标" prop="icon_url">
-                        <img v-if="infoForm.icon_url" :src="infoForm.icon_url" class="image-show">
+                        <img v-if="infoForm.icon_url" :src="url + infoForm.icon_url" class="image-show">
                         <el-upload
                                 class="upload-demo"
                                 name="file"
-                                :action="qiniuZone"
+                                accept="image/jpeg,image/gif,image/png,image/jpg"
+                                :action="uploadAction"
                                 :on-remove="iconRemove"
                                 :before-remove="beforeIconRemove"
                                 :file-list="fileList2"
                                 :data="picData"
                                 :on-success="handleUploadIconSuccess"
-                                :before-upload="getQiniuToken"
+                                :before-upload="checkFile"
                         >
                             <el-button v-if="!infoForm.icon_url" size="small" type="primary">点击上传</el-button>
                         </el-upload>
@@ -86,6 +88,7 @@
             return {
                 root: '',
                 qiniuZone:'',
+                uploadAction:'',
                 fileList: [],
                 fileList2: [],
                 uploaderHeader: {
@@ -122,7 +125,8 @@
                     ],
                 },
                 picData: {
-                    token: ''
+                    token: '',
+                    uc: 'cat'
                 },
                 url: ''
             }
@@ -137,6 +141,22 @@
                     that.url = resInfo.url;
                 })
             },
+            checkFile(file) {
+      			//let isIMAGE = file.type === 'image/jpeg'||'image/gif'||'image/png';
+      			let isIMAGE = file.type.indexOf('image')>-1?true:false;
+      			let isLt1M = file.size / 1024 / 1024 < 1;
+
+      			if (!isIMAGE) {
+        			this.$message.error('上传文件只能是图片格式!');
+        			return;
+      			}
+      			if (!isLt1M) {
+        			this.$message.error('上传文件大小不能超过 1MB!');
+        			return;
+      			}
+      			return isIMAGE && isLt1M;
+      			
+    		},
             beforeBannerRemove(file, fileList) {
                 return this.$confirm(`确定移除该图？删除后将无法找回`);
             },
@@ -146,7 +166,7 @@
             bannerRemove(file, fileList) {
                 this.infoForm.img_url = '';
                 let id = this.infoForm.id;
-                this.axios.post('category/deleteBannerImage', {id: id}).then((response) => {
+                this.axios.post(this.root + 'category/deleteBannerImage', qs.stringify({id: id})).then((response) => {
                     this.$message({
                         type: 'success',
                         message: '删除成功'
@@ -156,7 +176,7 @@
             iconRemove(file, fileList) {
                 this.infoForm.icon_url = '';
                 let id = this.infoForm.id;
-                this.axios.post('category/deleteIconImage', {id: id}).then((response) => {
+                this.axios.post(this.root + 'category/deleteIconImage', qs.stringify({id: id})).then((response) => {
                     this.$message({
                         type: 'success',
                         message: '删除成功'
@@ -192,14 +212,13 @@
             },
             handleUploadBannerSuccess(res, file) {
                 let url = this.url;
-                this.infoForm.img_url = url + res.key;
+                this.infoForm.img_url = res.data[0];
             },
             handleUploadIconSuccess(res, file) {
                 let url = this.url;
-                this.infoForm.icon_url = url + res.key;
+                this.infoForm.icon_url = res.data[0];
             },
             getTopCategory() {
-            	console.log(this.infoForm);
                 this.axios.get(this.root + 'category/topCategory?id=' + this.infoForm.id).then((response) => {
                     this.parentCategory = this.parentCategory.concat(response.data.data);
                 })
@@ -238,8 +257,10 @@
             this.infoForm.id = this.$route.query.id || 0;
             this.getTopCategory();
             this.getInfo();
-            this.qiniuZone = api.qiniu;
-            this.getQiniuToken();
+            this.uploadAction = api.rootUrl + 'common/upload';
+            this.url = 'http://e.local:8080/img_server/';
+            //this.qiniuZone = api.qiniu;
+            //this.getQiniuToken();
         }
     }
 

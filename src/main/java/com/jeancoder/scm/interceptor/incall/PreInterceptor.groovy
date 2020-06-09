@@ -17,7 +17,7 @@ JCLogger logger = JCLoggerFactory.getLogger('');
 JCResponse response = ResponseSource.getResponse();
 response.setHeader("Access-Control-Allow-Origin", "*");
 response.setHeader("Access-Control-Allow-Method", "*");
-response.setHeader("Access-Control-Allow-Headers","x-nideshop-token");
+response.setHeader("Access-Control-Allow-Headers","Content-Type,x-nideshop-token");
 
 JCRequest request = JC.request.get();
 

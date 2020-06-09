@@ -12,7 +12,7 @@ if(cat==null) {
 	return ProtObj.fail(110001, '分类未找到');
 }
 
-def data = ["id":cat.id,"name":cat.cat_name_cn,"keywords":"","front_desc":cat.cat_info,"parent_id":cat.parent_id,"sort_order":cat.id,
+def data = ["id":cat.id,"name":cat.cat_name_cn,"keywords":cat.cat_name_en,"front_desc":cat.cat_info,"parent_id":cat.parent_id,"sort_order":cat.seq,
 	"show_index":cat.seq,"is_show":cat.cat_show,"icon_url":cat.cat_icon,"img_url":cat.cat_icon,"level":"L1","front_name":cat.cat_name_cn,"p_height":155,"is_category":1,"is_channel":1];
 
 return ProtObj.success(data);

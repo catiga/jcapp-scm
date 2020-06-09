@@ -26,7 +26,7 @@
                     </el-form-item>
                     <el-form-item label="商品图片" prop="list_pic_url" v-if="infoForm.list_pic_url"
                                   class="image-uploader-diy new-height">
-                        <img v-if="infoForm.list_pic_url" :src="infoForm.list_pic_url" class="image-show">
+                        <img v-if="infoForm.list_pic_url" :src="url + infoForm.list_pic_url" class="image-show">
                         <el-button class="dele-list-pic" type="primary" @click="delePicList">
                             <i class="fa fa-trash-o"></i>
                         </el-button>
@@ -35,9 +35,10 @@
                         <el-upload
                                 name="file"
                                 class="upload-demo"
-                                :action="qiniuZone"
+                                accept="image/jpeg,image/gif,image/png,image/jpg"
+                                :action="uploadAction"
                                 :on-success="handleUploadListSuccess"
-                                :before-upload="getQiniuToken"
+                                :before-upload="checkFile"
                                 list-type="picture-card"
                                 :data="picData"
                         >
@@ -49,14 +50,15 @@
                         <el-upload
                                 name="file"
                                 class="upload-demo"
-                                :action="qiniuZone"
+                                accept="image/jpeg,image/gif,image/png,image/jpg"
+                                :action="uploadAction"
                                 list-type="picture-card"
                                 :on-preview="galleryPreview"
                                 :on-success="handleUploadGallerySuccess"
                                 :on-remove="galleryRemove"
                                 :file-list="gallery_list"
                                 :data="picData"
-                                :before-upload="galleryBefore"
+                                :before-upload="checkFile"
                                 :on-error="hasErrorAct"
                         >
                             <i class="el-icon-plus"></i>
@@ -129,32 +131,32 @@
                                 </el-table-column>
                                 <el-table-column prop="goods_aka" label="快递单上的简称" width="160">
                                     <template scope="scope">
-                                        <el-input size="mini" v-model="scope.row.goods_name" placeholder="简称"></el-input>
+                                        <el-input @blur="checkSkuOnly(scope.$index, scope.row)" size="mini" v-model="scope.row.goods_name" placeholder="简称"></el-input>
                                     </template>
                                 </el-table-column>
                                 <el-table-column prop="value" label="型号/规格" width="130">
                                     <template scope="scope">
-                                        <el-input size="mini" v-model="scope.row.value" placeholder="如1斤/条"></el-input>
+                                        <el-input @blur="checkSkuOnly(scope.$index, scope.row)" size="mini" v-model="scope.row.value" placeholder="如1斤/条"></el-input>
                                     </template>
                                 </el-table-column>
                                 <el-table-column prop="cost" label="成本(元)" width="100">
                                     <template scope="scope">
-                                        <el-input size="mini" v-model="scope.row.cost" placeholder="成本"></el-input>
+                                        <el-input @blur="checkSkuOnly(scope.$index, scope.row)" size="mini" v-model="scope.row.cost" placeholder="成本"></el-input>
                                     </template>
                                 </el-table-column>
                                 <el-table-column prop="retail_price" label="零售(元)" width="100">
                                     <template scope="scope">
-                                        <el-input size="mini" v-model="scope.row.retail_price" placeholder="零售"></el-input>
+                                        <el-input @blur="checkSkuOnly(scope.$index, scope.row)" size="mini" v-model="scope.row.retail_price" placeholder="零售"></el-input>
                                     </template>
                                 </el-table-column>
-                                <el-table-column prop="goods_weight" label="重量(KG)" width="100">
+                                <el-table-column prop="goods_weight" label="重量(千克)" width="100">
                                     <template scope="scope">
-                                        <el-input size="mini" v-model="scope.row.goods_weight" placeholder="重量"></el-input>
+                                        <el-input @blur="checkSkuOnly(scope.$index, scope.row)" size="mini" v-model="scope.row.goods_weight" placeholder="重量"></el-input>
                                     </template>
                                 </el-table-column>
                                 <el-table-column prop="goods_number" label="库存" width="100">
                                     <template scope="scope">
-                                        <el-input size="mini" v-model="scope.row.goods_number" placeholder="库存"></el-input>
+                                        <el-input @blur="checkSkuOnly(scope.$index, scope.row)" size="mini" v-model="scope.row.goods_number" placeholder="库存"></el-input>
                                     </template>
                                 </el-table-column>
                                 <el-table-column label="操作" width="70">
@@ -238,8 +240,10 @@
             return {
                 root: '',
                 qiniuZone:'',
+                uploadAction:'',
                 picData: {
-                    token: ''
+                    token: '',
+                    uc: 'goods'
                 },
                 url: '',
                 kdOptions: [],
@@ -323,8 +327,6 @@
                 return this.$confirm(`确定移除 ${ file.name }？`);
             },
             checkSkuOnly(index,row){
-                console.log(index);
-                console.log(row);
                 if(row.goods_sn == ''){
                     this.$message({
                         type: 'error',
@@ -332,7 +334,11 @@
                     })
                     return false;
                 }
-                this.axios.post('goods/checkSku', {info: row}).then((response) => {
+                if(!row.goods_id) {
+                	//应对新增行
+                	row.goods_id = this.infoForm.id;
+                }
+                this.axios.post(this.root + 'goods/checkSku', qs.stringify(row)).then((response) => {
                     if (response.data.errno === 100) {
                         this.$message({
                             type: 'error',
@@ -349,7 +355,7 @@
             },
             getSpecData() {
                 let id = this.infoForm.id;
-                this.axios.post('specification/getGoodsSpec', {id: id}).then((response) => {
+                this.axios.post(this.root + 'goods/getGoodsSpec', qs.stringify({id: id})).then((response) => {
                     if (response.data.errno === 0) {
                         let info = response.data.data;
                         this.specData = info.specData;
@@ -382,6 +388,7 @@
                 console.log(err);
             },
             getQiniuToken() {
+            	/*
                 let that = this
                 this.axios.post('index/getQiniuToken').then((response) => {
                     let resInfo = response.data.data;
@@ -389,7 +396,24 @@
                     that.picData.token = resInfo.token;
                     that.url = resInfo.url;
                 })
+                */
             },
+            checkFile(file) {
+      			//let isIMAGE = file.type === 'image/jpeg'||'image/gif'||'image/png';
+      			let isIMAGE = file.type.indexOf('image')>-1?true:false;
+      			let isLt1M = file.size / 1024 / 1024 < 1;
+
+      			if (!isIMAGE) {
+        			this.$message.error('上传文件只能是图片格式!');
+        			return;
+      			}
+      			if (!isLt1M) {
+        			this.$message.error('上传文件大小不能超过 1MB!');
+        			return;
+      			}
+      			return isIMAGE && isLt1M;
+      			
+    		},
             goodsGalleryEdit() {
                 this.$router.push({name: 'goodsgalleryedit', query: {id: this.infoForm.id}})
             },
@@ -473,12 +497,11 @@
                 this.getQiniuToken();
             },
             galleryRemove(file, fileList) {
-                console.log('L>>>>>>>>.');
                 let para = {
-                    id: file.id,
-                    url: file.url
+                    img_id: file.id,
+                    goods_id: this.infoForm.id,
                 }
-                this.axios.post('goods/deleteGalleryFile', para).then((response) => {
+                this.axios.post(this.root + 'goods/deleteGalleryFile', qs.stringify(para)).then((response) => {
                     if (response.data.errno === 0) {
                         this.$message({
                             type: 'success',
@@ -580,7 +603,15 @@
                             return false;
                         }
                         for(const ele of this.specData){
-                            if(ele.cost == '' || ele.goods_sn == '' || ele.goods_weight == '' || ele.retail_price == '' || ele.value == ''){
+                            if(ele.cost === '' || ele.goods_sn === '' || ele.goods_weight === '' || ele.retail_price === '' || ele.value === ''){
+                            	alert(ele.cost + '-' + ele.goods_sn + '-' + ele.goods_weight + '-' + ele.retail_price + '-' + ele.value);
+                            	
+                            	alert('ele.cost=' + ele.cost + '-' + (ele.cost==''));
+                            	alert('ele.goods_sn=' + ele.goods_sn + '-' + (ele.goods_sn==''));
+                            	alert('ele.goods_weight=' + ele.goods_weight + '+++' + (ele.goods_weight==''));
+                            	alert('ele.retail_price=' + ele.retail_price + '-' + (ele.retail_price==''));
+                            	alert('ele.value=' + ele.value + '-' + (ele.value==''));
+                            	
                                 this.$message({
                                     type: 'error',
                                     message: '型号和价格的值不能为空'
@@ -589,13 +620,12 @@
                             }
                         }
                         // return false;
-                        this.axios.post('goods/store',
-                            {
+                        this.axios.post(this.root + 'goods/store', {
                                 info: this.infoForm,
                                 specData:this.specData,
                                 specValue:this.specValue,
                                 cateId:this.cateId,
-                            }).then((response) => {
+                        }).then((response) => {
                             if (response.data.errno === 0) {
                                 this.$message({
                                     type: 'success',
@@ -616,12 +646,14 @@
             },
             handleUploadListSuccess(res) {
                 let url = this.url;
-                this.infoForm.list_pic_url = url + res.key;
+                this.infoForm.list_pic_url = res.data[0];
+                /*
                 this.axios.post('goods/uploadHttpsImage', {url:this.infoForm.list_pic_url}).then((response) => {
                     let lastUrl = response.data.data;
                     console.log(lastUrl);
                     this.infoForm.https_pic_url = lastUrl;
                 })
+                */
             },
             handleUploadIndexPicSuccess(res) {
                 let url = this.url;
@@ -644,15 +676,16 @@
                 // loading动画消失
                 this.quillUpdateImg = false
             },
-            handleUploadGallerySuccess(res) {
+            handleUploadGallerySuccess(res, file) {
                 console.log(res);
+                console.log(file);
                 let url = this.url;
-                if (res.key != '') {
-                    let urlData = url + res.key;
+                if (res.data[0]) {
                     let id = this.infoForm.id;
                     let info = {
-                        url: urlData,
-                        goods_id: id
+                        url: res.data[0],
+                        goods_id: id,
+                        ct: file.raw.type
                     }
                     let that = this
                     this.axios.post(this.root + 'goods/gallery', qs.stringify(info)).then((response) => {
@@ -696,6 +729,15 @@
                         id: that.infoForm.id
                     }
                 }).then((response) => {
+                	if(response.data.errno!=0) {
+                		this.$confirm(response.data.errmsg, '提示', {
+		                    confirmButtonText: '确定',
+		                    type: 'error'
+		                }).then(() => {
+		                    this.$router.go(-1);
+		                });
+		                return;
+                	}
                     let resInfo = response.data.data;
                     let goodsInfo = resInfo.info;
                     // goodsInfo.is_index = goodsInfo.is_index ? true : false;
@@ -703,7 +745,10 @@
                     goodsInfo.is_on_sale = goodsInfo.is_on_sale ? "1" : "0";
                     that.infoForm = goodsInfo;
                     that.kdValue = goodsInfo.freight_template_id;
+                    
                     that.cateId = resInfo.category_id;
+                    console.log('that.cateId===' + that.cateId);
+                    
                     that.getImgUrl();
                 })
             },
@@ -793,7 +838,10 @@
                 this.getSpecData();
                 this.getGalleryList();
             }
-            this.qiniuZone = api.qiniu;
+            this.uploadAction = api.rootUrl + 'common/upload';
+            this.url = 'http://e.local:8080/img_server/';
+            
+            //this.qiniuZone = api.qiniu;
         },
     }
 
