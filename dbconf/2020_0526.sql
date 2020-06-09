@@ -4,6 +4,9 @@ ALTER TABLE `order_info` ADD COLUMN `remark` VARCHAR(255);
 
 ALTER TABLE `order_info` ADD COLUMN `admin_memo` VARCHAR(255);
 
+ALTER TABLE `data_goods_sku` ADD COLUMN `cost_price` DECIMAL(12,2);
+ALTER TABLE `data_goods_sku` ADD COLUMN `weight` DECIMAL(12,2);
+
 CREATE TABLE `order_ship` (
   `id` bigint(11) unsigned NOT NULL AUTO_INCREMENT,
   `order_id` bigint(20) DEFAULT NULL,

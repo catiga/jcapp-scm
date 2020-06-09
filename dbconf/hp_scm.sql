@@ -232,9 +232,9 @@ CREATE TABLE `data_goods_info`  (
   `flag` tinyint(4) NOT NULL DEFAULT 0,
   `goods_id` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '产品编号',
   `goods_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '产品名称',
-  `goods_price` decimal(10, 2) NULL DEFAULT NULL COMMENT '产品价格',
-  `goods_original_price` decimal(10, 2) NULL DEFAULT NULL,
-  `cost_price` decimal(10, 2) NULL DEFAULT NULL,
+  `goods_price` decimal(12, 2) NULL DEFAULT NULL COMMENT '产品价格',
+  `goods_original_price` decimal(12, 2) NULL DEFAULT NULL,
+  `cost_price` decimal(12, 2) NULL DEFAULT NULL,
   `goods_material` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '产品材料',
   `goods_picturelink` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '产品图片链接',
   `goods_picturelink_big` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
@@ -397,19 +397,21 @@ CREATE TABLE `data_goods_package_item_vert`  (
 -- Table structure for data_goods_sku
 -- ----------------------------
 DROP TABLE IF EXISTS `data_goods_sku`;
-CREATE TABLE `data_goods_sku`  (
+CREATE TABLE `data_goods_sku` (
   `id` bigint(11) NOT NULL AUTO_INCREMENT,
   `goods_id` bigint(20) NOT NULL,
-  `sku_no` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '产品详细编号',
-  `sku_price` decimal(10, 2) NULL DEFAULT NULL COMMENT '产品详细价格(扩展)',
-  `sku_img` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '产品图片链接',
-  `remark` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '产品备注',
-  `c_time` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) ON UPDATE CURRENT_TIMESTAMP(0),
-  `flag` tinyint(4) NOT NULL DEFAULT 0,
-  `stock` int(11) NULL DEFAULT 1,
-  `skus` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '产品详细信息表' ROW_FORMAT = Compact;
+  `sku_no` varchar(255) DEFAULT NULL COMMENT '产品详细编号',
+  `sku_price` decimal(12,2) DEFAULT NULL COMMENT '产品详细价格(扩展)',
+  `sku_img` varchar(255) DEFAULT NULL COMMENT '产品图片链接',
+  `remark` varchar(255) DEFAULT '' COMMENT '产品备注',
+  `c_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `flag` tinyint(4) NOT NULL DEFAULT '0',
+  `stock` int(11) DEFAULT '1',
+  `skus` varchar(255) DEFAULT NULL,
+  `cost_price` decimal(12,2) DEFAULT NULL,
+  `weight` decimal(10,2) DEFAULT NULL COMMENT '单位克',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='产品详细信息表';
 
 -- ----------------------------
 -- Table structure for data_goods_stock
