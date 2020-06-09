@@ -19,6 +19,10 @@ class GoodsSku {
 	
 	BigDecimal sku_price;
 	
+	BigDecimal cost_price;
+	
+	BigDecimal weight;
+	
 	String sku_img;
 	
 	String remark;
