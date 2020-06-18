@@ -13,33 +13,44 @@
         <div class="content-main">
             <div class="form-table-box">
                 <el-form ref="infoForm" :rules="infoRules" :model="infoForm" label-width="120px">
+                	<el-form-item label="广告名称" prop="name">
+                        <el-input v-model="infoForm.title"></el-input>
+                    </el-form-item>
+                    <el-form-item label="广告简介" prop="goods_brief">
+                        <el-input type="textarea" v-model="infoForm.info" :rows="3"></el-input>
+                        <div class="form-tip"></div>
+                    </el-form-item>
+                    
                     <el-form-item label="广告图片" prop="image_url">
-                        <img v-if="infoForm.image_url" :src="infoForm.image_url" class="image-show">
+                        <img v-if="infoForm.image_url" :src="url + infoForm.image_url" class="image-show">
                         <el-upload
                                 class="upload-demo"
                                 name="file"
-                                :action="qiniuZone"
+                                accept="image/jpeg,image/gif,image/png,image/jpg"
+                                :action="uploadAction"
                                 :on-remove="adRemove"
                                 :before-remove="beforeAdRemove"
                                 :file-list="fileList"
                                 :on-success="handleUploadImageSuccess"
                                 :data="picData"
-                                :before-upload="getQiniuToken"
+                                :before-upload="checkFile"
                         >
                             <el-button v-if="!infoForm.image_url" size="small" type="primary">点击上传</el-button>
                         </el-upload>
                         <div class="form-tip">图片尺寸：750*440</div>
                     </el-form-item>
-                    <el-form-item label="商品类型">
+                    <el-form-item label="跳转类型">
                         <el-radio-group v-model="infoForm.link_type">
-                            <el-radio :label="0">商品id</el-radio>
-                            <el-radio :label="1">链接</el-radio>
+                        	<el-radio :label="'00'">默认</el-radio>
+                            <el-radio :label="'10'">商品跳转</el-radio>
+                            <el-radio :label="'20'">链接跳转</el-radio>
                         </el-radio-group>
                     </el-form-item>
-                    <el-form-item label="广告链接" prop="link" v-if="infoForm.link_type == 1">
+                    
+                    <el-form-item label="广告外部链接" prop="link" v-if="infoForm.link_type == '20'">
                         <el-input class="link-input" v-model="infoForm.link"></el-input>
                     </el-form-item>
-                    <el-form-item label="商品id" prop="link" v-if="infoForm.link_type == 0">
+                    <el-form-item label="商品id" prop="link" v-if="infoForm.link_type == '10'">
                         <el-input class="id-input" v-model="infoForm.goods_id"></el-input>
                         <el-popover
                                 placement="right"
@@ -66,9 +77,20 @@
                             <el-button slot="reference" type="primary" @click="relateGoodsClick">添加关联商品</el-button>
                         </el-popover>
                     </el-form-item>
+                    <el-form-item label="开始时间" prop="start_time">
+                        <el-date-picker
+                                v-model="infoForm.start_time"
+                                format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss"
+                                type="datetime"
+                                placeholder="选择日期"
+                                default-time="23:59:59">
+                            >
+                        </el-date-picker>
+                    </el-form-item>
                     <el-form-item label="结束时间" prop="end_time">
                         <el-date-picker
                                 v-model="infoForm.end_time"
+                                format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss"
                                 type="datetime"
                                 placeholder="选择日期"
                                 default-time="23:59:59">
@@ -106,9 +128,12 @@
                 },
                 infoForm: {
                     id: 0,
+                    title:'',
+                    info:'',
                     image_url: '',
                     link_type: 0,
                     enabled: 0,
+                    start_time: '',
                     end_time: '',
                     goods_id:0,
                     link:''
@@ -118,11 +143,12 @@
                         {required: true, message: '请输入广告图片', trigger: 'blur'},
                     ],
                     end_time: [
-                        {required: true, message: '请选择时间', trigger: 'blur'},
+                        {required: true, message: '请选择结束时间', trigger: 'blur'},
                     ],
                 },
                 picData: {
-                    token: ''
+                    token: '',
+                    uc: 'ad'
                 },
                 url: '',
                 chooseRelateGoods: [],
@@ -145,6 +171,22 @@
             test() {
                 console.log(this.infoForm.end_time);
             },
+            checkFile(file) {
+      			//let isIMAGE = file.type === 'image/jpeg'||'image/gif'||'image/png';
+      			let isIMAGE = file.type.indexOf('image')>-1?true:false;
+      			let isLt1M = file.size / 1024 / 1024 < 1;
+
+      			if (!isIMAGE) {
+        			this.$message.error('上传文件只能是图片格式!');
+        			return;
+      			}
+      			if (!isLt1M) {
+        			this.$message.error('上传文件大小不能超过 1MB!');
+        			return;
+      			}
+      			return isIMAGE && isLt1M;
+      			
+    		},
             beforeAdRemove() {
                 return this.$confirm(`确定移除？`);
             },
@@ -228,7 +270,7 @@
             },
             handleUploadImageSuccess(res, file) {
                 let url = this.url;
-                this.infoForm.image_url = url + res.key;
+                this.infoForm.image_url = res.data[0];
             },
             getInfo() {
                 if (this.infoForm.id <= 0) {
@@ -244,7 +286,7 @@
                     let resInfo = response.data.data;
                     resInfo.enabled = resInfo.enabled ? "1" : "0";
                     that.infoForm = resInfo;
-                    that.infoForm.end_time = resInfo.end_time * 1000;
+                    //that.infoForm.end_time = resInfo.end_time * 1000;
                     let info = {
                         name: resInfo.name,
                         url: resInfo.image_url
@@ -259,8 +301,14 @@
         	this.root = api.rootUrl;
             this.infoForm.id = this.$route.query.id || 0;
             this.getInfo();
+            
+            this.uploadAction = api.rootUrl + 'common/upload';
+            this.url = 'http://e.local:8080/img_server/';
+            
+            /*
             this.getQiniuToken();
             this.qiniuZone = api.qiniu;
+            */
         }
     }
 

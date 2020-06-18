@@ -9,6 +9,7 @@ import com.jeancoder.scm.ready.entity.FreightRule
 import com.jeancoder.scm.ready.entity.FreightTpl
 import com.jeancoder.scm.ready.incall.api.ProtObj
 import com.jeancoder.scm.ready.util.GlobalHolder
+import com.jeancoder.scm.ready.util.MoneyUtil
 
 def params = JC.request.get().getInputStream();
 if(params) {
@@ -25,35 +26,36 @@ def info = params['info'];
 def defaultData = params['defaultData'];
 def table = params['table'];
 
-//更新基本信息
-FreightTpl freight = JcTemplate.INSTANCE().get(FreightTpl, 'select * from FreightTpl where flag!=? and proj_id=? and id=?', -1, GlobalHolder.proj.id, info['id']);
-if(freight==null) {
-	return ProtObj.fail(110001, '模板未找到')
-}
-freight.freight_type = info['freight_type'];
-freight.package_price = _to_mul_(info['package_price'], new BigDecimal(100));
-freight.ft_name = info['name'];
-JcTemplate.INSTANCE().update(freight);
+//开始保存模板信息
+FreightTpl f_tpl = new FreightTpl();
+f_tpl.a_time = new Date();
+f_tpl.c_time = new Timestamp(Calendar.getInstance().getTimeInMillis());
+f_tpl.flag = 0;
+f_tpl.freight_type = info['freight_type'];
+f_tpl.package_price = MoneyUtil.get_cent_from_yuan(info['package_price']);
+f_tpl.ft_name = info['name'];
+f_tpl.proj_id = GlobalHolder.proj.id;
+f_tpl.is_def_sys = 0;
+
+f_tpl.id = JcTemplate.INSTANCE().save(f_tpl);
+
+BigDecimal _100_ = new BigDecimal(100);
+BigDecimal _1000_ = new BigDecimal(1000);
 
 def a_time = Calendar.getInstance().getTime();
+
 //开始保存明细数据
 def de_data = [];
-de_data.addAll(map_to_rule(defaultData, a_time, freight.id));
-de_data.addAll(map_to_rule(table, a_time, freight.id));
+de_data.addAll(map_to_rule(defaultData, a_time, f_tpl.id));
+de_data.addAll(map_to_rule(table, a_time, f_tpl.id));
 
-//删除所有已经存在的模版详细数据，然后进行保存
-def sql = 'update FreightRule set flag=-1 where flag!=? and ftpl=?';
-JcTemplate.INSTANCE().batchExecute(sql, -1, freight.id);
-//保存数据
 if(de_data) {
 	for(x in de_data) {
 		JcTemplate.INSTANCE().save(x);
 	}
 }
 
-return ProtObj.success("");
-
-
+return ProtObj.success(1);
 
 //转化成bigdecimal
 BigDecimal trans(def value) {
@@ -77,7 +79,6 @@ BigDecimal _to_mul_(def value, BigDecimal bd) {
 List<FreightRule> map_to_rule(def data_list, Date a_time, BigInteger tpl_id) {
 	BigDecimal _100_ = new BigDecimal(100);
 	BigDecimal _1000_ = new BigDecimal(1000);
-	BigDecimal _1_ = new BigDecimal(1);
 	
 	def data = [];
 	for(x in data_list) {

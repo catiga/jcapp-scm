@@ -591,7 +591,7 @@
                                      placeholder="请输入商品价格"></el-input-number>
                 </el-form-item>
                 <el-form-item label="修改快递价格:">
-                    <el-input-number @change="freightPriceChange" :min="0" :max="99999999" v-model="orderInfo.freight_price"
+                    <el-input-number @change="freightPriceChange" :min="0" :max="0" v-model="orderInfo.freight_price"
                                      auto-complete="off"
                                      placeholder="请输入修改后的快递"></el-input-number>
                 </el-form-item>
@@ -931,7 +931,7 @@
                     console.log(1);
                 }
                 else if (item.order_status == '0000') {
-                	//初始化状态
+                	//初始化状态，修改价格
                     this.getOrderInfo(this.order_id);
                     this.dialogPriceVisible = true;
                     console.log(2);
@@ -1209,7 +1209,7 @@
                     });
                     return false;
                 }
-                this.axios.get('order/orderPrice', {
+                this.axios.get(this.root + 'order/orderPrice', {
                     params: {
                         orderId: this.order_id,
                         actualPrice: this.orderInfo.actual_price,

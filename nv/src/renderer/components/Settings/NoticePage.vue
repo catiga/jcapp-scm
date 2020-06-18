@@ -40,6 +40,7 @@
                 <el-form-item label="到期时间:" label-width="120px">
                     <el-date-picker
                             v-model="noticeData.time"
+                            format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss"
                             type="datetime"
                             placeholder="选择日期时间"
                             default-time="23:59:59">
@@ -165,12 +166,9 @@
                                 type: 'success',
                                 message: '删除成功!'
                             });
-
                             this.getList();
                         }
                     })
-
-
                 });
             },
             getList() {

@@ -15,110 +15,39 @@ class FreightRule {
 	@JCForeign
 	BigInteger ftpl;
 	
+	// country,province,city,zone
 	String ac;
 	
-	String ff;
+	//首重 公斤 | 首件 个数
+	BigDecimal ff;
 	
-	String fm;
+	//首费 分
+	BigDecimal fm;
 	
-	String cfm;
+	//续重单位 公斤 | 续件 个数
+	BigDecimal cff;
 	
+	//续费 分
+	BigDecimal cfm;
+	
+	//按金额包邮
+	Integer freemoney_flag = 0;
+	BigDecimal freemoney_value;
+	
+	//按重量或数量包邮
+	Integer freewn_flag = 0;
+	BigDecimal freewn_value;
+	
+	//免邮类型
 	String fpt;
 	
+	//免邮金额
 	String fpv;
 	
-	Timestamp a_time;
+	Date a_time;
 	
 	Timestamp c_time;
 	
 	Integer flag = 0;
 
-	public BigInteger getId() {
-		return id;
-	}
-
-	public void setId(BigInteger id) {
-		this.id = id;
-	}
-
-	public BigInteger getFtpl() {
-		return ftpl;
-	}
-
-	public void setFtpl(BigInteger ftpl) {
-		this.ftpl = ftpl;
-	}
-
-	public String getAc() {
-		return ac;
-	}
-
-	public void setAc(String ac) {
-		this.ac = ac;
-	}
-
-	public String getFf() {
-		return ff;
-	}
-
-	public void setFf(String ff) {
-		this.ff = ff;
-	}
-
-	public String getFm() {
-		return fm;
-	}
-
-	public void setFm(String fm) {
-		this.fm = fm;
-	}
-
-	public String getCfm() {
-		return cfm;
-	}
-
-	public void setCfm(String cfm) {
-		this.cfm = cfm;
-	}
-
-	public String getFpt() {
-		return fpt;
-	}
-
-	public void setFpt(String fpt) {
-		this.fpt = fpt;
-	}
-
-	public String getFpv() {
-		return fpv;
-	}
-
-	public void setFpv(String fpv) {
-		this.fpv = fpv;
-	}
-
-	public Timestamp getA_time() {
-		return a_time;
-	}
-
-	public void setA_time(Timestamp a_time) {
-		this.a_time = a_time;
-	}
-
-	public Timestamp getC_time() {
-		return c_time;
-	}
-
-	public void setC_time(Timestamp c_time) {
-		this.c_time = c_time;
-	}
-
-	public Integer getFlag() {
-		return flag;
-	}
-
-	public void setFlag(Integer flag) {
-		this.flag = flag;
-	}
-	
 }

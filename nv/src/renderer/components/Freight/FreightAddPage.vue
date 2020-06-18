@@ -21,8 +21,8 @@
                     </el-form-item>
                     <el-form-item label="快递收费方式">
                         <el-radio-group v-model="infoForm.freight_type">
-                            <el-radio :label="0">按件计费</el-radio>
-                            <el-radio :label="1">按重量计费</el-radio>
+                            <el-radio :label="'10'">按件计费</el-radio>
+                            <el-radio :label="'00'">按重量计费</el-radio>
                         </el-radio-group>
                     </el-form-item>
 
@@ -30,14 +30,14 @@
                         <!--<div class="line-wrap">-->
                         <!--<div class="line">-->
                         <!--<el-input v-model="defaultData.start"></el-input>-->
-                        <!--<div class="text">{{infoForm.freight_type == 0?'件内':'KG内'}}</div>-->
+                        <!--<div class="text">{{infoForm.freight_type == '10'?'件内':'KG内'}}</div>-->
                         <!--<el-input v-model="defaultData.start_fee"></el-input>-->
                         <!--<div class="text">元</div>-->
                         <!--</div>-->
                         <!--<div class="line2">-->
                         <!--<div class="text2">每增加</div>-->
                         <!--<el-input v-model="defaultData.add"></el-input>-->
-                        <!--<div class="text">{{infoForm.freight_type == 0?'件':'KG'}}</div>-->
+                        <!--<div class="text">{{infoForm.freight_type == '10'?'件':'KG'}}</div>-->
                         <!--<div class="text2">增加</div>-->
                         <!--<el-input v-model="defaultData.add_fee"></el-input>-->
                         <!--<div class="text">元</div>-->
@@ -46,7 +46,7 @@
 
                         <div class="form-table-box">
                             <el-table :data="defaultData" style="width: 100%" border stripe>
-                                <el-table-column prop="start" :label="infoForm.freight_type == 0?'首件(个)':'首重(KG)'"
+                                <el-table-column prop="start" :label="infoForm.freight_type == '10'?'首件(个)':'首重(KG)'"
                                 >
                                     <template scope="scope">
                                         <el-input size="mini" v-model="scope.row.start" placeholder="个"
@@ -60,7 +60,7 @@
                                                   @blur="submitValue(scope.$index, scope.row.start_fee)"></el-input>
                                     </template>
                                 </el-table-column>
-                                <el-table-column prop="add" :label="infoForm.freight_type == 0?'续件(个)':'续重(KG)'"
+                                <el-table-column prop="add" :label="infoForm.freight_type == '10'?'续件(个)':'续重(KG)'"
                                 >
                                     <template scope="scope">
                                         <el-input size="mini" v-model="scope.row.add" placeholder="个"
@@ -112,7 +112,7 @@
                         <div class="form-table-box">
                             <el-table :data="tableData" style="width: 100%" border stripe>
                                 <el-table-column prop="areaName" label="运送到"></el-table-column>
-                                <el-table-column prop="start" :label="infoForm.freight_type == 0?'首件(个)':'首重(KG)'"
+                                <el-table-column prop="start" :label="infoForm.freight_type == '10'?'首件(个)':'首重(KG)'"
                                                  width="90">
                                     <template scope="scope">
                                         <el-input size="mini" v-model="scope.row.start" placeholder="个"
@@ -126,7 +126,7 @@
                                                   @blur="submitValue(scope.$index, scope.row.start_fee)"></el-input>
                                     </template>
                                 </el-table-column>
-                                <el-table-column prop="add" :label="infoForm.freight_type == 0?'续件(个)':'续重(KG)'"
+                                <el-table-column prop="add" :label="infoForm.freight_type == '10'?'续件(个)':'续重(KG)'"
                                                  width="90">
                                     <template scope="scope">
                                         <el-input size="mini" v-model="scope.row.add" placeholder="个"
@@ -189,9 +189,10 @@
                             <el-button type="text" @click="add_template">+添加指定地区运费</el-button>
                             <el-form-item>
                                 <el-button v-if="infoForm.id" type="danger" class="float-right" @click="onSaveTemplate">
-                                    保存模板
+                                    更新运费模板
                                 </el-button>
-                                <el-button v-else type="danger" class="float-right" @click="onAddTemplate">保存模板2
+                                <el-button v-else type="danger" class="float-right" @click="onAddTemplate">
+                                	保存运费模板
                                 </el-button>
                             </el-form-item>
                         </div>
@@ -231,7 +232,7 @@
                 specEditVisible: false,
                 infoForm: {
                     id: 0,
-                    freight_type: 0,
+                    freight_type: '00',
                     package_price: 0,
                     name: ''
                 },
@@ -396,11 +397,11 @@
                 }
 
                 let that = this;
-                this.axios.post(this.root + 'shipper/saveTable', qs.stringify({
+                this.axios.post(this.root + 'shipper/saveTable', {
                     table: that.tableData,
                     defaultData: that.defaultData,
                     info: that.infoForm
-                })).then((response) => {
+                }).then((response) => {
                     if (response.data.errno === 0) {
                         this.$message({
                             type: 'success',
@@ -471,7 +472,7 @@
 
                 let that = this;
 
-                this.axios.post('shipper/addTable', {
+                this.axios.post(this.root + 'shipper/addTable', {
                     table: that.tableData,
                     defaultData: that.defaultData,
                     info: that.infoForm

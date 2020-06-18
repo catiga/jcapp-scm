@@ -84,35 +84,40 @@ CREATE TABLE `data_category_info`  (
 -- Table structure for data_freight_tpl_info
 -- ----------------------------
 DROP TABLE IF EXISTS `data_freight_tpl_info`;
-CREATE TABLE `data_freight_tpl_info`  (
-  `id` bigint(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `ft_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `proj_id` bigint(20) NULL DEFAULT NULL,
-  `a_time` datetime(0) NULL DEFAULT NULL,
-  `c_time` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) ON UPDATE CURRENT_TIMESTAMP(0),
-  `flag` tinyint(4) NOT NULL DEFAULT 0,
-  `is_def_sys` tinyint(4) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+CREATE TABLE `data_freight_tpl_info` (
+  `id` bigint(11) unsigned NOT NULL AUTO_INCREMENT,
+  `ft_name` varchar(255) DEFAULT NULL,
+  `proj_id` bigint(20) DEFAULT NULL,
+  `a_time` datetime DEFAULT NULL,
+  `c_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `flag` tinyint(4) NOT NULL DEFAULT '0',
+  `is_def_sys` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for data_freight_tpl_rule
 -- ----------------------------
 DROP TABLE IF EXISTS `data_freight_tpl_rule`;
-CREATE TABLE `data_freight_tpl_rule`  (
-  `id` bigint(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `ftpl` bigint(20) NULL DEFAULT NULL,
-  `ac` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `ff` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `fm` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `cfm` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `fpt` char(4) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `fpv` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `a_time` datetime(0) NULL DEFAULT NULL,
-  `c_time` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) ON UPDATE CURRENT_TIMESTAMP(0),
-  `flag` tinyint(4) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+CREATE TABLE `data_freight_tpl_rule` (
+  `id` bigint(11) unsigned NOT NULL AUTO_INCREMENT,
+  `ftpl` bigint(20) DEFAULT NULL,
+  `ac` varchar(255) DEFAULT NULL,
+  `ff` decimal(10,2) DEFAULT NULL,
+  `fm` decimal(10,2) DEFAULT NULL,
+  `cff` decimal(10,2) DEFAULT NULL,
+  `cfm` decimal(10,2) DEFAULT NULL,
+  `fpt` char(4) DEFAULT NULL,
+  `fpv` varchar(255) DEFAULT NULL,
+  `a_time` datetime DEFAULT NULL,
+  `c_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `flag` tinyint(4) NOT NULL DEFAULT '0',
+  `freemoney_flag` tinyint(4) NOT NULL DEFAULT '0',
+  `freemoney_value` decimal(10,2) DEFAULT NULL,
+  `freewn_flag` tinyint(4) NOT NULL DEFAULT '0',
+  `freewn_value` decimal(10,2) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for data_g_f_sm

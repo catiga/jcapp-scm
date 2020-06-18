@@ -7,6 +7,19 @@ ALTER TABLE `order_info` ADD COLUMN `admin_memo` VARCHAR(255);
 ALTER TABLE `data_goods_sku` ADD COLUMN `cost_price` DECIMAL(12,2);
 ALTER TABLE `data_goods_sku` ADD COLUMN `weight` DECIMAL(12,2);
 
+ALTER TABLE `data_freight_tpl_info` ADD COLUMN `package_price` DECIMAL(12,2);
+ALTER TABLE `data_freight_tpl_info` ADD COLUMN `freight_type` CHAR(2) DEFAULT '00';
+
+alter table `data_freight_tpl_rule` modify column `ff` DECIMAL(10,2);
+alter table `data_freight_tpl_rule` modify column `fm` DECIMAL(10,2);
+alter table `data_freight_tpl_rule` modify column `cfm` DECIMAL(10,2);
+alter table `data_freight_tpl_rule` modify column `a_time` DATETIME(0);
+alter table `data_freight_tpl_rule` add column `cff` DECIMAL(10,2);
+alter table `data_freight_tpl_rule` add column `freemoney_flag` tinyint(4) NOT NULL DEFAULT 0;
+alter table `data_freight_tpl_rule` add column `freemoney_value` DECIMAL(10,2);
+alter table `data_freight_tpl_rule` add column `freewn_flag` tinyint(4) NOT NULL DEFAULT 0;
+alter table `data_freight_tpl_rule` add column `freewn_value` DECIMAL(10,2);
+
 CREATE TABLE `order_ship` (
   `id` bigint(11) unsigned NOT NULL AUTO_INCREMENT,
   `order_id` bigint(20) DEFAULT NULL,

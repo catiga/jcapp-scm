@@ -18,7 +18,7 @@
                     <el-table-column prop="package_price" label="包装费"></el-table-column>
                     <el-table-column prop="freight_type" label="按件/按重" width="200">
                         <template scope="scope">
-                            {{ scope.row.freight_type == 0 ? '按件' : '按重' }}
+                            {{ scope.row.freight_type == '00' ? '按重' : '按件' }}
                         </template>
                     </el-table-column>
                     <el-table-column label="操作" width="170">
