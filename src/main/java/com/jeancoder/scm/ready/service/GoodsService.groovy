@@ -270,7 +270,11 @@ class GoodsService {
 			sql = sql + ' and goods_sku_id=?';
 			params.add(sku.id);
 		}
-		return jc_template.get(BigDecimal.class, sql, params.toArray());
+		BigDecimal x_stock = jc_template.get(BigDecimal.class, sql, params.toArray());
+		if(x_stock==null) {
+			x_stock = new BigDecimal(0);
+		}
+		return x_stock;
 	}
 	
 	/**
