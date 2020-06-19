@@ -23,17 +23,25 @@ class ShoppingCart {
 	
 	BigInteger goods_id;
 	
+	String goods_no;
+	
 	String goods_name;
 	
 	String goods_pic;
 	
 	BigInteger goods_sku_id;
 	
+	String goods_sku_no;
+	
 	String goods_sku_name;
+	
+	BigDecimal weight;
 	
 	Integer number;
 	
 	BigDecimal add_price;
+	
+	BigDecimal retail_price;
 	
 	Date a_time;
 	

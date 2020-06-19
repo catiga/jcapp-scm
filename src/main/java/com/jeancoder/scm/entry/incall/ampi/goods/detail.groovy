@@ -46,8 +46,22 @@ if(typecode=='100') {
 		if(g_cont!=null) {
 			goods_content = g_cont.content;
 		}
+		def retail_price = 999999;
+		def min_retail_price = retail_price;
+		def cost_price = retail_price;
+		def min_cost_price = retail_price;
+		
+		if(g.goods_price!=null) {
+			retail_price = g.goods_price;
+			min_retail_price = retail_price;
+		}
+		if(g.cost_price!=null) {
+			cost_price = g.cost_price;
+			min_cost_price = cost_price;
+		}
+		
 		def base_info = ["id":g.id,"category_id":1005000,"is_on_sale":1,"name":g.goods_name,"goods_number":stock,"sell_volume":2923,
-		"keywords":"","retail_price":g.goods_price/100,"min_retail_price":g.goods_price/100,"cost_price":g.cost_price/100,"min_cost_price":g.cost_price/100,
+		"keywords":"","retail_price":retail_price/100,"min_retail_price":retail_price/100,"cost_price":cost_price/100,"min_cost_price":min_cost_price/100,
 		"goods_brief":g.goods_remark,
 		"goods_desc":goods_content,
 		"sort_order":1,"is_index":1,"is_new":0,"goods_unit":g.unit,

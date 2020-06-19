@@ -44,7 +44,7 @@ class GoodsInfo {
 	String config;
 	
 	//规格
-	Float weight;
+	BigDecimal weight;
 	
 	String spec_unit;
 	

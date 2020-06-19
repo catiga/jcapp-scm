@@ -68,4 +68,28 @@ CREATE TABLE `data_dic_express` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
+CREATE TABLE `data_shopping_cart` (
+  `id` bigint(11) unsigned NOT NULL AUTO_INCREMENT,
+  `pid` bigint(20) DEFAULT NULL,
+  `ap_id` bigint(20) DEFAULT NULL,
+  `basic_id` bigint(20) DEFAULT NULL,
+  `user_name` varchar(255) DEFAULT NULL,
+  `nick_name` varchar(255) DEFAULT NULL,
+  `goods_id` bigint(20) DEFAULT NULL,
+  `goods_no` varchar(255) DEFAULT NULL,
+  `goods_name` varchar(255) DEFAULT NULL,
+  `goods_pic` varchar(255) DEFAULT NULL,
+  `goods_sku_id` bigint(20) DEFAULT NULL,
+  `goods_sku_no` varchar(255) DEFAULT NULL,
+  `goods_sku_name` varchar(255) DEFAULT NULL,
+  `weight` decimal(10,2) DEFAULT NULL,
+  `number` int(11) DEFAULT NULL,
+  `add_price` decimal(12,2) DEFAULT NULL,
+  `retail_price` decimal(12,2) DEFAULT NULL,
+  `a_time` datetime DEFAULT NULL,
+  `c_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `flag` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 
