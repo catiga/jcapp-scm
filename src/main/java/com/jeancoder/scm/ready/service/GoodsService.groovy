@@ -245,6 +245,7 @@ class GoodsService {
 	}
 	
 	/**
+	 * 支持按照商品，单品，统计库存，可以不传入仓库信息
 	 * 统计剩余库存
 	 * @param goods
 	 * @param sku
@@ -252,14 +253,19 @@ class GoodsService {
 	 * @return
 	 */
 	public BigDecimal get_goods_sku_stock(GoodsInfo goods, GoodsSku sku, WareHouse ware) {
+		/*
 		if(ware==null) {
 			return new BigDecimal(0);
 		}
-		String sql = 'select sum(stock) from GoodsStock where flag!=? and wh_id=? and goods_id=?';
+		*/
+		String sql = 'select sum(stock) from GoodsStock where flag!=? and goods_id=?';
 		def params = [];
 		params.add(-1);
-		params.add(ware.id);
 		params.add(goods.id);
+		if(ware!=null) {
+			sql = sql + ' and wh_id=?';
+			params.add(ware.id);
+		}
 		if(sku!=null) {
 			sql = sql + ' and goods_sku_id=?';
 			params.add(sku.id);
