@@ -21,4 +21,7 @@ class FrontOrderAddr {
 	//门牌号，桌号
 	String point;
 	
+	String contact_name;
+	
+	String contact_phone;
 }

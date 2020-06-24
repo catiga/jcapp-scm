@@ -24,7 +24,7 @@ if(front_user_case==null) {
 }
 
 def ap_id = front_user_case['ap_id'];
-def pid = front_user_case['pid'];
+def pid = GlobalHolder.proj.id;
 
 def request_data = new String(JC.request.get().getInputStream().getBytes(), 'UTF-8');
 
@@ -59,16 +59,28 @@ s_cart.basic_id = 0;
 s_cart.user_name = front_user_case['realname'];
 s_cart.nick_name = front_user_case['nickname'];
 
-s_cart.c_time = new Timestamp(s_cart.a_time);
+s_cart.c_time = new Timestamp(Calendar.getInstance().getTimeInMillis());
 s_cart.flag = 0;
 s_cart.goods_id = goods.id;
 s_cart.goods_name = goods.goods_name;
 s_cart.goods_pic = goods.goods_picturelink;
+s_cart.goods_no = goods.goods_id;
+s_cart.goods_pic = goods.goods_picturelink;
+s_cart.weight = goods.weight;
+s_cart.retail_price = goods.goods_price;
 
 s_cart.goods_sku_id = goods_sku!=null?goods_sku.id: 0;
 s_cart.goods_sku_name = goods_sku!=null?goods_sku.skus:'';
 
+s_cart.is_on_sale = 1;
+
 s_cart.number = number;
 s_cart.pid = GlobalHolder.proj.id;
 
-return ProtObj.success(1);
+s_cart.id = JcTemplate.INSTANCE().save(s_cart);
+
+def data = [:];
+data['cartTotal'] = [goodsCount:number];
+
+return ProtObj.success(data);
+

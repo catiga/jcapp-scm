@@ -3,6 +3,7 @@ package com.jeancoder.scm.entry.incall.ampi.goods
 import java.util.List
 
 import com.jeancoder.app.sdk.JC
+import com.jeancoder.core.util.JackSonBeanMapper
 import com.jeancoder.scm.ready.ajax.SimpleAjax
 import com.jeancoder.scm.ready.entity.GdMerge
 import com.jeancoder.scm.ready.entity.GoodsContent
@@ -39,7 +40,7 @@ def goods_info = [:];
 
 if(typecode=='100') {
 	GoodsInfo g = goods_service.get(g_id);
-	def stock = 9999;	//库存
+	BigDecimal stock = 0;	//默认库存为0
 	def goods_content = null;
 	if(g!=null) {
 		GoodsContent g_cont = goods_service.get_content(g.id);
@@ -82,6 +83,29 @@ if(typecode=='100') {
 		goods_info['info'] = base_info;
 		goods_info['gallery'] = goods_gallery;
 		
+		//查找商品SKU
+		List<GoodsSku> g_skus = goods_service.find_goods_skus(g);
+		def productList = [];
+		def all_sku_props = [];
+		if(g_skus) {
+			for(x in g_skus) {
+				//查找当前sku对应的库存信息
+				BigDecimal x_stock = goods_service.get_goods_sku_stock(g, x, null);
+				stock = stock.add(x_stock);
+				def tmp_obj = [id:x.id, goods_id:g.id, goods_specification_ids:x.sku_no, goods_sn:g.goods_id, goods_number:x_stock, retail_price:x.sku_price,, cost:1, has_change:0, is_on_sale:1, is_delete:0];
+				tmp_obj['sku'] = x.skus;
+				if(x.skus) {
+					try {
+						all_sku_props.add(JackSonBeanMapper.jsonToMap(x.skus));					
+					} catch(any) {}
+				}
+				productList.add(tmp_obj);
+			}
+		}
+		//重置goods库存
+		goods_info['info']['goods_number'] = stock;
+		goods_info['productList'] = productList;
+		
 		def specificationList = [:];
 		//查找model
 		GoodsModel model = null;
@@ -94,7 +118,30 @@ if(typecode=='100') {
 				def valueList = [];
 				if(model_props) {
 					for(x in model_props) {
-						valueList.add([id:x.id, specification_id:x.gm_id, value:x.attr_k, is_delete:0, goods_id:g.id, pic_url:'', goods_number:0]);
+						def v_prop = [id:x.id, specification_id:x.gm_id, value:x.attr_k, is_delete:0, goods_id:g.id, pic_url:'', goods_number:0];
+						//查找这个属性对应的所有值
+						def v_values = new HashSet<?>();
+						if(all_sku_props) {
+							for(y in all_sku_props) {
+								y.each({
+									vv->
+									if(x.attr_k==vv.key) {
+										def had_in = false;
+										v_values.each({
+											item->
+											if(item['value']==vv.value) {
+												had_in = true;
+												return;
+											}
+										});
+										if(!had_in)
+											v_values.add([value:vv.value, checked:false]);
+									}
+								})
+							}
+						}
+						v_prop['v_result'] = v_values;
+						valueList.add(v_prop);
 					}
 				}
 				specificationList['valueList'] = valueList;
@@ -102,17 +149,6 @@ if(typecode=='100') {
 		}
 		goods_info['specificationList'] = specificationList;
 		
-		//查找商品SKU
-		List<GoodsSku> g_skus = goods_service.find_goods_skus(g);
-		def productList = [];
-		if(g_skus) {
-			for(x in g_skus) {
-				def tmp_obj = [id:x.id, goods_id:g.id, goods_specification_ids:x.sku_no, goods_sn:g.goods_id, goods_number:0, retail_price:x.sku_price,, cost:1, has_change:0, is_on_sale:1, is_delete:0];
-				tmp_obj['sku'] = x.skus;
-				productList.add(tmp_obj);
-			}
-		}
-		goods_info['productList'] = productList;
 	}
 } else if(typecode=='200') {
 	GoodsPack pack = cmp_service.get_pack(g_id);

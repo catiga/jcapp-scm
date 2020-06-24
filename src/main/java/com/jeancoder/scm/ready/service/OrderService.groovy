@@ -280,7 +280,7 @@ class OrderService {
 	 * @param session
 	 * @return
 	 */
-	def create_order_front(def pre_orders, StoreInfo store, def code, FrontOrderAddr order_addr, def pid = GlobalHolder.proj.id) {
+	def create_order_front(def pre_orders, StoreInfo store, def code, FrontOrderAddr order_addr, BigInteger pid = GlobalHolder.proj.id, String order_remark = '') {
 		OrderInfo o = new OrderInfo();
 		def items = [];
 
@@ -290,6 +290,7 @@ class OrderService {
 		o.dss = code;
 		o.oss = OrderUtil._create_;
 		o.order_no = code + OrderNoGenerator.generateNo();
+		o.remark = order_remark;
 
 		def total_amount = new BigDecimal(0);
 
@@ -302,7 +303,7 @@ class OrderService {
 			if(x.size()>3) {
 				item.remark = x[3];
 			}
-			if(x[0] in GoodsInfo) {
+			if(x[0] instanceof GoodsInfo) {
 				GoodsInfo g = x[0];
 				GoodsSku sku = x[1];
 				item.goods_id = g.id;
@@ -315,7 +316,7 @@ class OrderService {
 				item.pay_amount = g.goods_price;
 				item.tycode = '100';
 				item.pic_url = g.goods_picturelink;
-			} else if(x[0] in GoodsPack) {
+			} else if(x[0] instanceof GoodsPack) {
 				GoodsPack g = x[0];
 				item.goods_id = g.id;
 				item.goods_name = g.name;
@@ -324,7 +325,7 @@ class OrderService {
 				item.pay_amount = g.sale_price;
 				item.tycode = '200';
 				item.pic_url = g.pic_url;
-			} else if (x[0] in GdMerge) {
+			} else if (x[0] instanceof GdMerge) {
 				GdMerge g = x[0];
 				item.goods_id = g.id;
 				item.goods_name = g.name;

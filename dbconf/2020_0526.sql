@@ -86,10 +86,11 @@ CREATE TABLE `data_shopping_cart` (
   `number` int(11) DEFAULT NULL,
   `add_price` decimal(12,2) DEFAULT NULL,
   `retail_price` decimal(12,2) DEFAULT NULL,
+  `is_on_sale` int(11) NOT NULL DEFAULT '1',
   `a_time` datetime DEFAULT NULL,
   `c_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `flag` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
 

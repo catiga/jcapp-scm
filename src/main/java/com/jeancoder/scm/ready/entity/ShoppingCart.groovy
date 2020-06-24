@@ -43,6 +43,8 @@ class ShoppingCart {
 	
 	BigDecimal retail_price;
 	
+	Integer is_on_sale = 1;
+	
 	Date a_time;
 	
 	Timestamp c_time;
