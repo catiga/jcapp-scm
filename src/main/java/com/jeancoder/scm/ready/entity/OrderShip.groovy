@@ -51,12 +51,16 @@ class OrderShip {
 	
 	String ship_type;	//ship类型
 	
+	//快递公司id
 	BigInteger exp_id;
 	
+	//快递公司编码
 	String exp_code;
 	
+	//快递名称
 	String exp_name;
 	
+	//运单号
 	String exp_odd;
 	
 	String exp_str;		//快递单上打印内容
