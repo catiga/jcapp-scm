@@ -56,6 +56,27 @@ class OrderService {
 		return JcTemplate.INSTANCE().find(OrderInfo, sql, params.toArray());
 	}
 	
+	def find_user_order(JcPage<OrderInfo> page, def apid, def ds, def oss) {
+		if(apid==null) {
+			return null;
+		}
+		def sql = 'select * from OrderInfo where flag!=? and buyerid=?';
+		def params = []; params.add(-1); params.add(apid);
+		if(ds!=null) {
+			sql += ' and dss=?';
+		}
+		if(oss!=null && oss) {
+			sql += ' and oss in (';
+			for(x in oss) {
+				sql += '?,';
+				params.add(x);
+			}
+			sql = sql.substring(0, sql.length() - 1) + ')';
+		}
+		sql += ' order by a_time desc';
+		return JcTemplate.INSTANCE().find(OrderInfo, page, sql, params.toArray());
+	}
+	
 	OrderInfo get(def pid = GlobalHolder.proj.id, def order_id) {
 		String sql = 'select * from OrderInfo where flag!=? and pid=? and id=?';
 		return jc_template.get(OrderInfo.class, sql, -1, pid, order_id);
