@@ -29,7 +29,7 @@ if(goods_skus) {
 	}
 }
 
-return ProtObj.success([specData:specData, specValue:1]);
+return ProtObj.success([specData:specData, specValue:goods.model_id]);
 
 /*
 return ["errno":0,"errmsg":"",

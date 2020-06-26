@@ -8,6 +8,8 @@ import com.jeancoder.scm.ready.entity.GoodsImg
 import com.jeancoder.scm.ready.entity.GoodsInfo
 import com.jeancoder.scm.ready.incall.api.ProtObj
 import com.jeancoder.scm.ready.service.GoodsService
+import com.jeancoder.scm.ready.util.UnitCmp
+import com.jeancoder.scm.ready.util.UnitUtil
 
 JCLogger logger = JCLoggerFactory.getLogger('');
 
@@ -39,7 +41,24 @@ if(goods_cat_ids) {
 	cat_id = goods_cat_ids.get(0).split(',')[0];
 }
 
-def info = ["id":g.id,"category_id":cat_id,"is_on_sale":1,"name":g.goods_name,"goods_number":100,"sell_volume":1533,"keywords":"","retail_price":"999","min_retail_price":999,"cost_price":"900","min_cost_price":900,"goods_brief":g.goods_remark,"goods_desc":goods_content,"sort_order":1,"is_index":1,"is_new":0,"goods_unit":g.unit,"https_pic_url":g.goods_picturelink,"list_pic_url":g.goods_picturelink_middle,"freight_template_id":g.ftpl,"freight_type":g.freepost,"is_delete":0,"has_gallery":has_gallery,"has_done":1]
+def unit_name = '';
+UnitCmp unit_obj = UnitUtil.convert_by_code(g.unit);
+if(unit_obj!=null) {
+	unit_name = unit_obj.name;
+}
+def retail_price = '';
+def cost_price = '';
+if(g.goods_price) {
+	retail_price = g.goods_price/100;
+}
+if(g.cost_price) {
+	cost_price = g.cost_price/100;
+}
+def info = ["id":g.id,"category_id":cat_id,"is_on_sale":1,"name":g.goods_name,"goods_number":100,"sell_volume":1533,"keywords":"",
+	"retail_price":retail_price,"min_retail_price":retail_price,"cost_price":cost_price,"min_cost_price":cost_price,
+	"goods_brief":g.goods_remark,"goods_desc":goods_content,"sort_order":1,"is_index":1,"is_new":0,"goods_unit":unit_name,
+	"https_pic_url":g.goods_picturelink,"list_pic_url":g.goods_picturelink_middle,"freight_template_id":g.ftpl,"freight_type":g.freepost,
+	"is_delete":0,"has_gallery":has_gallery,"has_done":1]
 
 return ProtObj.success([info:info, "category_id":cat_id]);
 

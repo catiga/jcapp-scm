@@ -26,6 +26,8 @@ def goods_weight = JC.request.param('goods_weight');	//单位千克
 
 def sku_name = JC.request.param('goods_name');	//显示名称
 
+def value = JC.request.param('value');
+
 //首先根据goods_id 和 sku_no查找
 if(sku_no==null) {
 	sku_no = nextInt(100, 999) + '' + nextInt(100, 999);
@@ -116,13 +118,15 @@ if(stock)
 if(goods_weight)
 	data.weight = goods_weight;
 
+data.skus = value;
+
 if(update) {
 	JcTemplate.INSTANCE().update(data);
 } else {
-	JcTemplate.INSTANCE().save(data);
+	data.id = JcTemplate.INSTANCE().save(data);
 }
 
-return ProtObj.success(1);
+return ProtObj.success(data);
 
 
 int nextInt(final int min, final int max){

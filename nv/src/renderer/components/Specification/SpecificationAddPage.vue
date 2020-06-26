@@ -12,7 +12,7 @@
         <div class="content-main">
             <div class="form-table-box">
                 <el-form ref="infoForm" :rules="infoRules" :model="infoForm" label-width="120px">
-                    <el-form-item label="分类名称" prop="name">
+                    <el-form-item label="型号名称" prop="name">
                         <el-input v-model="infoForm.name"></el-input>
                     </el-form-item>
                     <el-form-item label="排序">

@@ -339,14 +339,13 @@
                 this.$router.push({name: 'goods_add', query: {id: row.id}})
             },
             handleRowDelete(index, row) {
-
                 this.$confirm('确定要删除?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
                 let that = this;
-                that.axios.post('goods/destory', {id: row.id}).then((response) => {
+                that.axios.post(this.root + 'goods/destory', qs.stringify({id: row.id})).then((response) => {
                     if (response.data.errno === 0) {
                         that.$message({
                             type: 'success',
@@ -365,6 +364,9 @@
                         }
                         else if (pIndex == 3) {
                             that.getDropList();
+                        }
+                        else {
+                        	that.getOnSaleList();
                         }
                     }
                 })

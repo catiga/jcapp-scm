@@ -1,5 +1,5 @@
-const rootUrl = 'http://e.local:8080/scm/incall/api/';
-//const rootUrl = 'http://m.mt.ex.piaodaren.com/scm/incall/api/';
+//const rootUrl = 'http://e.local:8080/scm/incall/api/';
+const rootUrl = 'http://m.mt.ex.piaodaren.com/scm/incall/api/';
 //const rootUrl = 'http://www.hiolabs.com:8360/admin/';
 
 

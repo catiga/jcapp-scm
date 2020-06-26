@@ -92,4 +92,22 @@ class UnitUtil {
 		return d;
 	}
 	
+	public static UnitCmp convert_by_code(String code) {
+		for(x in _unit_) {
+			if(x.code==code) {
+				return x;
+			}
+		}
+		return null;
+	}
+	
+	public static UnitCmp match_one_by_name(String name) {
+		for(x in _unit_) {
+			if(x.name==name) {
+				return x;
+			}
+		}
+		return null;
+	}
+	
 }

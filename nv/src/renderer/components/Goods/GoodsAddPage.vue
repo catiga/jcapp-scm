@@ -81,6 +81,17 @@
                         <el-input v-model="infoForm.goods_unit"></el-input>
                         <div class="form-tip">如：件、包、袋</div>
                     </el-form-item>
+                    
+                    <el-form-item label="商品售价" prop="retail_price">
+                    	<el-input v-model="infoForm.retail_price" type="number"></el-input>
+                    	<div class="form-tip"></div>
+                    </el-form-item>
+                    
+                    <el-form-item label="商品成本价" prop="cost_price">
+                    	<el-input v-model="infoForm.cost_price" type="number"></el-input>
+                    	<div class="form-tip"></div>
+                    </el-form-item>
+                    
                     <el-form-item label="销量" prop="sell_volume">
                         <el-input v-model="infoForm.sell_volume"></el-input>
                     </el-form-item>
@@ -110,9 +121,9 @@
                                 >
                         </el-upload>
                     </el-form-item>
-                    <el-form-item label="型号和价格">
+                    <el-form-item label="商品型号">
                         <div>
-                            <el-select class="el-select-class" v-model="specValue"
+                            <el-select class="el-select-class" v-model="specValue" @change="selectChanged"
                                        placeholder="选择型号分类">
                                 <el-option
                                         v-for="item in specOptionsList"
@@ -124,43 +135,49 @@
                         </div>
                         <div class="spec-wrap">
                             <el-table :data="specData" stripe style="width: 100%">
-                                <el-table-column prop="goods_sn" label="商品SKU" width="140">
+                                <el-table-column prop="goods_sn" label="SKU编码" width="140">
                                     <template scope="scope">
-                                        <el-input @blur="checkSkuOnly(scope.$index, scope.row)" size="mini" v-model="scope.row.goods_sn" placeholder="商品SKU"></el-input>
+                                        <el-input size="mini" v-model="scope.row.goods_sn" placeholder="SKU编码"></el-input>
                                     </template>
                                 </el-table-column>
-                                <el-table-column prop="goods_aka" label="快递单上的简称" width="160">
+                                <el-table-column prop="goods_aka" label="SKU简称" width="160">
                                     <template scope="scope">
-                                        <el-input @blur="checkSkuOnly(scope.$index, scope.row)" size="mini" v-model="scope.row.goods_name" placeholder="简称"></el-input>
+                                        <el-input size="mini" v-model="scope.row.goods_name" placeholder="SKU简称"></el-input>
                                     </template>
                                 </el-table-column>
                                 <el-table-column prop="value" label="型号/规格" width="130">
                                     <template scope="scope">
-                                        <el-input @blur="checkSkuOnly(scope.$index, scope.row)" size="mini" v-model="scope.row.value" placeholder="如1斤/条"></el-input>
+                                        <el-input size="mini" v-model="scope.row.value" placeholder="如1斤/条"></el-input>
                                     </template>
                                 </el-table-column>
                                 <el-table-column prop="cost" label="成本(元)" width="100">
                                     <template scope="scope">
-                                        <el-input @blur="checkSkuOnly(scope.$index, scope.row)" size="mini" v-model="scope.row.cost" placeholder="成本"></el-input>
+                                        <el-input size="mini" v-model="scope.row.cost" placeholder="成本"></el-input>
                                     </template>
                                 </el-table-column>
                                 <el-table-column prop="retail_price" label="零售(元)" width="100">
                                     <template scope="scope">
-                                        <el-input @blur="checkSkuOnly(scope.$index, scope.row)" size="mini" v-model="scope.row.retail_price" placeholder="零售"></el-input>
+                                        <el-input size="mini" v-model="scope.row.retail_price" placeholder="零售"></el-input>
                                     </template>
                                 </el-table-column>
                                 <el-table-column prop="goods_weight" label="重量(千克)" width="100">
                                     <template scope="scope">
-                                        <el-input @blur="checkSkuOnly(scope.$index, scope.row)" size="mini" v-model="scope.row.goods_weight" placeholder="重量"></el-input>
+                                        <el-input size="mini" v-model="scope.row.goods_weight" placeholder="重量"></el-input>
                                     </template>
                                 </el-table-column>
                                 <el-table-column prop="goods_number" label="库存" width="100">
                                     <template scope="scope">
-                                        <el-input @blur="checkSkuOnly(scope.$index, scope.row)" size="mini" v-model="scope.row.goods_number" placeholder="库存"></el-input>
+                                        <el-input size="mini" v-model="scope.row.goods_number" placeholder="库存"></el-input>
                                     </template>
                                 </el-table-column>
                                 <el-table-column label="操作" width="70">
                                     <template scope="scope">
+                                    	<el-button
+                                                size="mini"
+                                                type="success"
+                                                icon="el-icon-document" circle
+                                                @click="checkSkuOnly(scope.$index, scope.row)">
+                                        </el-button>
                                         <el-button
                                                 size="mini"
                                                 type="danger"
@@ -290,6 +307,9 @@
                     name: [
                         {required: true, message: '请输入名称', trigger: 'blur'},
                     ],
+                    retail_price: [
+                    	{required: true, message: '请输入商品售价', trigger: 'blur'},
+                    ],
                     goods_brief: [
                         {required: true, message: '请输入简介', trigger: 'blur'},
                     ],
@@ -311,7 +331,7 @@
                     goods_number:''
                 }],
                 specOptionsList: [],
-                specValue:1,
+                specValue:'',
                 selectedSpec: '规格',
                 is_has_spec: false,
                 gallery: {
@@ -326,6 +346,24 @@
             beforeRemove(file, fileList) {
                 return this.$confirm(`确定移除 ${ file.name }？`);
             },
+            selectChanged(value) {
+            	let sel_obj = null;
+            	for(var x in this.specOptionsList) {
+            		if(this.specOptionsList[x]['value']==value) {
+            			sel_obj = this.specOptionsList[x];
+            			break;
+            		}
+            	}
+            	this.$confirm(`确定选择 ${ sel_obj.label }吗？选择后不可修改`, '提示', {
+            		confirmButtonText: '确定',
+            		cancelButtonText: '取消',
+            		type: 'warning'
+            	}).then(() => {
+            		//确认选择
+            	}).catch(() => {
+            		this.specValue = '';
+            	});
+            },
             checkSkuOnly(index,row){
                 if(row.goods_sn == ''){
                     this.$message({
@@ -339,6 +377,16 @@
                 	row.goods_id = this.infoForm.id;
                 }
                 this.axios.post(this.root + 'goods/checkSku', qs.stringify(row)).then((response) => {
+                	if(response.data.errno === 0) {
+                		//可用
+                		row.id = response.data.data.id;
+                	} else {
+                		this.$message({
+                            type: 'error',
+                            message: response.data.errmsg
+                        })
+                	}
+                	/*
                     if (response.data.errno === 100) {
                         this.$message({
                             type: 'error',
@@ -351,6 +399,7 @@
                             message: '该SKU可以用！'
                         })
                     }
+                    */
                 })
             },
             getSpecData() {
@@ -369,6 +418,7 @@
             },
             addSpecData() {
                 let ele = {
+                	id: 0,
                     goods_sn:'',
                     value:'',
                     cost:'',
@@ -584,6 +634,7 @@
                 });
             },
             onSubmitInfo() {
+            	console.log(this.specData);
                 this.$refs['infoForm'].validate((valid) => {
                     if (valid) {
                         if (this.infoForm.index_pic_position > 0) {
@@ -604,14 +655,6 @@
                         }
                         for(const ele of this.specData){
                             if(ele.cost === '' || ele.goods_sn === '' || ele.goods_weight === '' || ele.retail_price === '' || ele.value === ''){
-                            	alert(ele.cost + '-' + ele.goods_sn + '-' + ele.goods_weight + '-' + ele.retail_price + '-' + ele.value);
-                            	
-                            	alert('ele.cost=' + ele.cost + '-' + (ele.cost==''));
-                            	alert('ele.goods_sn=' + ele.goods_sn + '-' + (ele.goods_sn==''));
-                            	alert('ele.goods_weight=' + ele.goods_weight + '+++' + (ele.goods_weight==''));
-                            	alert('ele.retail_price=' + ele.retail_price + '-' + (ele.retail_price==''));
-                            	alert('ele.value=' + ele.value + '-' + (ele.value==''));
-                            	
                                 this.$message({
                                     type: 'error',
                                     message: '型号和价格的值不能为空'
