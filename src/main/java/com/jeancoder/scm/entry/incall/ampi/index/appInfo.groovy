@@ -1,16 +1,11 @@
 package com.jeancoder.scm.entry.incall.ampi.index
 
 import com.jeancoder.app.sdk.JC
-import com.jeancoder.core.log.JCLoggerFactory
-import com.jeancoder.core.util.JackSonBeanMapper
-import com.jeancoder.core.log.JCLogger
 import com.jeancoder.scm.ready.entity.Catalog
 import com.jeancoder.scm.ready.entity.GoodsInfo
 import com.jeancoder.scm.ready.entity.GoodsSku
 import com.jeancoder.scm.ready.service.CatalogIndexService
 import com.jeancoder.scm.ready.util.GlobalHolder
-
-JCLogger logger = JCLoggerFactory.getLogger('');
 
 //首先获取推荐到首页的分类
 def dscs = JC.request.param('dscs');	//前端传过来的要获取的访问分类的渠道
@@ -37,8 +32,6 @@ if(channel) {
 			for(y in result) {
 				def goods = y[1];
 				def goods_sku = y[0];
-				logger.info(JackSonBeanMapper.toJson(goods));
-				
 				goodsList.add(build_index_goods_data(goods, goods_sku));
 			}
 		}

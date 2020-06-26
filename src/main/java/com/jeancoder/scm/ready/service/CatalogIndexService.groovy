@@ -113,16 +113,25 @@ class CatalogIndexService {
 			ret_data.addAll(ConvertToGoods.convert_merge(page_merge.result));
 		}
 		
-		//ret_data.each({it-> it[0].sku_img = 'http://pe1s.static.pdr365.com/' + it[1].goods_picturelink});
-		ret_data.each({it->
-//			if(it[1].goods_picturelink) {
-//				it[0].sku_img = img_path + '/' + it[1].goods_picturelink
-//			}
-			it[1].goods_picturelink = img_path + '/' + it[1].goods_picturelink;
-			it[1].goods_picturelink_big = img_path + '/' + it[1].goods_picturelink_big;
-			it[1].goods_picturelink_middle = img_path + '/' + it[1].goods_picturelink_middle;
+//		ret_data.each({it->
+//			it[1].goods_picturelink = img_path + '/' + it[1].goods_picturelink;
+//			it[1].goods_picturelink_big = img_path + '/' + it[1].goods_picturelink_big;
+//			it[1].goods_picturelink_middle = img_path + '/' + it[1].goods_picturelink_middle;
+//			it[0].sku_img = it[1].goods_picturelink
+//		});
+		
+		for(it in ret_data) {
+			if(it[1].goods_picturelink!=null && !it[1].goods_picturelink.startsWith(img_path)) {
+				it[1].goods_picturelink = img_path + '/' + it[1].goods_picturelink;
+			}
+			if(it[1].goods_picturelink_big!=null && !it[1].goods_picturelink_big.startsWith(img_path)) {
+				it[1].goods_picturelink_big = img_path + '/' + it[1].goods_picturelink_big;
+			}
+			if(it[1].goods_picturelink_middle!=null && !it[1].goods_picturelink_middle.startsWith(img_path)) {
+				it[1].goods_picturelink_middle = img_path + '/' + it[1].goods_picturelink_middle;
+			}
 			it[0].sku_img = it[1].goods_picturelink
-		});
+		}
 		def result = ret_data;
 		
 		
