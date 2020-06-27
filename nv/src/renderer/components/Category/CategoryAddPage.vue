@@ -224,29 +224,30 @@
                 })
             },
             getInfo() {
+            	/*
                 if (this.infoForm.id <= 0) {
                     return false
                 }
+                */
                 //加载分类详情
-                let that = this
-                this.axios.get(this.root + 'category/info', {
-                    params: {
-                        id: that.infoForm.id
-                    }
-                }).then((response) => {
-                    let resInfo = response.data.data;
-                    console.log(resInfo);
-                    let data = {
-                        name: '分类图',
-                        url: resInfo.img_url
-                    };
-                    this.fileList.push(data);
-                    let iconData = {
-                        name: '图标',
-                        url: resInfo.icon_url
-                    };
-                    this.fileList2.push(iconData);
-                    that.infoForm = resInfo;
+                let that = this;
+                this.axios.post(this.root + 'category/info', qs.stringify({id: that.infoForm.id})).then((response) => {
+                	if(resInfo!=null) {
+                		let resInfo = response.data.cat;
+	                    console.log(resInfo);
+	                    let data = {
+	                        name: '分类图',
+	                        url: resInfo.img_url
+	                    };
+	                    this.fileList.push(data);
+	                    let iconData = {
+	                        name: '图标',
+	                        url: resInfo.icon_url
+	                    };
+	                    this.fileList2.push(iconData);
+	                    that.infoForm = resInfo;
+                	}
+                	that.url = resInfo.prefix;
                 })
             }
 
@@ -258,7 +259,7 @@
             this.getTopCategory();
             this.getInfo();
             this.uploadAction = api.rootUrl + 'common/upload';
-            this.url = 'http://e.local:8080/img_server/';
+            //this.url = 'http://e.local:8080/img_server/';
             //this.qiniuZone = api.qiniu;
             //this.getQiniuToken();
         }
