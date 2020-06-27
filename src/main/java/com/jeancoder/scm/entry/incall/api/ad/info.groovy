@@ -8,6 +8,14 @@ import com.jeancoder.scm.ready.util.GlobalHolder
 def id = JC.request.param('id');
 def pid = GlobalHolder.proj.id;
 
+def domain = JC.request.get().getServerName();
+def port = JC.request.get().getServerPort();
+if(port!=80) {
+	domain = domain + ':' + port;
+}
+def sch = JC.request.get().getSchema();
+def prefix = sch + domain + '/img_server/';
+
 SimpleAjax result = JC.internal.call(SimpleAjax, 'market', '/figure/admin/get', [pid:pid, id:id]);
 
 def tmp_o = null;
@@ -23,7 +31,7 @@ if(result && result.available) {
 	}
 }
 
-return ProtObj.success(tmp_o);
+return ProtObj.success([ad:tmp_o, prefix:prefix]);
 
 /*
 return ["errno":0,"errmsg":"","data":["id":30,"link_type":0,"link":"","goods_id":1109034,"image_url":"http://yanxuan.nosdn.127.net/0251bd141f5b55bd4311678750a6b344.jpg","end_time":1894780212,"enabled":0,"sort_order":3,"is_delete":0]];

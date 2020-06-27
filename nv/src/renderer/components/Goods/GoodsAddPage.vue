@@ -762,16 +762,15 @@
                 }
             },
             getInfo() {
+            	/*
                 if (this.infoForm.id <= 0) {
                     return false
                 }
+                */
                 //加载商品详情
                 let that = this
-                this.axios.get(this.root + 'goods/info', {
-                    params: {
-                        id: that.infoForm.id
-                    }
-                }).then((response) => {
+                this.axios.post(this.root + 'goods/info', qs.stringify({id: that.infoForm.id})
+                ).then((response) => {
                 	if(response.data.errno!=0) {
                 		this.$confirm(response.data.errmsg, '提示', {
 		                    confirmButtonText: '确定',
@@ -783,30 +782,30 @@
                 	}
                     let resInfo = response.data.data;
                     let goodsInfo = resInfo.info;
-                    // goodsInfo.is_index = goodsInfo.is_index ? true : false;
-                    goodsInfo.is_new = goodsInfo.is_new ? true : false;
-                    goodsInfo.is_on_sale = goodsInfo.is_on_sale ? "1" : "0";
-                    that.infoForm = goodsInfo;
-                    that.kdValue = goodsInfo.freight_template_id;
-                    
-                    that.cateId = resInfo.category_id;
-                    console.log('that.cateId===' + that.cateId);
-                    
+                    if(goodsInfo!=null) {
+                    	// goodsInfo.is_index = goodsInfo.is_index ? true : false;
+	                    goodsInfo.is_new = goodsInfo.is_new ? true : false;
+	                    goodsInfo.is_on_sale = goodsInfo.is_on_sale ? "1" : "0";
+	                    that.infoForm = goodsInfo;
+	                    that.kdValue = goodsInfo.freight_template_id;
+	                    
+	                    that.cateId = resInfo.category_id;
+	                    console.log('that.cateId===' + that.cateId);
+                    }
+                    that.url = resInfo.prefix;
                     that.getImgUrl();
                 })
             },
             // 获取所有分类
             getAllCategory() {
                 let that = this;
-                this.axios.get(this.root + 'goods/getAllCategory', {
-                    params: {}
-                }).then((response) => {
+                this.axios.post(this.root + 'goods/getAllCategory').then((response) => {
                     that.options = response.data.data;
                 })
             },
             getAllSpecification() {
                 let that = this;
-                this.axios.get(this.root + 'goods/getAllSpecification').then((response) => {
+                this.axios.post(this.root + 'goods/getAllSpecification').then((response) => {
                     let resInfo = response.data.data;
                     console.log(resInfo);
                     that.specOptionsList = resInfo;
@@ -814,9 +813,7 @@
             },
             getExpressData() {
                 let that = this
-                this.axios.get(this.root + 'goods/getExpressData', {
-                    params: {}
-                }).then((response) => {
+                this.axios.post(this.root + 'goods/getExpressData').then((response) => {
                     let options = response.data.data;
                     that.kdOptions = options.kd;
                     that.cateOptions = options.cate;
@@ -882,7 +879,7 @@
                 this.getGalleryList();
             }
             this.uploadAction = api.rootUrl + 'common/upload';
-            this.url = 'http://e.local:8080/img_server/';
+            //this.url = 'http://e.local:8080/img_server/';
             
             //this.qiniuZone = api.qiniu;
         },

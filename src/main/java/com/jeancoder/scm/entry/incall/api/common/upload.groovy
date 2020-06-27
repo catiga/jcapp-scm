@@ -6,10 +6,14 @@ import org.apache.commons.fileupload.FileItem
 import org.apache.commons.io.FileUtils
 
 import com.jeancoder.app.sdk.JC
+import com.jeancoder.core.log.JCLogger
+import com.jeancoder.core.log.JCLoggerFactory
 import com.jeancoder.core.util.MD5Util
 import com.jeancoder.scm.ready.ajax.SimpleAjax
 import com.jeancoder.scm.ready.entity.GoodsImg
 import com.jeancoder.scm.ready.incall.api.ProtObj
+
+JCLogger logger = JCLoggerFactory.getLogger('');
 
 //def cdn_root_path = '/data/cdn/jc';
 def cdn_root_path = '/Users/jackielee/Desktop';
@@ -21,11 +25,13 @@ if(!upload_cat) {
 }
 rel_path = rel_path + '/' + upload_cat;
 
+logger.info('cdn_root_path1=' + cdn_root_path);
+
 SimpleAjax sys_conf = JC.internal.call(SimpleAjax, 'project', '/sys/get_root_path', null);
 if(sys_conf && sys_conf.available) {
 	cdn_root_path = sys_conf.data;
 }
-
+logger.info('cdn_root_path2=' + cdn_root_path);
 
 List<FileItem> items = JC.request.get().getFormItems();
 

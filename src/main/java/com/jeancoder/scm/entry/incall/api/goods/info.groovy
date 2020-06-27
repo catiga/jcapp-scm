@@ -15,52 +15,65 @@ JCLogger logger = JCLoggerFactory.getLogger('');
 
 def id = JC.request.param('id');
 
-logger.info('id========' + id);
+def domain = JC.request.get().getServerName();
+def port = JC.request.get().getServerPort();
+if(port!=80) {
+	domain = domain + ':' + port;
+}
+def sch = JC.request.get().getSchema();
+def prefix = sch + domain + '/img_server/';
 
-GoodsInfo g = GoodsService.INSTANCE().get(id);
-if(g==null) {
-	return ProtObj.fail(110001, '商品未找到');
+GoodsInfo g = null;
+if(id && id!='0') {
+	g =  GoodsService.INSTANCE().get(id);
+	if(g==null) {
+		return ProtObj.fail(110001, '商品未找到');
+	}
 }
 
-def goods_content = '';
-def has_gallery = 0;
-//查找商品详情和图片
-GoodsContent g_c = GoodsService.INSTANCE().get_content(id);
-List<GoodsImg> g_imgs = GoodsService.INSTANCE().find_goods_imgs(id, null);
-if(g_c) {
-	goods_content = g_c.content;
-}
-if(g_imgs) {
-	has_gallery = 1;
-}
-
-//查找当前商品对应的顶级分类
-List<String> goods_cat_ids = GoodsService.INSTANCE().get_goods_cats(g.id, '100');	//固定为商品
+def info = null;
 String cat_id = '';
-if(goods_cat_ids) {
-	cat_id = goods_cat_ids.get(0).split(',')[0];
+if(g!=null) {
+	def goods_content = '';
+	def has_gallery = 0;
+	//查找商品详情和图片
+	GoodsContent g_c = GoodsService.INSTANCE().get_content(id);
+	List<GoodsImg> g_imgs = GoodsService.INSTANCE().find_goods_imgs(id, null);
+	if(g_c) {
+		goods_content = g_c.content;
+	}
+	if(g_imgs) {
+		has_gallery = 1;
+	}
+	
+	//查找当前商品对应的顶级分类
+	List<String> goods_cat_ids = GoodsService.INSTANCE().get_goods_cats(g.id, '100');	//固定为商品
+	if(goods_cat_ids) {
+		cat_id = goods_cat_ids.get(0).split(',')[0];
+	}
+	
+	def unit_name = '';
+	UnitCmp unit_obj = UnitUtil.convert_by_code(g.unit);
+	if(unit_obj!=null) {
+		unit_name = unit_obj.name;
+	}
+	def retail_price = '';
+	def cost_price = '';
+	if(g.goods_price) {
+		retail_price = g.goods_price/100;
+	}
+	if(g.cost_price) {
+		cost_price = g.cost_price/100;
+	}
+	info = ["id":g.id,"category_id":cat_id,"is_on_sale":1,"name":g.goods_name,"goods_number":100,"sell_volume":1533,"keywords":"",
+		"retail_price":retail_price,"min_retail_price":retail_price,"cost_price":cost_price,"min_cost_price":cost_price,
+		"goods_brief":g.goods_remark,"goods_desc":goods_content,"sort_order":1,"is_index":1,"is_new":0,"goods_unit":unit_name,
+		"https_pic_url":g.goods_picturelink,"list_pic_url":g.goods_picturelink_middle,"freight_template_id":g.ftpl,"freight_type":g.freepost,
+		"is_delete":0,"has_gallery":has_gallery,"has_done":1]
 }
 
-def unit_name = '';
-UnitCmp unit_obj = UnitUtil.convert_by_code(g.unit);
-if(unit_obj!=null) {
-	unit_name = unit_obj.name;
-}
-def retail_price = '';
-def cost_price = '';
-if(g.goods_price) {
-	retail_price = g.goods_price/100;
-}
-if(g.cost_price) {
-	cost_price = g.cost_price/100;
-}
-def info = ["id":g.id,"category_id":cat_id,"is_on_sale":1,"name":g.goods_name,"goods_number":100,"sell_volume":1533,"keywords":"",
-	"retail_price":retail_price,"min_retail_price":retail_price,"cost_price":cost_price,"min_cost_price":cost_price,
-	"goods_brief":g.goods_remark,"goods_desc":goods_content,"sort_order":1,"is_index":1,"is_new":0,"goods_unit":unit_name,
-	"https_pic_url":g.goods_picturelink,"list_pic_url":g.goods_picturelink_middle,"freight_template_id":g.ftpl,"freight_type":g.freepost,
-	"is_delete":0,"has_gallery":has_gallery,"has_done":1]
 
-return ProtObj.success([info:info, "category_id":cat_id]);
+return ProtObj.success([info:info, "category_id":cat_id, 'prefix':prefix]);
 
 /*
 return ["errno":0,"errmsg":"",

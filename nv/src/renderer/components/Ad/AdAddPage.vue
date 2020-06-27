@@ -273,26 +273,28 @@
                 this.infoForm.image_url = res.data[0];
             },
             getInfo() {
+            	/*
                 if (this.infoForm.id <= 0) {
                     return false
                 }
+                */
                 //加载广告详情
                 let that = this
-                this.axios.get(this.root + 'ad/info', {
-                    params: {
-                        id: that.infoForm.id
+                this.axios.post(this.root + 'ad/info', qs.stringify({id: that.infoForm.id})
+                ).then((response) => {
+                    let resInfo = response.data.ad;
+                    if(resInfo!=null) {
+                    	resInfo.enabled = resInfo.enabled ? "1" : "0";
+	                    that.infoForm = resInfo;
+	                    //that.infoForm.end_time = resInfo.end_time * 1000;
+	                    let info = {
+	                        name: resInfo.name,
+	                        url: resInfo.image_url
+	                    };
+	                    this.fileList.push(info);
+	                    console.log(this.infoForm);
                     }
-                }).then((response) => {
-                    let resInfo = response.data.data;
-                    resInfo.enabled = resInfo.enabled ? "1" : "0";
-                    that.infoForm = resInfo;
-                    //that.infoForm.end_time = resInfo.end_time * 1000;
-                    let info = {
-                        name: resInfo.name,
-                        url: resInfo.image_url
-                    };
-                    this.fileList.push(info);
-                    console.log(this.infoForm);
+                    that.url = resInfo.prefix;
                 })
             }
         },
@@ -303,7 +305,7 @@
             this.getInfo();
             
             this.uploadAction = api.rootUrl + 'common/upload';
-            this.url = 'http://e.local:8080/img_server/';
+            //this.url = 'http://e.local:8080/img_server/';
             
             /*
             this.getQiniuToken();

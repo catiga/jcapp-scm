@@ -15,4 +15,8 @@ class ProtObj {
 	public static fail(int errno, String errmsg) {
 		return new ProtObj(errno:errno, errmsg:errmsg);
 	}
+	
+	public static fail(int errno, String errmsg, def data) {
+		return new ProtObj(errno:errno, errmsg:errmsg, data:data);
+	}
 }
