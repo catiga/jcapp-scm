@@ -72,7 +72,7 @@ class GoodsInfo {
 	
 	BigInteger other_id;
 	
-	Timestamp a_time;
+	Date a_time;
 
 	@JCNotColumn
 	BigInteger on_sale;
