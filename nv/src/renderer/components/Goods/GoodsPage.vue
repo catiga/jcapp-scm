@@ -407,36 +407,30 @@
                 })
             },
             getOnSaleList() {
-                this.axios.get(this.root + 'goods/onsale', {
-                    params: {
+                this.axios.post(this.root + 'goods/onsale', qs.stringify({
                         page: this.page,
 						size: this.size
-                    }
-                }).then((response) => {
+                })).then((response) => {
                     this.tableData = response.data.data.data
                     this.page = response.data.data.currentPage
                     this.total = response.data.data.count
                 })
             },
             getOutList() {
-                this.axios.get(this.root + 'goods/out', {
-                    params: {
+                this.axios.post(this.root + 'goods/out', qs.stringify({
                         page: this.page,
 						size: this.size
-                    }
-                }).then((response) => {
+                })).then((response) => {
                     this.tableData = response.data.data.data;
                     this.page = response.data.data.currentPage;
                     this.total = response.data.data.count;
                 })
             },
             getDropList() {
-                this.axios.get(this.root + 'goods/drop', {
-                    params: {
+                this.axios.post(this.root + 'goods/drop', qs.stringify({
                         page: this.page,
 						size: this.size
-                    }
-                }).then((response) => {
+                })).then((response) => {
                     this.tableData = response.data.data.data;
                     this.page = response.data.data.currentPage;
                     this.total = response.data.data.count;

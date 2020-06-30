@@ -294,7 +294,7 @@
 	                    this.fileList.push(info);
 	                    console.log(this.infoForm);
                     }
-                    that.url = resInfo.prefix;
+                    that.url = response.data.prefix;
                 })
             }
         },
