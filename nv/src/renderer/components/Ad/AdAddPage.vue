@@ -282,19 +282,21 @@
                 let that = this
                 this.axios.post(this.root + 'ad/info', qs.stringify({id: that.infoForm.id})
                 ).then((response) => {
-                    let resInfo = response.data.ad;
-                    if(resInfo!=null) {
-                    	resInfo.enabled = resInfo.enabled ? "1" : "0";
-	                    that.infoForm = resInfo;
+                    let resInfo = response.data.data;
+                    let ad_info = resInfo.ad;
+                    if(ad_info!=null) {
+                    	ad_info.enabled = ad_info.enabled ? "1" : "0";
+	                    that.infoForm = ad_info;
 	                    //that.infoForm.end_time = resInfo.end_time * 1000;
 	                    let info = {
-	                        name: resInfo.name,
-	                        url: resInfo.image_url
+	                        name: ad_info.name,
+	                        url: ad_info.image_url
 	                    };
 	                    this.fileList.push(info);
 	                    console.log(this.infoForm);
                     }
-                    that.url = response.data.prefix;
+                    that.url = resInfo.prefix;
+                    alert(that.url);
                 })
             }
         },
