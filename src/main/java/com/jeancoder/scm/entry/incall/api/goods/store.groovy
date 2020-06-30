@@ -136,10 +136,11 @@ if(model && specData) {
 			sku.remark = x['goods_name'];
 			sku.skus = x['value'];
 			if(x['goods_weight']) {
-				sku.weight = new BigDecimal(x['goods_weight']);
+				sku.weight = MoneyUtil.get_decimal(x['goods_weight']);
 			}
 			if(x['goods_number']) {
-				sku.stock = new BigDecimal(x['goods_number'] + '').intValue();
+				def stock_decimal = MoneyUtil.get_decimal(x['goods_number']);
+				sku.stock = stock_decimal!=null?stock_decimal.intValue():0;
 			}
 			JcTemplate.INSTANCE().save(sku);
 		}

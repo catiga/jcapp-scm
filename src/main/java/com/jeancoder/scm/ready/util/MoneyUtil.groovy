@@ -6,6 +6,17 @@ public class MoneyUtil {
 
 	private static BigDecimal bd_100 = new BigDecimal(100);
 	
+	public static BigDecimal get_decimal(def value) {
+		if(value==null) {
+			return null;
+		}
+		try {
+			return new BigDecimal(value.toString());
+		} catch(any) {
+			return null;
+		}
+	}
+	
 	public static BigDecimal get_cent_from_yuan(String yuan) {
 		if(yuan==null) {
 			return null;
