@@ -3,6 +3,8 @@ package com.jeancoder.scm.ready.service
 import com.jeancoder.app.sdk.JC
 import com.jeancoder.app.sdk.source.LoggerSource
 import com.jeancoder.core.log.JCLogger
+import com.jeancoder.core.log.JCLoggerFactory
+import com.jeancoder.core.util.JackSonBeanMapper
 import com.jeancoder.jdbc.JcPage
 import com.jeancoder.jdbc.JcTemplate
 import com.jeancoder.scm.ready.dto.SysProjectInfo
@@ -15,7 +17,7 @@ import com.jeancoder.scm.ready.util.GlobalHolder
 
 class CatalogService {
 
-	static final JCLogger logger = LoggerSource.getLogger();
+	static final JCLogger logger = JCLoggerFactory.getLogger('');
 	
 	private static final CatalogService __instance__ = new CatalogService();
 	
@@ -144,7 +146,8 @@ class CatalogService {
 			sql = sql + ' and tycode=?';
 			params.add(typecode);
 		}
-		
+		logger.info('pid=' + pid + '===' + sql);
+		logger.info(JackSonBeanMapper.toJson(params));
 		def result = null;
 		if(typecode=='100') {
 			sql = 'select g.id as goods_id, s.* from GoodsSku s right join GoodsInfo g on s.goods_id=g.id where g.id in (' + sql + ')';
