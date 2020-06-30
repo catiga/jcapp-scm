@@ -136,7 +136,6 @@ class CatalogService {
 		if(!now_project.root) {
 			sql += ' and (pid=? or pid=?)';
 			params.add(pid);
-			//params.add(BigInteger.valueOf(1l));
 			params.add(now_project.dbpid);
 		}
 		if(aim_catalog!=null) {
