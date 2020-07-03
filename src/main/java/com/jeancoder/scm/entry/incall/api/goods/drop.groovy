@@ -7,8 +7,17 @@ import com.jeancoder.scm.ready.entity.GoodsInfo
 import com.jeancoder.scm.ready.incall.api.ProtObj
 import com.jeancoder.scm.ready.util.GlobalHolder
 
+def domain = JC.request.get().getServerName();
+def port = JC.request.get().getServerPort();
+if(port!=80) {
+	domain = domain + ':' + port;
+}
+def sch = JC.request.get().getSchema();
+def prefix = sch + domain + '/img_server/';
+
 def pn = JC.request.param('page');
 def ps = JC.request.param('size');
+
 try {
 	pn = Integer.valueOf(pn);
 	if(pn<1) {
@@ -44,10 +53,14 @@ def page_obj = [count:page.totalCount, totalPages:page.totalPages, pageSize:page
 def g_data = [];
 if(page.result) {
 	for(x in page.result) {
+		def img_url = x.goods_picturelink;
+		if(img_url) {
+			img_url = prefix + img_url;
+		}
 		def goods_1 = ["id": x.id,"name": x.goods_name,"goods_brief": x.goods_material,"goods_desc": x.goods_remark,
 			"retail_price": x.goods_price,"min_retail_price": x.goods_price,"cost_price": x.cost_price,"min_cost_price": x.cost_price,
 			"is_on_sale": false,"goods_number": 22, "sell_volume": 2923,"keywords": "",
-			"sort_order": 1,"is_index": true,"is_new": 1,"goods_unit": x.unit,"https_pic_url": x.goods_picturelink,
+			"sort_order": 1,"is_index": true,"is_new": 1,"goods_unit": x.unit,"https_pic_url": img_url,
 			"freight_template_id": x.ftpl,"freight_type": x.freepost,"is_delete": 0,"has_gallery": 1,"has_done": 1,
 			"category_id": 1005000,"category_name": "居家"];
 		
