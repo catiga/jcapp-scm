@@ -60,7 +60,7 @@ if(goods==null) {
 	}
 }
 goods.goods_name = goods_info['name'];
-goods.goods_picturelink = goods_info['https_pic_url'];
+goods.goods_picturelink = goods_info['list_pic_url'];
 goods.goods_picturelink_middle = goods_info['list_pic_url'];
 goods.goods_remark = goods_info['goods_brief'];
 if(goods_info['freight_template_id']) {
