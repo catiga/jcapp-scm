@@ -83,7 +83,7 @@ if(typecode=='100') {
 		if(goods_img && !goods_img.empty) {
 			goods_info['has_gallery'] = 1;
 			for(x in goods_img) {
-				def g_i_obj = ["id":x.id,"goods_id":x.goods_id,"img_url":x.img_url,"img_desc":"","sort_order":1,"is_delete":0];
+				def g_i_obj = ["id":x.id,"goods_id":x.goods_id,"img_url":prefix + x.img_url,"img_desc":"","sort_order":1,"is_delete":0];
 				goods_gallery.add(g_i_obj);
 			}
 		}
