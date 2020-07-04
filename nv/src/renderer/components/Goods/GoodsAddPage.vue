@@ -123,8 +123,8 @@
                     </el-form-item>
                     <el-form-item label="商品型号">
                         <div>
-                            <el-select class="el-select-class" v-model="specValue" @change="selectChanged"
-                                       placeholder="选择型号分类">
+                            <el-select class="el-select-class" v-model="specValue" @change="selectChanged" placeholder="选择型号分类"
+                            	:disabled="infoForm.id && specValue?true:false">
                                 <el-option
                                         v-for="item in specOptionsList"
                                         :key="item.value"
@@ -332,6 +332,7 @@
                 }],
                 specOptionsList: [],
                 specValue:'',
+                specModel: {},
                 selectedSpec: '规格',
                 is_has_spec: false,
                 gallery: {
@@ -409,10 +410,7 @@
                         let info = response.data.data;
                         this.specData = info.specData;
                         this.specValue = info.specValue;
-                        console.log(this.specValue)
-                        console.log(this.specValue)
-                        console.log(this.specValue)
-                        console.log(this.specValue)
+                        this.specModel = info.specModel;
                     }
                 })
             },
