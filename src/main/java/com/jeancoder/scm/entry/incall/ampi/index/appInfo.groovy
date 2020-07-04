@@ -134,7 +134,7 @@ def build_index_goods_data(GoodsInfo goods, GoodsSku goods_sku) {
 	def is_new = 1;
 	def is_on_sale = 1;
 	def keywords = "";
-	def list_pic_url = goods.goods_picturelink_big;
+	def list_pic_url = goods.goods_picturelink;
 	def min_cost_price = goods.goods_price;
 	if(min_cost_price==null) {
 		min_cost_price = _9999;
