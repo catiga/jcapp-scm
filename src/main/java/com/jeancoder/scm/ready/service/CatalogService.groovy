@@ -145,8 +145,6 @@ class CatalogService {
 			sql = sql + ' and tycode=?';
 			params.add(typecode);
 		}
-		logger.info('pid=' + pid + '===' + sql);
-		logger.info(JackSonBeanMapper.toJson(params));
 		def result = null;
 		if(typecode=='100') {
 			sql = 'select g.id as goods_id, s.* from GoodsSku s right join GoodsInfo g on s.goods_id=g.id where g.id in (' + sql + ')';

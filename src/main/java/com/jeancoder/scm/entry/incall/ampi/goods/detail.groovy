@@ -36,6 +36,14 @@ MergeGoodsService merge_service = MergeGoodsService.INSTANCE();
 
 WareHouseService wh_service = WareHouseService.INSTANCE();
 
+def domain = JC.request.get().getServerName();
+def port = JC.request.get().getServerPort();
+if(port!=80) {
+	domain = domain + ':' + port;
+}
+def sch = JC.request.get().getSchema();
+def prefix = sch + domain + '/img_server/';
+
 def goods_info = [:];
 
 if(typecode=='100') {
@@ -66,8 +74,7 @@ if(typecode=='100') {
 		"goods_brief":g.goods_remark,
 		"goods_desc":goods_content,
 		"sort_order":1,"is_index":1,"is_new":0,"goods_unit":g.unit,
-		"https_pic_url":g.goods_picturelink,
-		"list_pic_url":g.goods_picturelink,
+		"https_pic_url":prefix + g.goods_picturelink, "list_pic_url": prefix + g.goods_picturelink,
 		"freight_template_id":g.ftpl,"freight_type":g.freepost,"is_delete":0,"has_gallery":0,"has_done":1];
 		
 		//查找图片库
