@@ -58,6 +58,10 @@ if(goods==null) {
 	if(model!=null) {
 		goods.model_id = model.id;
 	}
+} else {
+	if(model!=null && goods.model_id==null) {
+		goods.model_id = model.id;
+	}
 }
 goods.goods_name = goods_info['name'];
 goods.goods_picturelink = goods_info['list_pic_url'];
@@ -134,7 +138,7 @@ if(model && specData) {
 			if(x['retail_price'])
 				sku.sku_price = MoneyUtil.get_cent_from_yuan(x['retail_price']);
 			sku.remark = x['goods_name'];
-			sku.skus = x['value'];
+			sku.skus = sku_model_check(model, x['value']);
 			if(x['goods_weight']) {
 				sku.weight = MoneyUtil.get_decimal(x['goods_weight']);
 			}
@@ -159,7 +163,7 @@ if(model && specData) {
 				sku.sku_price = MoneyUtil.get_cent_from_yuan(x['retail_price'] + '');
 			}
 			sku.remark = x['goods_name'];
-			sku.skus = x['value'];
+			sku.skus = sku_model_check(model, x['value']);
 			
 			if(x['goods_weight']) {
 				sku.weight = new BigDecimal(x['goods_weight']);
@@ -192,3 +196,13 @@ if(model && specData) {
 }
 
 return ProtObj.success(1);
+
+def sku_model_check(GoodsModel model, def map_obj) {
+	if(map_obj==null) {
+		return null;
+	}
+	if(!(map_obj instanceof Map)) {
+		return null;
+	}
+	return JackSonBeanMapper.toJson(map_obj);
+}

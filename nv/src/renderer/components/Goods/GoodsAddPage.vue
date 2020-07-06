@@ -146,9 +146,16 @@
                                     </template>
                                 </el-table-column>
                                 <el-table-column prop="value" label="型号/规格" width="130">
+                                	<template scope="scope">
+	                                	<el-table-column v-for="(item,index) in scope.row.value" :key="index"  align="center">
+	                                		{{index}}：<el-input size="mini" v-model="scope.row.value[index]" placeholder="型号/规格"></el-input>
+	                                	</el-table-column>
+                                	</template>
+                                	<!--
                                     <template scope="scope">
                                         <el-input size="mini" v-model="scope.row.value" placeholder="如1斤/条"></el-input>
                                     </template>
+                                    -->
                                 </el-table-column>
                                 <el-table-column prop="cost" label="成本(元)" width="100">
                                     <template scope="scope">
@@ -332,7 +339,7 @@
                 }],
                 specOptionsList: [],
                 specValue:'',
-                specModel: {},
+                specModel: null,
                 selectedSpec: '规格',
                 is_has_spec: false,
                 gallery: {
@@ -355,12 +362,22 @@
             			break;
             		}
             	}
+            	let spec_model = sel_obj['model'];
+            	if(Object.keys(spec_model).length ===0) {
+            		this.$message({
+            			type: 'error',
+            			message: ` ${ sel_obj.label }尚未设置属性值，请先设置模型属性`
+            		});
+            		this.specValue = '';
+            		return;
+            	}
             	this.$confirm(`确定选择 ${ sel_obj.label }吗？选择后不可修改`, '提示', {
             		confirmButtonText: '确定',
             		cancelButtonText: '取消',
             		type: 'warning'
             	}).then(() => {
             		//确认选择
+            		this.specModel = sel_obj['model'];
             	}).catch(() => {
             		this.specValue = '';
             	});
@@ -415,10 +432,11 @@
                 })
             },
             addSpecData() {
+            	let specModel = this.specModel;
                 let ele = {
                 	id: 0,
                     goods_sn:'',
-                    value:'',
+                    value:specModel,
                     cost:'',
                     retail_price:'',
                     goods_weight:'',
@@ -632,7 +650,6 @@
                 });
             },
             onSubmitInfo() {
-            	console.log(this.specData);
                 this.$refs['infoForm'].validate((valid) => {
                     if (valid) {
                         if (this.infoForm.index_pic_position > 0) {
