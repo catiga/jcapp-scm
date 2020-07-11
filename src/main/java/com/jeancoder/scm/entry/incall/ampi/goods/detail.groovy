@@ -90,7 +90,8 @@ if(typecode=='100') {
 			//把默认图片添加到首页
 			if(g.goods_picturelink) {
 				goods_info['has_gallery'] = 1;
-				goods_gallery.add(prefix + g.goods_picturelink);
+				def g_i_obj = ["id":0,"goods_id":g.id,"img_url":prefix + g.goods_picturelink,"img_desc":"","sort_order":1,"is_delete":0];
+				goods_gallery.add(g_i_obj);
 			}
 		}
 		goods_info['info'] = base_info;
