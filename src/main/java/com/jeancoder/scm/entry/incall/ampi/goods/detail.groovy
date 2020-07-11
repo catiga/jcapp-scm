@@ -86,6 +86,12 @@ if(typecode=='100') {
 				def g_i_obj = ["id":x.id,"goods_id":x.goods_id,"img_url":prefix + x.img_url,"img_desc":"","sort_order":1,"is_delete":0];
 				goods_gallery.add(g_i_obj);
 			}
+		} else {
+			//把默认图片添加到首页
+			if(g.goods_picturelink) {
+				goods_info['has_gallery'] = 1;
+				goods_gallery.add(prefix + g.goods_picturelink);
+			}
 		}
 		goods_info['info'] = base_info;
 		goods_info['gallery'] = goods_gallery;
