@@ -1,6 +1,8 @@
 package com.jeancoder.scm.ready.service
 
 import com.jeancoder.app.sdk.JC
+import com.jeancoder.core.log.JCLogger
+import com.jeancoder.core.log.JCLoggerFactory
 import com.jeancoder.core.util.JackSonBeanMapper
 import com.jeancoder.jdbc.JcPage
 import com.jeancoder.jdbc.JcTemplate
@@ -10,6 +12,8 @@ import com.jeancoder.scm.ready.entity.WareHouse
 import com.jeancoder.scm.ready.util.ConvertToGoods
 
 class CatalogIndexService {
+	
+	JCLogger logger = JCLoggerFactory.getLogger('');
 	
 	final static CatalogIndexService INSTANCE = new CatalogIndexService();
 
@@ -139,6 +143,7 @@ class CatalogIndexService {
 		def sid = JC.internal.param('sid')?.trim();
 		
 		WareHouse default_wh = WareHouseService.INSTANCE().get_default_warehouse_by_store(sid, pid);
+		logger.info(JackSonBeanMapper.toJson(default_wh));
 		if(default_wh==null) {
 			return SimpleAjax.notAvailable('sys_set_error,请绑定门店仓库');
 		}
