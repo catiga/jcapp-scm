@@ -279,20 +279,24 @@ class GoodsService {
 	
 	/**
 	 * 统计剩余库存
+	 * 修改以支持不按仓库统计
 	 * @param goods
 	 * @param sku
 	 * @param ware
 	 * @return
 	 */
 	public BigDecimal get_goods_sku_stock_by_id(BigInteger goods_id, BigInteger sku_id, WareHouse ware) {
-		if(ware==null) {
-			return new BigDecimal(0);
-		}
-		String sql = 'select sum(stock) from GoodsStock where flag!=? and wh_id=? and goods_id=?';
+//		if(ware==null) {
+//			return new BigDecimal(0);
+//		}
+		String sql = 'select sum(stock) from GoodsStock where flag!=? and goods_id=?';
 		def params = [];
 		params.add(-1);
-		params.add(ware.id);
 		params.add(goods_id);
+		if(ware!=null) {
+			sql = sql + ' and wh_id=?';
+			params.add(ware.id);
+		}
 		if(sku_id!=null&&sku_id>0) {
 			sql = sql + ' and goods_sku_id=?';
 			params.add(sku_id);

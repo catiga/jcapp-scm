@@ -157,6 +157,7 @@ class CatalogService {
 				for(x in result.result) {
 					BigInteger goods_id = x.goods_id;
 					if(x.id==null||x.id==BigInteger.valueOf(0l)) {
+						//商品未添加或者设置sku的情况，需要对商品进行直接销售，此处需要处理虚拟sku的情况
 						x = new GoodsSku();
 						x.goods_id = goods_id;
 					}

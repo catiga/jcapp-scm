@@ -142,11 +142,15 @@ class CatalogIndexService {
 		//检查用户选择的门店
 		def sid = JC.internal.param('sid')?.trim();
 		
-		WareHouse default_wh = WareHouseService.INSTANCE().get_default_warehouse_by_store(sid, pid);
-		logger.info(JackSonBeanMapper.toJson(default_wh));
-		if(default_wh==null) {
-			return SimpleAjax.notAvailable('sys_set_error,请绑定门店仓库');
+		WareHouse default_wh = null;
+		
+		if(sid!=null) {
+			default_wh = WareHouseService.INSTANCE().get_default_warehouse_by_store(sid, pid);
+			if(default_wh==null) {
+				return SimpleAjax.notAvailable('sys_set_error,请绑定门店仓库');
+			}
 		}
+		
 		//开始处理 typecode==100 即普通商品情况下的库存
 		//查询库存
 		//result.result.each({
