@@ -149,6 +149,7 @@ class CatalogService {
 		if(typecode=='100') {
 			sql = 'select g.id as goods_id, s.* from GoodsSku s right join GoodsInfo g on s.goods_id=g.id where g.id in (' + sql + ')';
 			result = jc_template.find(GoodsSku.class, page, sql, params.toArray());
+			logger.info(sql);
 			if(result&&result.result&&result.result.size()>0) {
 				def param = [];
 				def new_result = [];
