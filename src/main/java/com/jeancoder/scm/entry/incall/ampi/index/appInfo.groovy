@@ -1,11 +1,16 @@
 package com.jeancoder.scm.entry.incall.ampi.index
 
 import com.jeancoder.app.sdk.JC
+import com.jeancoder.core.log.JCLogger
+import com.jeancoder.core.log.JCLoggerFactory
+import com.jeancoder.core.util.JackSonBeanMapper
 import com.jeancoder.scm.ready.entity.Catalog
 import com.jeancoder.scm.ready.entity.GoodsInfo
 import com.jeancoder.scm.ready.entity.GoodsSku
 import com.jeancoder.scm.ready.service.CatalogIndexService
 import com.jeancoder.scm.ready.util.GlobalHolder
+
+JCLogger logger = JCLoggerFactory.getLogger('');
 
 //首先获取推荐到首页的分类
 def dscs = JC.request.param('dscs');	//前端传过来的要获取的访问分类的渠道
@@ -27,6 +32,9 @@ if(channel) {
 		def t_obj = [id:x['id'], name:x['name'], height:155, banner:x['img_url']];
 		//查找对应分类下的商品
 		def result = CatalogIndexService.INSTANCE.find_catalog_merge_goods(pid, x['id'], null, 1, 6);
+		if(x['id']==262) {
+			logger.info(JackSonBeanMapper.toJson(result));
+		}
 		def goodsList = [];
 		if(result) {
 			for(y in result) {
