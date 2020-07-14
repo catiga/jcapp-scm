@@ -8,8 +8,11 @@ import com.jeancoder.scm.ready.ajax.SimpleAjax
 import com.jeancoder.scm.ready.incall.api.ProtObj
 import com.jeancoder.scm.ready.util.GlobalHolder
 
-def hp_wxapp_app_id = 'wx7a8d97a1f1a98596';
-def hp_wxapp_app_key = '34fcc7920dd4622756a93e2a55c5411d';
+//def hp_wxapp_app_id = 'wx7a8d97a1f1a98596';
+//def hp_wxapp_app_key = '34fcc7920dd4622756a93e2a55c5411d';
+
+def hp_wxapp_app_id = 'wxfe0fc3d79427b224';
+def hp_wxapp_app_key = '269aa2b967730eb1cc7c94a738368531';
 
 JCLogger logger = JCLoggerFactory.getLogger('');
 
