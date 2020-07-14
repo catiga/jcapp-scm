@@ -23,6 +23,8 @@ JCRequest request = JC.request.get();
 
 def method = request.getMethod();
 
+logger.info('token method=' + method + ', ' + JC.request.get().getRequestURI());
+
 if(method=='OPTIONS') {
 	response.setStatus(204);
 	return false;
