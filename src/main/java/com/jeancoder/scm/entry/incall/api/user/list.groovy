@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat
 import com.jeancoder.app.sdk.JC
 import com.jeancoder.jdbc.JcPage
 import com.jeancoder.scm.ready.ajax.SimpleAjax
+import com.jeancoder.scm.ready.incall.api.ProtObj
 import com.jeancoder.scm.ready.util.GlobalHolder
 
 SimpleDateFormat _sdf_ = new SimpleDateFormat('yyyy-MM-dd HH:mm:ss');
@@ -48,7 +49,5 @@ if(ajax && ajax.available) {
 	}
 }
 
+return ProtObj.success(["userData":["count":count,"totalPages":totalPages,"pageSize":pageSize,"currentPage":currentPage, "data":data]]);
 
-return ["errno":0,"errmsg":"",
-	"data":["userData":["count":count,"totalPages":totalPages,"pageSize":pageSize,"currentPage":currentPage, "data":data]]
-];

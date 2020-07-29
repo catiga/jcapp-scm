@@ -168,7 +168,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.axios.post(this.root + 'specification/delete', qs.stringify({id: row.id})).then((response) => {
+                    this.axios.post(this.root + 'category/spec/delete', qs.stringify({id: row.id})).then((response) => {
                         console.log(response.data)
                         if (response.data.errno === 0) {
                             this.$message({
